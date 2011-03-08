@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	
+	<title>jQuery UI Carousel Plugin v2.0 - Richard Scarrott</title>
+	
+	<link rel="stylesheet" type="text/css" href="css/demo.css" media="all" />
+	
+	<style type="text/css">
+		/** base carousel **/
+		.carousel ul {
+		    position:absolute;
+		    overflow:hidden;
+		    margin:0;
+		    padding:0;
+		    list-style:none;
+		}
+
+		.no-js .carousel ul {position:static;}
+
+		.carousel .mask {
+		    position:relative;
+		    overflow:hidden;
+		    border:6px solid #444;
+		}
+
+		.carousel ul li {
+			float:left;
+			width:150px;
+		    height:150px;
+		    color:#fff;
+			font-size:8em;
+			text-align:center;
+			margin:0;
+		}
+
+		.carousel .pagination-links {
+		    list-style:none;
+		    margin:0;
+		    padding:0;
+		}
+		 
+		.carousel .pagination-links li {
+		    display:inline;
+		}
+
+		.carousel .pagination-links li a {
+			padding:2px 6px;	
+		}
+
+		.carousel .pagination-links li a:hover {text-decoration:none;}
+
+		.carousel .pagination-links li.current a {
+			 background:#444;
+			 color:#fff;
+		}
+		 
+		.carousel .disabled {
+		    color:gray;
+		    cursor:default;
+		}
+		
+		/** my carousel 1 **/
+		#my-carousel-1 .mask {
+			width:150px;
+		}
+
+		/** my carousel 2 **/
+		#my-carousel-2 .mask {
+			width:630px;
+		}
+
+		#my-carousel-2 ul li {
+			margin:0 10px 0 0;
+		}
+
+		/** my carousel 3 **/
+		#my-carousel-3 .mask {
+			width:450px;
+		}
+
+		.color-1 {background:#007cd2;}
+		.color-2 {background:#1788D7;}
+		.color-3 {background:#3798db;}
+		.color-4 {background:#62acdf;}
+		.color-5 {background:#86bbe0;}
+		.color-6 {background:#a7c7de;}
+		.color-7 {background:#d5dbdf;}
+	</style>
+	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.widget.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.carousel.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.carousel-autoscroll.js"></script>
+	
+	<script type="text/javascript">
+	
+		$(document).ready(function() {
+			$('body').removeClass('no-js');
+			
+		    $('#my-carousel-1').carousel();
+			
+		    $('#my-carousel-2').carousel({
+		    	itemsPerPage: 4,
+		    	itemsPerTransition: 4,
+		    	speed: 500,
+				autoScroll: false
+		    });
+			
+		    $('#my-carousel-3').carousel({
+				itemsPerPage: 3,
+				itemsPerTransition: 3,
+				easing: 'linear',
+				noOfRows: 2,
+				autoScroll: false
+			});
+			
+		});
+	</script>
+</head>
+<body class="no-js">
+	<div id="container">
+		<h1>jQuery UI Carousel plugin v2.0</h1>
+		
+		<p>Requires jQuery v1.4+ and jQuery UI Widget Factory 1.8+ (now available without core)</p>
+		<p>Due to overwhelmingly popular demand jQuery Carousel now includes autoScroll feature...okay perhaps not overwhelmingly but it's included as an addon :)</p>
+		<p><a href="http://www.richardscarrott.co.uk">Documentation coming shortly</a></p>
+		
+		<h2>Default Carousel</h2>
+		<p><code>
+			$('#my-carousel-1').carousel();
+		</code></p>
+		<div id="my-carousel-1" class="carousel module">
+		    <ul>
+				<li class="color-1">1</li>
+				<li class="color-4">2</li>
+				<li class="color-6">3</li>
+				<li class="color-2">4</li>
+				<li class="color-3">5</li>
+				<li class="color-1">6</li>
+				<li class="color-5">7</li>
+		    </ul>
+		</div>
+
+		<h2>Multiple items Carousel</h2>
+		<p><code>
+		<pre>
+$('#my-carousel-2').carousel({
+	itemsPerPage: 4,
+	itemsPerTransition: 4,
+	speed: 500,
+	autoScroll: false
+});
+		</pre>
+		</code></p>
+		<div id="my-carousel-2" class="carousel module">
+			 <ul>
+				<li class="color-1">1</li>
+				<li class="color-4">2</li>
+				<li class="color-6">3</li>
+				<li class="color-2">4</li>
+				<li class="color-3">5</li>
+				<li class="color-1">6</li>
+				<li class="color-5">7</li>
+				<li class="color-2">8</li>
+				<li class="color-7">9</li>
+				<li class="color-6">10</li>
+				<li class="color-2">11</li>
+				<li class="color-4">12</li>
+				<li class="color-7">13</li>
+				<li class="color-5">14</li>
+		    </ul>
+		</div>
+
+		<h2>Multiple rows Carousel</h2>
+		<p><code>
+		<pre>
+$('#my-carousel-3').carousel({
+	itemsPerPage: 3,
+	itemsPerTransition: 3,
+	easing: 'linear',
+	noOfRows: 2,
+	autoScroll: false
+});
+		</pre>
+		</code></p>
+		<div id="my-carousel-3" class="carousel module">
+			 <ul>
+				<li class="color-1">1</li>
+				<li class="color-4">2</li>
+				<li class="color-6">3</li>
+				<li class="color-2">4</li>
+				<li class="color-3">5</li>
+				<li class="color-1">6</li>
+				<li class="color-5">7</li>
+				<li class="color-2">8</li>
+				<li class="color-7">9</li>
+				<li class="color-6">10</li>
+				<li class="color-1">11</li>
+				<li class="color-4">12</li>
+		    </ul>
+		</div>
+	</div>
+
+	</div>
+</body>
+</html>
