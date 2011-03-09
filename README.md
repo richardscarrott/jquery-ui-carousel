@@ -84,4 +84,4 @@ You can pass in any number of options from the following defaults:
 		pause: 3000 // duration before auto scroll NOTE: requires jquery.ui.carousel-autoscroll.js
     }
 
-The plugin supports multiple carousels on a single page and maintains jQuery's chainability through the use of jquery UI's Widget. If you do become stuck see the demo or leave me a [message](http://richardscarrott.co.uk/posts/view/jquery-carousel-plugin "Richard Scarrott").
+The plugin supports multiple carousels on a single page and maintains jQuery's chainability through the use of jquery UI's Widget Factory. If you do become stuck see the demo or leave me a [message](http://richardscarrott.co.uk/posts/view/jquery-carousel-plugin "Richard Scarrott").
