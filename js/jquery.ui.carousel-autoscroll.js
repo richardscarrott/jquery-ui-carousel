@@ -1,5 +1,5 @@
 /*
- * jQuery UI Carousel Plugin v2.0 - Autoplay Extension
+ * jQuery UI Carousel Plugin v2.0 - Auto Scroll Extension
  *
  * Copyright (c) 2011 Richard Scarrott
  *
