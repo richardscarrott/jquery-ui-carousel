@@ -24,6 +24,11 @@
 		    overflow:hidden;
 		    border:6px solid #444;
 		}
+		
+		.carousel.vertical .mask {
+			height: 450px;
+			width: 150px;
+		}
 
 		.carousel ul li {
 			float:left;
@@ -33,6 +38,10 @@
 			font-size:8em;
 			text-align:center;
 			margin:0;
+		}
+		
+		.carousel.vertical ul li {
+			float: none;
 		}
 
 		.carousel .pagination-links {
@@ -72,7 +81,7 @@
 		}
 
 		#my-carousel-2 ul li {
-			margin:0 10px 0 0;
+			margin:0 0 0 0;
 		}
 
 		/** my carousel 3 **/
@@ -89,17 +98,20 @@
 		.color-7 {background:#d5dbdf;}
 	</style>
 	
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
 	<script type="text/javascript" src="js/jquery.ui.widget.js"></script>
 	<script type="text/javascript" src="js/jquery.ui.carousel.js"></script>
-	<script type="text/javascript" src="js/jquery.ui.carousel-autoscroll.js"></script>
+	<!--script type="text/javascript" src="js/jquery.ui.carousel-autoscroll.js"></script-->
 	
 	<script type="text/javascript">
 	
 		$(document).ready(function() {
 			$('body').removeClass('no-js');
 			
-		    $('#my-carousel-1').carousel();
+		    $('#my-carousel-1').carousel({
+				//autoScroll: true,
+				itemsPerPage: 'auto' // dynamically calculated based on mask width
+			});
 			
 		    $('#my-carousel-2').carousel({
 		    	itemsPerPage: 4,
@@ -115,6 +127,19 @@
 				noOfRows: 2,
 				autoScroll: false
 			});
+			
+			$('#my-carousel-4').carousel({
+				direction: 'vertical',
+				itemsPerPage: 3,
+		    	itemsPerTransition: 3
+			});
+			
+			
+			/*$('#my-carousel-4 ul li').click(function() {
+				
+				$('#my-carousel-4').carousel('goTo', $(this).prev());
+				
+			});*/
 			
 		});
 	</script>
@@ -199,6 +224,28 @@ $('#my-carousel-3').carousel({
 				<li class="color-6">10</li>
 				<li class="color-1">11</li>
 				<li class="color-4">12</li>
+		    </ul>
+		</div>
+		
+		<h2>Vertical Carousel</h2>
+		<p><code>
+			<pre>
+$('#my-carousel-4').carousel({
+	direction: 'vertical',
+	itemsPerPage: 3,
+	itemsPerTransition: 3
+});
+			</pre>
+		</code></p>
+		<div id="my-carousel-4" class="carousel vertical module">
+		    <ul>
+				<li class="color-1">1</li>
+				<li class="color-4">2</li>
+				<li class="color-6">3</li>
+				<li class="color-2">4</li>
+				<li class="color-3">5</li>
+				<li class="color-1">6</li>
+				<li class="color-5">7</li>
 		    </ul>
 		</div>
 	</div>
