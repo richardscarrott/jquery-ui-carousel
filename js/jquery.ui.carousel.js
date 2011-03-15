@@ -13,7 +13,7 @@
  *
  */
  
- // add pause and play API linking to startInterval and stop interval...
+ // add keyboard support?
  // store similar items together in attr?
  // refactor
  

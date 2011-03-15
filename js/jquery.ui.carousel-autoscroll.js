@@ -1,5 +1,5 @@
 /*
- * jQuery UI Carousel Plugin v2.0 - Auto Scroll Extension
+ * jQuery UI Carousel Plugin v2.1 - Auto Scroll Extension
  *
  * Copyright (c) 2011 Richard Scarrott
  *
@@ -10,7 +10,7 @@
  * Requires:
  * jQuery v1.4+,
  * jQuery UI Widget Factory 1.8+
- * jQuery UI Carousel 2.0+ 
+ * jQuery UI Carousel 2.1+ 
  *
  */
  
@@ -21,7 +21,7 @@
 	
 	$.extend(carousel.options, {
 		pause: 5000,
-		autoScroll: true
+		autoScroll: false
 	});
 	
 	$.extend(carousel, {
@@ -32,22 +32,22 @@
 			
 			if (!this.options.autoScroll) { return; }
 			
-			this._setInterval();
+			this.start();
 			this._elements.container
-				.bind('mouseenter.carousel', $.proxy(this, '_clearInterval'))
-				.bind('mouseleave.carousel', $.proxy(this, '_setInterval'));
+				.bind('mouseenter.carousel', $.proxy(this, 'stop'))
+				.bind('mouseleave.carousel', $.proxy(this, 'start'));
 				
 		},
 		
-		_setInterval: function() {
+		start: function() {
 		
 			var self = this;
 			
 			this._interval = setInterval(function() {
 			
-				self._itemIndex = self._itemIndex + self.options.itemsPerTransition;
-				if (self._itemIndex > (self._noOfItems - self.options.itemsPerPage)) {
-					self._itemIndex = 0;
+				self.itemIndex = self.itemIndex + self.options.itemsPerTransition;
+				if (self.itemIndex > (self.noOfItems - 1)) {
+					self.itemIndex = 0;
 				}
 				
 				self._go();
@@ -56,7 +56,7 @@
 			
 		},
 		
-		_clearInterval: function() {
+		stop: function() {
 		
 			clearInterval(this._interval);
 			
@@ -65,7 +65,7 @@
 		destroy: function() {
 			
 			destroy.apply(this);
-			this._clearInterval();
+			this.stop();
 			
 		}
 	

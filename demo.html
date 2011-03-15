@@ -101,7 +101,7 @@
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
 	<script type="text/javascript" src="js/jquery.ui.widget.js"></script>
 	<script type="text/javascript" src="js/jquery.ui.carousel.js"></script>
-	<!--script type="text/javascript" src="js/jquery.ui.carousel-autoscroll.js"></script-->
+	<script type="text/javascript" src="js/jquery.ui.carousel-autoscroll.js"></script>
 	
 	<script type="text/javascript">
 	
@@ -109,23 +109,21 @@
 			$('body').removeClass('no-js');
 			
 		    $('#my-carousel-1').carousel({
-				//autoScroll: true,
+				autoScroll: true,
 				itemsPerPage: 'auto' // dynamically calculated based on mask width
 			});
 			
 		    $('#my-carousel-2').carousel({
 		    	itemsPerPage: 4,
 		    	itemsPerTransition: 4,
-		    	speed: 500,
-				autoScroll: false
+		    	speed: 500
 		    });
 			
 		    $('#my-carousel-3').carousel({
 				itemsPerPage: 3,
 				itemsPerTransition: 3,
 				easing: 'linear',
-				noOfRows: 2,
-				autoScroll: false
+				noOfRows: 2
 			});
 			
 			$('#my-carousel-4').carousel({
@@ -146,7 +144,7 @@
 </head>
 <body class="no-js">
 	<div id="container">
-		<h1>jQuery UI Carousel plugin v2.0</h1>
+		<h1>jQuery UI Carousel plugin v2.1</h1>
 		
 		<p>Requires jQuery v1.4+ and jQuery UI Widget Factory 1.8+ (now available without core)</p>
 		<p>Due to overwhelmingly popular demand jQuery Carousel now includes autoScroll feature...okay perhaps not overwhelmingly but it's included as an addon :)</p>
