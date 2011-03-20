@@ -99,7 +99,7 @@
 		
 		_setNoOfItems: function() {
 			
-			this.noOfItems = this.elements.items.length / this.options.noOfRows;
+			this.noOfItems = Math.ceil(this.elements.items.length / this.options.noOfRows);
 			
 		},
 		
