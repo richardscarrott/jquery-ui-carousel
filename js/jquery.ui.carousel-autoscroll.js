@@ -1,5 +1,5 @@
 /*
- * jQuery UI Carousel Plugin v2.1 - Auto Scroll Extension
+ * jQuery UI Carousel Plugin v0.3 - Auto Scroll Extension
  *
  * Copyright (c) 2011 Richard Scarrott
  *
@@ -10,7 +10,7 @@
  * Requires:
  * jQuery v1.4+,
  * jQuery UI Widget Factory 1.8+
- * jQuery UI Carousel 2.1+ 
+ * jQuery UI Carousel 0.3+ 
  *
  */
  
@@ -33,7 +33,7 @@
 			if (!this.options.autoScroll) { return; }
 			
 			this.start();
-			this._elements.container
+			this.elements.container
 				.bind('mouseenter.carousel', $.proxy(this, 'stop'))
 				.bind('mouseleave.carousel', $.proxy(this, 'start'));
 				

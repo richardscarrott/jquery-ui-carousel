@@ -69,19 +69,20 @@ And here's the JavaScript:
 
 You can pass in any number of options from the following defaults:
 ------------------------------------------------------------------
-    {
+	{
 		itemsPerPage: 1, // number of items to show on each page
 		itemsPerTransition: 1, // number of items moved with each transition
-		noOfRows: 1, // number of rows (see demo)
+		noOfRows: 1, // number of rows (only horizontal, see demo)
+		horizontal: true, // orientation
 		pagination: true, // whether next and prev links will be included
-		nextPrevActions: true, // whether pagination links will be included
+		nextPrevActions: true, // whether next and prev links will be included
 		speed: 'normal', // animation speed
-		easing: 'swing', // supports the jQuery easing plugin
+		easing: 'swing', // supports the jQuery easing
 		startAt: null, // takes number, DOM element or jquery object indicating which list item to animate to on load
 		beforeAnimate: null, // callback before animation
-		afterAnimate: null // callback after animation
+		afterAnimate: null, // callback after animation
 		autoScroll: true, // sets interval NOTE: requires jquery.ui.carousel-autoscroll.js
 		pause: 3000 // duration before auto scroll NOTE: requires jquery.ui.carousel-autoscroll.js
-    }
+	}
 
 The plugin supports multiple carousels on a single page and maintains jQuery's chainability through the use of jquery UI's Widget Factory. If you do become stuck see the demo or leave me a [message](http://richardscarrott.co.uk/posts/view/jquery-carousel-plugin "Richard Scarrott").
