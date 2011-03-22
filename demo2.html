@@ -1,0 +1,377 @@
+<!doctype html>
+<html>
+<head>
+
+	<meta charset="utf-8" />
+	
+	<title>jQuery UI Carousel Plugin v0.4 - Richard Scarrott</title>
+	
+	<link rel="stylesheet" type="text/css" href="css/demo.css" media="all" />
+	
+	<style type="text/css">
+		.ui-carousel .mask {
+		    position:relative;
+		    overflow:hidden;
+		    border:6px solid #444;
+		}
+		
+			.ui-carousel ul {
+				position: absolute;
+				overflow: hidden;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.no-js .ui-carousel ul {
+				position: static;
+			}
+			
+				.ui-carousel ul li {
+					float: left;
+					width: 150px;
+					height: 150px;
+					color: #fff;
+					font-size: 8em;
+					text-align: center;
+					margin: 0;
+				}
+		
+				.ui-carousel.ui-carousel-vertical ul li {
+					float: none;
+				}
+
+		.ui-carousel .pagination-links {
+		    list-style: none;
+		    margin: 0;
+		    padding: 0;
+		}
+		 
+			.ui-carousel .pagination-links li {
+				display: inline;
+			}
+
+				.ui-carousel .pagination-links a {
+					padding: 2px 6px;	
+				}
+
+				.ui-carousel .pagination-links a:hover {
+					text-decoration: none;
+				}
+
+				.ui-carousel .pagination-links li.current a {
+					 background: #444;
+					 color: #fff;
+				}
+		 
+				.ui-carousel .disabled {
+					color: gray;
+					cursor: default;
+				}
+		
+		/** my carousel 1 **/
+		
+		/** horizontal **/
+		#my-carousel-1 {}
+		
+			/** items per page **/
+			#my-carousel-1.ui-carousel-items-1 .mask {
+				width: 150px;
+			}
+			
+			#my-carousel-1.ui-carousel-items-2 .mask {
+				width: 300px;
+			}
+			
+			#my-carousel-1.ui-carousel-items-3 .mask {
+				width: 450px;
+			}
+			
+			#my-carousel-1.ui-carousel-items-4 .mask {
+				width: 600px;
+			}
+			
+			/** no of rows **/
+			#my-carousel-1.ui-carousel-rows-1 .mask {
+				height: 150px;
+			}
+			
+			#my-carousel-1.ui-carousel-rows-2 .mask {
+				height: 300px;
+			}
+			
+			#my-carousel-1.ui-carousel-rows-3 .mask {
+				height: 450px;
+			}
+		
+		/** vertical **/
+		#my-carousel-1.ui-carousel-vertical .mask {
+			width: 150px;
+		}
+		
+			/** items per page **/
+			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-1 .mask {
+				height: 150px;
+			}
+			
+			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-2 .mask {
+				height: 300px;
+			}
+			
+			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-3 .mask {
+				height: 450px;
+			}
+			
+			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-4 .mask {
+				height: 600px;
+			}
+
+		
+		
+		
+		
+		
+		.color-1 {background:#007cd2;}
+		.color-2 {background:#1788D7;}
+		.color-3 {background:#3798db;}
+		.color-4 {background:#62acdf;}
+		.color-5 {background:#86bbe0;}
+		.color-6 {background:#a7c7de;}
+		.color-7 {background:#d5dbdf;}
+		
+		.field,
+		.actions {
+			margin: 20px;
+		}
+		
+		.action-set .action {
+			display: inline;
+		}
+		
+		ul.base,
+		ol.base {
+			list-style: none;
+			padding: 0;
+		}
+	</style>
+	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.widget.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.carousel.js"></script>
+	
+	<script type="text/javascript">
+	
+		// this demo JS has def become ridiculous
+	
+		var demo = {
+				
+			init: function(view) {
+			
+				this.view = view;
+				this.elements();
+				this.events();
+				
+				this.elements.initBtn.click();
+			
+			},
+			
+			elements: function() {
+			
+				var view = this.view,
+					form;
+					
+				this.elements = {};
+			
+				this.elements.carousel = view.find('#my-carousel-1');
+				
+				form = this.elements.form = view.find('form');
+				this.elements.inputs = form.find(':checkbox, select');
+				this.elements.initBtn = form.find('#init');
+				this.elements.destroyBtn = form.find('#destroy');
+				
+			
+			},
+			
+			events: function() {
+			
+				var self = this,
+					elems = this.elements,
+					carousel = elems.carousel;
+					
+				elems.inputs.change(function() {
+					
+					var input = $(this),
+						option = this.name;
+						
+					value = self.getValueAsOption(input);
+					
+					carousel.carousel('option', option, value);
+					
+				});
+				
+				elems.initBtn.click(function(e) {
+					e.preventDefault();
+					
+					$('body').removeClass('no-js');
+					// get form values
+					console.log(elems.inputs);
+					
+					var opts = {};
+					
+					elems.inputs.each(function() {
+						
+						opts[this.name] = self.getValueAsOption($(this));
+						
+					});
+					
+					console.log(opts);
+					
+					carousel.carousel(opts);
+				});
+				
+				elems.destroyBtn.click(function(e) {
+					e.preventDefault();
+					
+					$('body').addClass('no-js');
+					carousel.carousel('destroy');
+				});
+			},
+			
+			// ensures option are correct type (not always string)
+			getValueAsOption: function(input) {
+			
+				var value,
+					integer;
+				
+				if (input.is(':checkbox')) {
+					if (input.is(':checked')) {
+						value = true;
+					}
+					else {
+						value = false;
+					}
+				}
+				else {
+					value = input[0].value;
+				}
+				
+				// ensure numbers are of type number
+				integer = parseInt(value, 10);
+				if (!isNaN(integer)) {
+					value = integer;
+				}
+					
+				return value;
+				
+			}
+				
+		};
+	
+		$(document).ready(function() {
+		
+			$('body').removeClass('no-js');
+			
+		    demo.init($('#container')); 
+			
+		});
+	</script>
+	
+</head>
+<body class="no-js">
+	<div id="container">
+	
+		<h1>jQuery UI Carousel plugin v0.4</h1>
+		
+		<form class="module">
+			
+			<div class="field">
+				<label for="orientation">orientation:</label>
+				<select id="orientation" name="orientation">
+					<option value="horizontal" selected="selected">horizontal</option>
+					<option value="vertical">vertical</option>
+				</select>
+			</div>
+			
+			<!-- items per page requires the mask width to be changed accordingly (should add class) -->
+			<div class="field">
+				<label for="itemsPerPage">itemsPerPage:</label>
+				<select id="itemsPerPage" name="itemsPerPage">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4" selected="selected">4</option>
+				</select>
+			</div>
+			
+			<div class="field">
+				<label for="itemsPerTransition">itemsPerTransition:</label>
+				<select id="itemsPerTransition" name="itemsPerTransition">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4" selected="selected">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+				</select>
+			</div>
+			
+			<div class="field">
+				<label for="noOfRows">noOfRows:</label>
+				<select id="noOfRows" name="noOfRows">
+					<option value="1" selected="selected">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+				</select>
+			</div>
+			
+			<div class="field">
+				<label for="pagination">pagination:</label>
+				<input type="checkbox" id="pagination" name="pagination" checked="checked" />
+			</div>
+			
+			<div class="field">
+				<label for="nextPrevActions">nextPrevActions:</label>
+				<input type="checkbox" id="nextPrevActions" name="nextPrevActions" checked="checked" />
+			</div>
+			
+			<div class="actions">
+				<ul class="action-set base">
+					<li class="action">
+						<input type="button" id="init" name="init" value="init" />
+					</li>
+					<li class="action">
+						<input type="button" id="destroy" name="destroy" value="destroy" />
+					</li>
+				</ul>
+				
+			</div>
+			
+			<!--
+			<div class="field">
+				<select id="" name="">
+					<option value="horizontal">1</option>
+					<option value="vertical">2</option>
+				</select>
+			</div>
+			-->
+		</form>
+		
+		<div id="my-carousel-1" class="ui-carousel module">
+		    <ul>
+				<li class="color-1">1</li>
+				<li class="color-4">2</li>
+				<li class="color-6">3</li>
+				<li class="color-2">4</li>
+				<li class="color-3">5</li>
+				<li class="color-1">6</li>
+				<li class="color-5">7</li>
+				<li class="color-2">8</li>
+				<li class="color-7">9</li>
+		    </ul>
+		</div>
+
+	</div>
+</body>
+</html>

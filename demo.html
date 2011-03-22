@@ -30,11 +30,6 @@
 		    overflow:hidden;
 		    border:6px solid #444;
 		}
-		
-		.carousel.vertical .mask {
-			height: 450px;
-			width: 150px;
-		}
 
 		.carousel ul li {
 			float:left;
@@ -46,7 +41,7 @@
 			margin:0;
 		}
 		
-		.carousel.vertical ul li {
+		.carousel.ui-carousel-vertical ul li {
 			float: none;
 		}
 
@@ -86,6 +81,11 @@
 			width:630px;
 			width:650px;
 		}
+		
+		#my-carousel-2.ui-carousel-vertical .mask {
+			width:150px;
+			height:630px;
+		}
 
 		#my-carousel-2 ul li {
 			margin:0 10px 0 0;
@@ -94,6 +94,16 @@
 		/** my carousel 3 **/
 		#my-carousel-3 .mask {
 			width:450px;
+		}
+		
+		/** my carousel 3 **/
+		#my-carousel-4.ui-carousel-vertical .mask {
+			height: 510px;
+			width: 150px;
+		}
+		
+		#my-carousel-4 ul li {
+			margin: 0 0 30px;
 		}
 
 		.color-1 {background:#007cd2;}
@@ -134,7 +144,7 @@
 			});
 			
 			$('#my-carousel-4').carousel({
-				horizontal: false,
+				orientation: 'vertical',
 				itemsPerPage: 3,
 		    	itemsPerTransition: 3
 			});
@@ -166,8 +176,8 @@
 			<li>.carousel('option', 'optionName', [value]) // Get or set any carousel option. If no value is specified, will act as a getter.</li>
 			<li>.carousel('option', options) // Set multiple carousel options at once by providing an options object.</li>
 			<li>.carousel('destroy') // reverts carousel back to original state</li>
-			<li>.carousel('start') // starts auto scroll NOTE: requires jquery.ui.autoscroll.js</li>
-			<li>.carousel('stop') // stops auto scroll NOTE: requires jquery.ui.autoscroll.js</li>
+			<li>.carousel('start') // starts auto scroll NOTE: requires jquery.ui.carousel-autoscroll.js</li>
+			<li>.carousel('stop') // stops auto scroll NOTE: requires jquery.ui.carousel-autoscroll.js</li>
 		</ul>
 		
 		<p><strong>Note</strong>: Options that can be changed after instantiation are currently limited to:</p>
@@ -266,7 +276,7 @@ $('#my-carousel-4').carousel({
 });
 			</pre>
 		</code></p>
-		<div id="my-carousel-4" class="carousel vertical module">
+		<div id="my-carousel-4" class="carousel ui-carousel-vertical module">
 		    <ul>
 				<li class="color-1">1</li>
 				<li class="color-4">2</li>
