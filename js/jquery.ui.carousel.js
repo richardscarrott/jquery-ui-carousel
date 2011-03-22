@@ -30,7 +30,7 @@
 
 	$.widget('ui.carousel', {
 	
-		version: 0.4,
+		version: 0.5,
 		
 		// holds original class string
 		oldClass: null,
