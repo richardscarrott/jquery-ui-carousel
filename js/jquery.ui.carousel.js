@@ -26,7 +26,7 @@
  
  // Drop noOfRows?
  
-(function($, undefined) {
+(function ($, undefined) {
 
 	$.widget('ui.carousel', {
 	
@@ -50,7 +50,7 @@
 			afterAnimate: null
 		},
 		
-		_create: function() {
+		_create: function () {
 		
 			this.itemIndex = 0;
 			this._elements();
@@ -83,7 +83,7 @@
 		},
 		
 		// caches DOM elements
-		_elements: function() {
+		_elements: function () {
 		
 			var elems = this.elements = {};
 		
@@ -97,36 +97,36 @@
 		
 		},
 		
-		_addClasses: function() {
+		_addClasses: function () {
 		
 			this.oldClass = this.element.attr('class');
 		
 			this._removeClasses();
 			
-			var baseClass = this.widgetBaseClass;
+			var baseClass = this.widgetBaseClass,
 				classes = [];
 				
-				classes.push(baseClass);
-				classes.push(baseClass + '-' + this.options.orientation);
-				classes.push(baseClass + '-items-' + this.options.itemsPerPage);
-				classes.push(baseClass + '-rows-' + this.options.noOfRows);
+			classes.push(baseClass);
+			classes.push(baseClass + '-' + this.options.orientation);
+			classes.push(baseClass + '-items-' + this.options.itemsPerPage);
+			classes.push(baseClass + '-rows-' + this.options.noOfRows);
 		
 			this.element.addClass(classes.join(' '));
 		
 		},
 		
 		// removes ui-carousel* classes
-		_removeClasses: function() {
+		_removeClasses: function () {
 		
 			var uiClasses = [],
 				current,
 				fragments;
 		
-			this.element.removeClass(function(i, currentClasses) {
+			this.element.removeClass(function (i, currentClasses) {
 				
 				currentClasses = currentClasses.split(' ');
 				
-				$.each(currentClasses, function(i) {
+				$.each(currentClasses, function (i) {
 					
 					current = currentClasses[i];
 					fragments = current.split('-');
@@ -146,7 +146,7 @@
 		},
 		
 		// defines obj to hold strings based on orientation for dynamic method calls
-		_defineOrientation: function() {
+		_defineOrientation: function () {
 
 			if (this.options.orientation === 'horizontal') {
 				this.horizontal = true;
@@ -154,7 +154,7 @@
 					pos: 'left',
 					pos2: 'right',
 					dim: 'width'
-				}
+				};
 			}
 			else {
 				this.horizontal = false;
@@ -162,14 +162,14 @@
 					pos: 'top',
 					pos2: 'bottom',
 					dim: 'height'
-				}
+				};	
 				this.options.noOfRows = 1;
 			}
 		
 		},
 		
 		// adds masking div (aka clipper)
-		_addMask: function() {
+		_addMask: function () {
 		
 			var elems = this.elements;
 			
@@ -185,14 +185,14 @@
 		},
 		
 		// sets maskDim to later detemine lastPos
-		_setMaskDim: function() {
+		_setMaskDim: function () {
 		
 			this.maskDim = this.elements.mask[this.helperStr.dim]();
 		
 		},
 		
 		// sets masks height allowing items to have an unknown height (not applicable to vertical orientation)
-		_setMaskHeight: function() {
+		_setMaskHeight: function () {
 		
 			if (!this.horizontal || !this.options.unknownHeight) {
 				return;
@@ -206,7 +206,7 @@
 		},
 		
 		// sets itemDim to the dimension of first item incl. margin
-		_setItemDim: function() {
+		_setItemDim: function () {
 			
 			// is this ridiculous??
 			this.itemDim = this.elements.items['outer' + this.helperStr.dim.charAt(0).toUpperCase() + this.helperStr.dim.slice(1)](true);
@@ -214,7 +214,7 @@
 		},
 		
 		// sets options.itemsPerPage based on maskdim
-		_setItemsPerPage: function() {
+		_setItemsPerPage: function () {
 			
 			// if itemsPerPage of type number don't dynamically calculate
 			if (typeof this.options.itemsPerPage === 'number') {
@@ -226,7 +226,7 @@
 		},
 		
 		// sets no of items, not neccesarily the literal number of items if more than one row
-		_setNoOfItems: function() {
+		_setNoOfItems: function () {
 
 			this.noOfItems = Math.ceil(this.elements.items.length / this.options.noOfRows);
 			
@@ -238,14 +238,14 @@
 		},
 		
 		// sets noOfPages
-		_setNoOfPages: function() {
+		_setNoOfPages: function () {
 		
 			this.noOfPages = Math.ceil((this.noOfItems - this.options.itemsPerPage) / this.options.itemsPerTransition) + 1;
 		
 		},
 		
 		// sets runners width
-		_setRunnerWidth: function() {
+		_setRunnerWidth: function () {
 		
 			if (!this.horizontal) {
 				return;
@@ -257,7 +257,7 @@
 		},
 		
 		// sets lastPos to ensure runner doesn't move beyond mask (allowing mask to be any width and the use of margins)
-		_setLastPos: function() {
+		_setLastPos: function () {
 			
 			// noOfrows means last theoretical item might not be the last item
 			var lastItem = this.elements.items.eq(this.noOfItems - 1);
@@ -268,7 +268,7 @@
 		},
 		
 		// adds pagination links and binds associated events
-		_addPagination: function() {
+		_addPagination: function () {
 		
 			if (!this.options.pagination) {
 				return;
@@ -287,7 +287,7 @@
 				// and then readded
 				.insertAfter(this.elements.mask)
 				.append(links.join(''))
-				.delegate('a', 'click.' + this.widgetEventPrefix, function() {
+				.delegate('a', 'click.' + this.widgetEventPrefix, function () {
 					self.goTo($(this).parent().index()  * self.options.itemsPerTransition);
 					return false;
 				});
@@ -295,7 +295,7 @@
 		},
 		
 		// refreshes pagination links
-		_refreshPagination: function() {
+		_refreshPagination: function () {
 			
 			if (!this.elements.pagination) {
 				return;
@@ -308,7 +308,7 @@
 		},
 		
 		// jumps to specific element
-		goTo: function(index) {
+		goTo: function (index) {
 		
 			if (typeof index === 'number') {
 				this.itemIndex = index;
@@ -323,7 +323,7 @@
 		},
 		
 		// adds next and prev links
-		_addNextPrevActions: function() {
+		_addNextPrevActions: function () {
 		
 			if (!this.options.nextPrevActions) {
 				return;
@@ -336,12 +336,12 @@
 			elems.prevAction = $('<a href="#" class="prev">Prev</a>').appendTo(elems.container);
 			elems.nextAction = $('<a href="#" class="next">Next</a>').appendTo(elems.container);
 				
-			elems.nextAction.bind('click.' + this.widgetEventPrefix, function() {
+			elems.nextAction.bind('click.' + this.widgetEventPrefix, function () {
 				self.next();
 				return false;
 			});
 			
-			elems.prevAction.bind('click.' + this.widgetEventPrefix, function() {
+			elems.prevAction.bind('click.' + this.widgetEventPrefix, function () {
 				self.prev();
 				return false;
 			});
@@ -349,7 +349,7 @@
 		},
 		
 		// moves to next page
-		next: function() {
+		next: function () {
 		
 			this.itemIndex = this.itemIndex + parseInt(this.options.itemsPerTransition, 10);
 			this._go();
@@ -357,7 +357,7 @@
 		},
 		
 		// moves to prev page
-		prev: function() {
+		prev: function () {
 		
 			this.itemIndex = this.itemIndex - this.options.itemsPerTransition;
 			this._go();
@@ -365,7 +365,7 @@
 		},
 		
 		// updates pagination, next and prev link status classes
-		_updateUi: function() {
+		_updateUi: function () {
 		
 			var elems = this.elements,
 				index = this.itemIndex;
@@ -395,7 +395,7 @@
 		},
 		
 		// validates itemIndex and initiates slide
-		_go: function() {
+		_go: function () {
 		
 			var self = this,
 				elems = this.elements,
@@ -421,7 +421,7 @@
 		},
 		
 		// slides runner
-		_slide: function(nextItem) {
+		_slide: function (nextItem) {
 		
 			var self = this,
 				elems = this.elements,
@@ -437,7 +437,7 @@
 		
 			elems.runner
 				.stop()
-				.animate(animateProps, this.options.speed, this.options.easing, function() {
+				.animate(animateProps, this.options.speed, this.options.easing, function () {
 					
 					self._trigger('afterAnimate', null, {
 						index: self.itemIndex
@@ -448,7 +448,7 @@
 		},
 		
 		// refresh carousel
-		_refresh: function() {
+		_refresh: function () {
 			
 			this.itemIndex = 0;
 			this.elements.runner.css({
@@ -480,7 +480,7 @@
 		},
 		
 		// adds items to end and refreshes carousel, items === jquery obj
-		addItems: function(items) {
+		addItems: function (items) {
 		
 			var elems = this.elements;
 		
@@ -490,102 +490,102 @@
 		
 		},
 		
-		_enable: function() {
+		_enable: function () {
 			
 			$.Widget.prototype._enable.apply(this, arguments);
 			
 		},
 		
-		_disable: function() {
+		_disable: function () {
 		
 			$.Widget.prototype._disable.apply(this, arguments);
 		
 		},
 		
 		// handles option updates
-		_setOption: function(option, value) {
+		_setOption: function (option, value) {
 			
 			var elems = this.elements,
 				opts = this.options;
 				
 			$.Widget.prototype._setOption.apply(this, arguments);
 			
-			switch(option) {
+			switch (option) {
 				
-				case 'itemsPerPage':
+			case 'itemsPerPage':
 				
+				this._refresh();
+				
+				break;
+				
+			case 'itemsPerTransition':
+				
+				this._refreshPagination();
+				this._updateUi();
+				
+				break;
+				
+			case 'noOfRows':
+				
+				if (this.horizontal) {
 					this._refresh();
-					
-					break;
-				
-				case 'itemsPerTransition':
-				
-					this._refreshPagination();
-					this._updateUi();
-					
-					break;
-				
-				case 'noOfRows':
-				
-					if (this.horizontal) {
-						this._refresh();
-					}
-					else {
-						// noOfRows must be 1 if vertical
-						this.options.noOfRows = 1;
-					}
-					
-					break;
-				
-				case 'orientation':
-						
-					this._defineOrientation();
-					
+				}
+				else {
 					// noOfRows must be 1 if vertical
-					if (!this.horizontal) {
-						this.options.noOfRows = 1;
-					}
-					
-					elems.mask.height('');
-					elems.runner.width('');
-					this._refresh();
-					
-					break;
-					
-				case 'pagination':
+					this.options.noOfRows = 1;
+				}
 				
-					if (value && !elems.pagination) {
-						this._addPagination();
-						this._updateUi();
-					}
-					else if (!value && elems.pagination) {
-						elems.pagination.remove();
-						elems.pagination = null;
-					}
-					
-					break;
+				break;
 				
-				case 'nextPrevActions':
+			case 'orientation':
+						
+				this._defineOrientation();
+				
+				// noOfRows must be 1 if vertical
+				if (!this.horizontal) {
+					this.options.noOfRows = 1;
+				}
+				
+				elems.mask.height('');
+				elems.runner.width('');
+				this._refresh();
+				
+				break;
+					
+			case 'pagination':
+				
+				if (value && !elems.pagination) {
+					this._addPagination();
+					this._updateUi();
+				}
+				else if (!value && elems.pagination) {
+					elems.pagination.remove();
+					elems.pagination = null;
+				}
+				
+				break;
+				
+			case 'nextPrevActions':
 
-					if (value && !elems.nextAction) {
-						this._addNextPrevActions();
-						this._updateUi();
-					}
-					else if (!value && elems.nextAction) {
-						elems.nextAction.remove();
-						elems.nextAction = null;
-						elems.prevAction.remove();
-						elems.prevAction = null;
-					}
-					
-					break;
+				if (value && !elems.nextAction) {
+					this._addNextPrevActions();
+					this._updateUi();
+				}
+				else if (!value && elems.nextAction) {
+					elems.nextAction.remove();
+					elems.nextAction = null;
+					elems.prevAction.remove();
+					elems.prevAction = null;
+				}
+				
+				break;
 					
 			}
 		
 		},
 		
 		// returns carousel to original state
-		destroy: function() {
+		destroy: function () {
 		
 			var elems = this.elements,
 				cssProps = {};
@@ -612,7 +612,7 @@
 			}
 			
 			// overkill?
-			$.each(elems, function() {
+			$.each(elems, function () {
 				$(this).unbind(this.widgetEventPrefix);
 			});
 		
