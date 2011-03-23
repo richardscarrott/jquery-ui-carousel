@@ -15,14 +15,14 @@
  
  // TODO:
  // support disabled and enabled methods
- // storing this.element in this.elements.container is prob not overly sensible
  // add keyboard support
  // continuous option - i.e. append not slide back to beginning
  // theme roller support - does a carousel ever need a generic look and feel, maybe icons etc.?
  // moving from vertical to horizontal doesn't take into account noOfRows as vertical resets it to 1...store original somewhere
  // include addItems() input demo
- // if noOfRows > 1 runner width
- // set 'disbale' flag for nextAndPrevActions and pagination instead so it can't be reactivated after logically it's been removed
+ // add methdoverrideoption to append pagination, next and prev links yourself
+ // move autoScroll into main Widget
+ // include touch support?
  
  // Drop noOfRows?
  
@@ -39,8 +39,8 @@
 			itemsPerPage: 4,
 			itemsPerTransition: 4,
 			orientation: 'horizontal',
-			noOfRows: 1, // only horizontal
-			unknownHeight: false, // horizontal only (allows unknown item height - useful if, for example, item contains textual content)
+			noOfRows: 1, // horizontal only
+			unknownHeight: true, // horizontal only (allows unknown item height - useful if, for example, items contains textual content)
 			pagination: true,
 			nextPrevActions: true,
 			speed: 'normal',
@@ -61,12 +61,6 @@
 			this._setItemDim();
 			this._setItemsPerPage();
 			this._setNoOfItems();
-			
-			// bail if too few items
-			if (this.noOfItems <= this.options.itemsPerPage) {
-				return; 
-			}
-			
 			this._setNoOfPages();
 			this._setRunnerWidth();
 			this._setMaskHeight();
@@ -74,7 +68,7 @@
 			this._addPagination();
 			this._addNextPrevActions();
 			
-			if (this.options.startAt !== null) {
+			if (this.options.startAt) {
 				this.goTo(this.options.startAt);
 			}
 			
@@ -86,11 +80,10 @@
 		_elements: function () {
 		
 			var elems = this.elements = {};
-		
-			elems.container  = this.element;
-			elems.runner = elems.container.find('ul');
+			
+			elems.mask = this.element.find('.mask');
+			elems.runner = this.element.find('ul');
 			elems.items = elems.runner.children('li');
-			elems.mask = elems.container.find('.mask');
 			elems.pagination = null;
 			elems.nextAction = null;
 			elems.prevAction = null;
@@ -131,8 +124,6 @@
 					current = currentClasses[i];
 					fragments = current.split('-');
 					
-					// don't remove ui-carousel as it holds basic styling which would be required when no-js
-					// and carousel destroyed?
 					if (fragments[0] === 'ui' && fragments[1] === 'carousel') {
 						uiClasses.push(current);
 					}
@@ -173,14 +164,16 @@
 		
 			var elems = this.elements;
 			
-			if (!elems.mask.length) {
-				elems.mask = elems.runner
-					.wrap('<div class="mask" />')
-					.parent();
-				
-				// indicates whether mask was dynamically added or already existed in mark-up
-				this.maskAdded = true;
+			if (elems.mask.length) {
+				return;
 			}
+			
+			elems.mask = elems.runner
+				.wrap('<div class="mask" />')
+				.parent();
+			
+			// indicates whether mask was dynamically added or already existed in mark-up
+			this.maskAdded = true;
 			
 		},
 		
@@ -287,9 +280,12 @@
 				// and then readded
 				.insertAfter(this.elements.mask)
 				.append(links.join(''))
-				.delegate('a', 'click.' + this.widgetEventPrefix, function () {
-					self.goTo($(this).parent().index()  * self.options.itemsPerTransition);
+				.delegate('a', 'click.carousel', function () {
+				
+					self.goTo(this.hash.split('-')[1] * self.options.itemsPerTransition);
+					
 					return false;
+					
 				});
 				
 		},
@@ -297,7 +293,7 @@
 		// refreshes pagination links
 		_refreshPagination: function () {
 			
-			if (!this.elements.pagination) {
+			if (!this.options.pagination) {
 				return;
 			}
 			
@@ -333,15 +329,15 @@
 				elems = this.elements;
 			
 			// bit crap but add() then appendTo() doesn't work in jQuery 1.4.2 so appended individually
-			elems.prevAction = $('<a href="#" class="prev">Prev</a>').appendTo(elems.container);
-			elems.nextAction = $('<a href="#" class="next">Next</a>').appendTo(elems.container);
+			elems.prevAction = $('<a href="#" class="prev">Prev</a>').appendTo(this.element);
+			elems.nextAction = $('<a href="#" class="next">Next</a>').appendTo(this.element);
 				
-			elems.nextAction.bind('click.' + this.widgetEventPrefix, function () {
+			elems.nextAction.bind('click.carousel', function () {
 				self.next();
 				return false;
 			});
 			
-			elems.prevAction.bind('click.' + this.widgetEventPrefix, function () {
+			elems.prevAction.bind('click.carousel', function () {
 				self.prev();
 				return false;
 			});
@@ -368,27 +364,43 @@
 		_updateUi: function () {
 		
 			var elems = this.elements,
-				index = this.itemIndex;
+				index = this.itemIndex,
+				
+				// add void class if ui doesn't make sense - can then be either hidden or styled like disabled / current
+				isVoid = this.noOfItems <= this.options.itemsPerPage;
 		
 			if (this.options.pagination) {
 			
-				elems.pagination
-					.children('li')
-						.removeClass('current')
-						.eq(Math.ceil(index / this.options.itemsPerTransition))
-							.addClass('current');
+				if (isVoid) {
+					elems.pagination.addClass('void');
+				}
+				else {
+					elems.pagination
+						.children('li')
+							.removeClass('current')
+							.eq(Math.ceil(index / this.options.itemsPerTransition))
+								.addClass('current');		
+				}
+				
 			}
 
 			if (this.options.nextPrevActions) {
-				elems.nextAction
-					.add(elems.prevAction)
-						.removeClass('disabled');
-						
-				if (index === (this.noOfItems - this.options.itemsPerPage)) {
-					elems.nextAction.addClass('disabled');
+			
+				var nextPrev = elems.nextAction.add(elems.prevAction);
+				nextPrev.removeClass('disabled');
+			
+				if (isVoid) {
+					nextPrev.addClass('void');		
 				}
-				else if (index === 0) {
-					elems.prevAction.addClass('disabled');
+				else {
+					nextPrev.removeClass('void');
+							
+					if (index === (this.noOfItems - this.options.itemsPerPage)) {
+						elems.nextAction.addClass('disabled');
+					}
+					else if (index === 0) {
+						elems.prevAction.addClass('disabled');
+					}
 				}
 			}
 			
@@ -397,8 +409,7 @@
 		// validates itemIndex and initiates slide
 		_go: function () {
 		
-			var self = this,
-				elems = this.elements,
+			var elems = this.elements,
 				nextItem;
 			
 			// check whether there are enough items to animate to
@@ -460,17 +471,6 @@
 			this._setItemDim();
 			this._setItemsPerPage();
 			this._setNoOfItems();
-			
-			// remove pagination and nextPrevActions if not enough items
-			if (this.noOfItems <= this.options.itemsPerPage) {
-				this._setOption('pagination', false);
-				this._setOption('nextPrevActions', false);
-			}
-			else {
-				this._setOption('pagination', true);
-				this._setOption('nextPrevActions', true);
-			}
-			
 			this._setRunnerWidth();
 			this._setMaskHeight();
 			this._setLastPos();
@@ -487,18 +487,6 @@
 			items.appendTo(elems.runner);
 			elems.items = elems.runner.children('li');
 			this._refresh();
-		
-		},
-		
-		_enable: function () {
-			
-			$.Widget.prototype._enable.apply(this, arguments);
-			
-		},
-		
-		_disable: function () {
-		
-			$.Widget.prototype._disable.apply(this, arguments);
 		
 		},
 		
@@ -532,7 +520,18 @@
 				}
 				else {
 					// noOfRows must be 1 if vertical
-					this.options.noOfRows = 1;
+					opts.noOfRows = 1;
+				}
+				
+				break;
+				
+			case 'unknownHeight':
+				
+				if (value) {
+					this._setMaskHeight();
+				}
+				else {
+					elems.mask.height('');
 				}
 				
 				break;
@@ -540,12 +539,6 @@
 			case 'orientation':
 						
 				this._defineOrientation();
-				
-				// noOfRows must be 1 if vertical
-				if (!this.horizontal) {
-					this.options.noOfRows = 1;
-				}
-				
 				elems.mask.height('');
 				elems.runner.width('');
 				this._refresh();
@@ -596,6 +589,9 @@
 				elems.runner
 					.unwrap('.mask');
 			}
+			else {
+				elems.mask.height('');
+			}
 			
 			// should really store original value?
 			cssProps[this.helperStr.pos] = '';
@@ -613,9 +609,9 @@
 			
 			// overkill?
 			$.each(elems, function () {
-				$(this).unbind(this.widgetEventPrefix);
+				$(this).unbind('.carousel');
 			});
-		
+			
 			$.Widget.prototype.destroy.apply(this, arguments);
 			
 		}

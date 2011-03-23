@@ -9,6 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="css/demo.css" media="all" />
 	
 	<style type="text/css">
+		/* carousel */
 		.ui-carousel .mask {
 		    position:relative;
 		    overflow:hidden;
@@ -40,7 +41,8 @@
 				.ui-carousel.ui-carousel-vertical ul li {
 					float: none;
 				}
-
+		
+		/* pagination */
 		.ui-carousel .pagination-links {
 		    list-style: none;
 		    margin: 0;
@@ -68,6 +70,21 @@
 					color: gray;
 					cursor: default;
 				}
+				
+				.ui-carousel .pagination-links.void {
+					display: none;
+				}
+				
+		/** next & prev actions **/
+		.ui-carousel .next.void,
+		.ui-carousel .prev.void	{
+			display: none;
+		}
+		
+		
+		
+		
+		
 		
 		/** my carousel 1 **/
 		
@@ -155,7 +172,8 @@
 		}
 	</style>
 	
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+	<!--script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script-->
+	<script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/jquery.ui.widget.js"></script>
 	<script type="text/javascript" src="js/jquery.ui.carousel.js"></script>
 	
@@ -214,7 +232,6 @@
 					
 					$('body').removeClass('no-js');
 					// get form values
-					console.log(elems.inputs);
 					
 					var opts = {};
 					
@@ -223,8 +240,6 @@
 						opts[this.name] = self.getValueAsOption($(this));
 						
 					});
-					
-					console.log(opts);
 					
 					carousel.carousel(opts);
 				});
@@ -280,7 +295,7 @@
 <body class="no-js">
 	<div id="container">
 	
-		<h1>jQuery UI Carousel plugin v0.4</h1>
+		<h1>jQuery UI Carousel plugin v0.5</h1>
 		
 		<form class="module">
 			
@@ -291,8 +306,7 @@
 					<option value="vertical">vertical</option>
 				</select>
 			</div>
-			
-			<!-- items per page requires the mask width to be changed accordingly (should add class) -->
+
 			<div class="field">
 				<label for="itemsPerPage">itemsPerPage:</label>
 				<select id="itemsPerPage" name="itemsPerPage">
@@ -347,19 +361,10 @@
 				</ul>
 				
 			</div>
-			
-			<!--
-			<div class="field">
-				<select id="" name="">
-					<option value="horizontal">1</option>
-					<option value="vertical">2</option>
-				</select>
-			</div>
-			-->
 		</form>
 		
 		<div id="my-carousel-1" class="ui-carousel module">
-		    <ul>
+			<ul>
 				<li class="color-1">1</li>
 				<li class="color-4">2</li>
 				<li class="color-6">3</li>
@@ -369,7 +374,7 @@
 				<li class="color-5">7</li>
 				<li class="color-2">8</li>
 				<li class="color-7">9</li>
-		    </ul>
+			</ul>
 		</div>
 
 	</div>

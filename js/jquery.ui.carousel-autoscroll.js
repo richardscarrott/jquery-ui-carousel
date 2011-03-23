@@ -10,7 +10,7 @@
  * Requires:
  * jQuery v1.4+,
  * jQuery UI Widget Factory 1.8+
- * jQuery UI Carousel 0.3+ 
+ * jQuery UI Carousel 0.5+ 
  *
  */
  
@@ -33,7 +33,7 @@
 			if (!this.options.autoScroll) { return; }
 			
 			this.start();
-			this.elements.container
+			this.element
 				.bind('mouseenter.carousel', $.proxy(this, 'stop'))
 				.bind('mouseleave.carousel', $.proxy(this, 'start'));
 				
