@@ -37,7 +37,7 @@
 		
 		options: {
 			itemsPerPage: 4,
-			itemsPerTransition: 4,
+			itemsPerTransition: 'auto',
 			orientation: 'horizontal',
 			noOfRows: 1, // horizontal only
 			unknownHeight: true, // horizontal only (allows unknown item height - useful if, for example, items contains textual content)
@@ -53,6 +53,7 @@
 		_create: function () {
 		
 			this.itemIndex = 0;
+			
 			this._elements();
 			this._addClasses();
 			this._defineOrientation();
@@ -233,8 +234,17 @@
 		// sets noOfPages
 		_setNoOfPages: function () {
 		
-			this.noOfPages = Math.ceil((this.noOfItems - this.options.itemsPerPage) / this.options.itemsPerTransition) + 1;
+			this.noOfPages = Math.ceil((this.noOfItems - this.options.itemsPerPage) / this._getitemsPerTransition()) + 1;
 		
+		},
+		
+		_getitemsPerTransition: function () {
+		    
+		    if (this.options.itemsPerTransition === 'auto') {
+		        return this.options.itemsPerPage;
+		    }
+		    
+		    return this.options.itemsPerTransition;
 		},
 		
 		// sets runners width
@@ -347,7 +357,7 @@
 		// moves to next page
 		next: function () {
 		
-			this.itemIndex = this.itemIndex + parseInt(this.options.itemsPerTransition, 10);
+			this.itemIndex = this.itemIndex + this._getitemsPerTransition();
 			this._go();
 			
 		},
@@ -355,7 +365,7 @@
 		// moves to prev page
 		prev: function () {
 		
-			this.itemIndex = this.itemIndex - this.options.itemsPerTransition;
+			this.itemIndex = this.itemIndex - this._getitemsPerTransition();
 			this._go();
 			
 		},
@@ -378,7 +388,7 @@
 					elems.pagination
 						.children('li')
 							.removeClass('current')
-							.eq(Math.ceil(index / this.options.itemsPerTransition))
+							.eq(Math.ceil(index / this._getitemsPerTransition()))
 								.addClass('current');		
 				}
 				
