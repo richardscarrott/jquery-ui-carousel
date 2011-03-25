@@ -292,7 +292,7 @@
 				.append(links.join(''))
 				.delegate('a', 'click.carousel', function () {
 				
-					self.goTo(this.hash.split('-')[1] * self.options.itemsPerTransition);
+					self.goTo(this.hash.split('-')[1] * self._getitemsPerTransition());
 					
 					return false;
 					
