@@ -93,7 +93,9 @@
 		
 		_addClasses: function () {
 		
-			this.oldClass = this.element.attr('class');
+			if (!this.oldClass) {
+				this.oldClass = this.element.attr('class');
+			}
 		
 			this._removeClasses();
 			
@@ -420,7 +422,7 @@
 		_go: function () {
 		
 			var elems = this.elements,
-				nextItem;
+				pos;
 			
 			// check whether there are enough items to animate to
 			if (this.itemIndex > (this.noOfItems - this.options.itemsPerPage)) {
@@ -431,30 +433,29 @@
 				this.itemIndex = 0; // go to first
 			}
 			
-			nextItem = elems.items.eq(this.itemIndex);
-			
 			this._trigger('beforeAnimate', null, {
 				index: this.itemIndex
 			});
 			
-			this._slide(nextItem);
+			pos = this.itemIndex * this.itemDim;
+			
+			this._slide(pos);
 			this._updateUi();
 		},
 		
 		// slides runner
-		_slide: function (nextItem) {
+		_slide: function (pos) {
 		
 			var self = this,
 				elems = this.elements,
-				pos = nextItem.position(),
 				animateProps = {};
-		
-			//  check pos doesn't go past last
-			if (Math.abs(pos[this.helperStr.pos]) > this.lastPos) {
-				pos[this.helperStr.pos] = this.lastPos;
+				
+			// check pos doesn't go past last
+			if (pos > this.lastPos) {
+				pos = this.lastPos;
 			}
 			
-			animateProps[this.helperStr.pos] = -pos[this.helperStr.pos];
+			animateProps[this.helperStr.pos] = -pos;
 		
 			elems.runner
 				.stop()
