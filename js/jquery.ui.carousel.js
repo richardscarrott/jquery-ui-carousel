@@ -1,5 +1,5 @@
 ﻿/*
- * jQuery UI Carousel Plugin v0.5
+ * jQuery UI Carousel Plugin v0.5.1
  *
  * Copyright (c) 2011 Richard Scarrott
  *
@@ -30,7 +30,7 @@
 
 	$.widget('ui.carousel', {
 	
-		version: 0.5,
+		version: 0.5.1,
 		
 		// holds original class string
 		oldClass: null,
