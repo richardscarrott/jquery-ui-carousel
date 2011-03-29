@@ -42,7 +42,10 @@
 			noOfRows: 1, // horizontal only
 			unknownHeight: true, // horizontal only (allows unknown item height - useful if, for example, items contains textual content)
 			pagination: true,
+			insertPagination: null,
 			nextPrevActions: true,
+			insertNextAction: null,
+			isnertPrevAction: null,
 			speed: 'normal',
 			easing: 'swing',
 			startAt: null,
@@ -280,6 +283,8 @@
 			}
 		
 			var self = this,
+				elems = this.elements,
+				opts = this.options,
 				links = [],
 				i;
 			
@@ -287,10 +292,7 @@
 				links[i] = '<li><a href="#item-' + i + '">' + (i + 1) + '</a></li>';
 			}
 			
-			this.elements.pagination = $('<ol class="pagination-links" />')
-				// insertAfter means the order will stay the same if paginatioin is removed through setOption
-				// and then readded
-				.insertAfter(this.elements.mask)
+			elems.pagination = $('<ol class="pagination-links" />')
 				.append(links.join(''))
 				.delegate('a', 'click.carousel', function () {
 				
@@ -298,7 +300,14 @@
 					
 					return false;
 					
-				});
+				})
+				
+			if ($.isFunction(opts.insertPagination)) {
+				$.proxy(opts.insertPagination, elems.pagination)();
+			}
+			else {
+				elems.pagination.insertAfter(elems.mask);
+			}
 				
 		},
 		
@@ -338,21 +347,34 @@
 			}
 		
 			var self = this,
-				elems = this.elements;
-			
-			// bit crap but add() then appendTo() doesn't work in jQuery 1.4.2 so appended individually
-			elems.prevAction = $('<a href="#" class="prev">Prev</a>').appendTo(this.element);
-			elems.nextAction = $('<a href="#" class="next">Next</a>').appendTo(this.element);
+				elems = this.elements,
+				opts = this.options;
 				
-			elems.nextAction.bind('click.carousel', function () {
-				self.next();
-				return false;
-			});
+			elems.prevAction = $('<a href="#" class="prev">Prev</a>')
+				.bind('click.carousel', function () {
+					self.prev();
+					return false;
+				});;
 			
-			elems.prevAction.bind('click.carousel', function () {
-				self.prev();
-				return false;
-			});
+			elems.nextAction = $('<a href="#" class="next">Next</a>')
+				.bind('click.carousel', function () {
+					self.next();
+					return false;
+				});
+			
+			if ($.isFunction(opts.insertPrevAction)) {
+				$.proxy(opts.insertPrevAction, elems.prevAction)();
+			}
+			else {
+				elems.prevAction.appendTo(this.element);
+			}
+				
+			if ($.isFunction(opts.insertNextAction)) {
+				$.proxy(opts.insertNextAction, elems.nextAction)();
+			}
+			else {
+				elems.nextAction.appendTo(this.element);
+			}
 			
 		},
 		
