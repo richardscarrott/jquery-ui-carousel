@@ -1,5 +1,5 @@
 ﻿/*
- * jQuery UI Carousel Plugin v0.5.1
+ * jQuery UI Carousel Plugin v0.5.2
  *
  * Copyright (c) 2011 Richard Scarrott
  *
@@ -30,13 +30,13 @@
 
 	$.widget('ui.carousel', {
 	
-		version: '0.5.1',
+		version: '0.5.2',
 		
 		// holds original class string
 		oldClass: null,
 		
 		options: {
-			itemsPerPage: 4,
+			itemsPerPage: 'auto',
 			itemsPerTransition: 'auto',
 			orientation: 'horizontal',
 			noOfRows: 1, // horizontal only
@@ -58,12 +58,11 @@
 			this.itemIndex = 0;
 			
 			this._elements();
-			this._addClasses();
 			this._defineOrientation();
 			this._addMask();
 			this._setMaskDim();
 			this._setItemDim();
-			this._setItemsPerPage();
+			this._addClasses();
 			this._setNoOfItems();
 			this._setNoOfPages();
 			this._setRunnerWidth();
@@ -107,7 +106,7 @@
 				
 			classes.push(baseClass);
 			classes.push(baseClass + '-' + this.options.orientation);
-			classes.push(baseClass + '-items-' + this.options.itemsPerPage);
+			classes.push(baseClass + '-items-' + this._getItemsPerPage());
 			classes.push(baseClass + '-rows-' + this.options.noOfRows);
 		
 			this.element.addClass(classes.join(' '));
@@ -212,26 +211,28 @@
 			
 		},
 		
-		// sets options.itemsPerPage based on maskdim
-		_setItemsPerPage: function () {
+		// gets itemsPerPage, does not overrite this.options.itemsPerPage to keep reference to 'auto' if selected
+		_getItemsPerPage: function () {
 			
 			// if itemsPerPage of type number don't dynamically calculate
-			if (typeof this.options.itemsPerPage === 'number') {
-				return;
+			if (this.options.itemsPerPage === 'auto') {
+				return Math.floor(this.maskDim / this.itemDim);
 			}
 			
-			this.options.itemsPerPage = Math.floor(this.maskDim / this.itemDim);
+			return this.options.itemsPerPage;
 		
 		},
 		
 		// sets no of items, not neccesarily the literal number of items if more than one row
 		_setNoOfItems: function () {
+		
+			var itemsPerPage = this._getItemsPerPage();
 
 			this.noOfItems = Math.ceil(this.elements.items.length / this.options.noOfRows);
 			
 			// fixed 9 items, 3 rows, 4 shown 
-			if (this.noOfItems < this.options.itemsPerPage) {
-				this.noOfItems = this.options.itemsPerPage;
+			if (this.noOfItems < itemsPerPage) {
+				this.noOfItems = itemsPerPage;
 			}
 			
 		},
@@ -239,14 +240,14 @@
 		// sets noOfPages
 		_setNoOfPages: function () {
 		
-			this.noOfPages = Math.ceil((this.noOfItems - this.options.itemsPerPage) / this._getitemsPerTransition()) + 1;
+			this.noOfPages = Math.ceil((this.noOfItems - this._getItemsPerPage()) / this._getItemsPerTransition()) + 1;
 		
 		},
 		
-		_getitemsPerTransition: function () {
+		_getItemsPerTransition: function () {
 		    
 		    if (this.options.itemsPerTransition === 'auto') {
-		        return this.options.itemsPerPage;
+		        return this._getItemsPerPage();
 		    }
 		    
 		    return this.options.itemsPerTransition;
@@ -296,7 +297,7 @@
 				.append(links.join(''))
 				.delegate('a', 'click.carousel', function () {
 				
-					self.goTo(this.hash.split('-')[1] * self._getitemsPerTransition());
+					self.goTo(this.hash.split('-')[1] * self._getItemsPerTransition());
 					
 					return false;
 					
@@ -381,7 +382,7 @@
 		// moves to next page
 		next: function () {
 		
-			this.itemIndex = this.itemIndex + this._getitemsPerTransition();
+			this.itemIndex = this.itemIndex + this._getItemsPerTransition();
 			this._go();
 			
 		},
@@ -389,7 +390,7 @@
 		// moves to prev page
 		prev: function () {
 		
-			this.itemIndex = this.itemIndex - this._getitemsPerTransition();
+			this.itemIndex = this.itemIndex - this._getItemsPerTransition();
 			this._go();
 			
 		},
@@ -399,9 +400,10 @@
 		
 			var elems = this.elements,
 				index = this.itemIndex,
+				itemsPerPage = this._getItemsPerPage(),
 				
 				// add void class if ui doesn't make sense - can then be either hidden or styled like disabled / current
-				isVoid = this.noOfItems <= this.options.itemsPerPage;
+				isVoid = this.noOfItems <= itemsPerPage;
 		
 			if (this.options.pagination) {
 			
@@ -412,8 +414,8 @@
 					elems.pagination
 						.children('li')
 							.removeClass('current')
-							.eq(Math.ceil(index / this._getitemsPerTransition()))
-								.addClass('current');		
+							.eq(Math.ceil(index / this._getItemsPerTransition()))
+								.addClass('current');
 				}
 				
 			}
@@ -429,7 +431,7 @@
 				else {
 					nextPrev.removeClass('void');
 							
-					if (index === (this.noOfItems - this.options.itemsPerPage)) {
+					if (index === (this.noOfItems - itemsPerPage)) {
 						elems.nextAction.addClass('disabled');
 					}
 					else if (index === 0) {
@@ -444,11 +446,12 @@
 		_go: function () {
 		
 			var elems = this.elements,
-				pos;
+				pos,
+				itemsPerPage = this._getItemsPerPage();
 			
 			// check whether there are enough items to animate to
-			if (this.itemIndex > (this.noOfItems - this.options.itemsPerPage)) {
-				this.itemIndex = this.noOfItems - this.options.itemsPerPage; // go to last panel - items per transition
+			if (this.itemIndex > (this.noOfItems - itemsPerPage)) {
+				this.itemIndex = this.noOfItems - itemsPerPage; // go to last panel - items per transition
 			}
 			
 			if (this.itemIndex < 0) {
@@ -502,7 +505,6 @@
 			this._addClasses();
 			this._setMaskDim();
 			this._setItemDim();
-			this._setItemsPerPage();
 			this._setNoOfItems();
 			this._setRunnerWidth();
 			this._setMaskHeight();
