@@ -1,4 +1,5 @@
-﻿## Quick start
+﻿
+## Quick start
 
 ### This is the basic HTML structure required:
 
@@ -132,16 +133,16 @@ This allows you to easily add items to the carousel whilst ensuring it's state i
 
 items must be a jQuery object of list items.
 
-#### option .accordion('option', optionName , [value])
-Get or set any accordion option. If no value is specified, will act as a getter.
+#### option .carousel('option', optionName , [value])
+Get or set any carousel option. If no value is specified, will act as a getter.
 
-#### option .accordion('option', options)
-Set multiple accordion options at once by providing an options object.
+#### option .carousel('option', options)
+Set multiple carousel options at once by providing an options object.
 
-#### widget .accordion('widget')
-Returns the .ui-accordion element.
+#### widget .carousel('widget')
+Returns the .ui-carousel element.
 
-#### destroy
+#### destroy .carousel
 Remove the carousel functionality completely. This will return the element back to its pre-init state.
 
 [If you have any questions or ideas you can contact me here](http://richardscarrott.co.uk/contact "Richard Scarrott").
