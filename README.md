@@ -1,5 +1,4 @@
-﻿
-## Quick start
+﻿## Quick start
 
 ### This is the basic HTML structure required:
 
@@ -32,7 +31,7 @@
 ## DOCS
 
 ### Overview
-This is a rewrite of jQuery Carousel leveraging jQuery UIs Widget Factory.
+This is a rewrite of [jQuery Carousel](http://www.richardscarrott.co.uk/posts/view/jquery-carousel-plugin "see the original jQuery Carousel plugin") leveraging jQuery UIs [Widget Factory](http://docs.jquery.com/UI_Developer_Guide#The_widget_factory "Learn more about the Widget Factory").
 
 ### Options
 #### itemsPerPage: 'auto' (string, number)
