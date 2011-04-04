@@ -32,7 +32,7 @@
 			insertPagination: null,
 			nextPrevActions: true,
 			insertNextAction: null,
-			isnertPrevAction: null,
+			insertPrevAction: null,
 			speed: 'normal',
 			easing: 'swing',
 			startAt: null,
