@@ -1,5 +1,7 @@
-﻿This is the basic HTML structure required:
-------------------------------------------
+﻿## Quick start
+
+### This is the basic HTML structure required:
+
     <div id="my-carousel">
         <ul>
             <li>
@@ -20,12 +22,126 @@
         </ul>
     </div>
 	
-And here's the JavaScript:
---------------------------
+### And here's the JavaScript:
+
     $(document).ready(function() {
         $('#my-carousel').carousel();
     });
 
-Full docs and API coming shortly.
+## DOCS
 
-[Get in touch here](http://richardscarrott.co.uk/contact "Richard Scarrott").
+### Overview
+This is a rewrite of jQuery Carousel leveraging jQuery UIs Widget Factory.
+
+### Options
+#### itemsPerPage: 'auto' (string, number)
+Sets the number of items shown on each page, if set to 'auto' the number of items
+will be calculated based on width of mask (aka clipping div).
+
+#### itemsPerTransition: 'auto' (string, number)
+Sets the number of items to scroll per transition, if set to 'auto' the number of items
+will match itemsPerPage.
+
+#### orientation: 'horizontal' (string)
+Sets the orientation of the carousel, either 'horizontal' or 'vertical'.
+
+#### noOfRows: 1 (number)
+Sets the number of rows.
+
+NOTE: This is only applicable to horizontal carousels
+
+#### unknownHeight: true, (boolean)
+If set to true the height of the mask (aka clipping div) will be dynamically calculated.
+
+This can be useful if, for example, the carousel's items contain textual content which cannot be determined due
+to varying font sizes etc.
+
+NOTE: This is only applicable to horizontal carousels.
+
+#### pagination: true (boolean)
+Sets whether pagination links should be included, pagination links are inserted as an ordered list.
+
+#### insertPagination: null (function)
+Allows you to override where in the DOM the pagination links are inserted.
+
+The function is passed the pagination links (ol) as it's context wrapped pre wrapped as a jQuery object, e.g.
+
+: function() {
+	// this === $paginationLinks
+	this.appendTo('body');
+}
+
+NOTE: By default they are inserted after the mask (aka clipping div).
+
+#### nextPrevActions: true (boolean)
+Sets whether the next and prev actions are included, next and prev actions are inserted as anchor tags.
+
+#### insertNextAction: null (function)
+Allows you to override where in the DOM the next action is inserted.
+
+The function is passed the next action (a) as it's context , e.g.
+
+: function() {
+	// this === $nextAction
+	this.appendTo('body');
+}
+
+NOTE: By default the next action is appended to the carousels container.
+
+#### insertPrevAction: null (function)
+Allows you to override where in the DOM the prev action is inserted.
+
+The function is passed the prev action (a) as it's context , e.g.
+
+: function() {
+	// this === $prevAction
+	this.appendTo('body');
+}
+
+NOTE: By default the prev action is appended to the carousels container.
+
+#### speed: 'normal' (string)
+Sets the speed of the carousel.
+
+#### easing: 'swing' (string)
+Sets the easing equation used.
+
+#### startAt: null (number)
+If set the carousel will animate to the item specified on init (zero-index).
+
+### Events
+#### beforeAnimate: null (function)
+Fired before transition.
+
+#### afterAnimate: null (function)
+Fired after transition.
+
+### Methods
+#### next .carousel('next')
+Moves to the next page.
+
+#### prev .carousel('prev')
+Moves to the prev page.
+
+#### goTo .carousel('goTo', item)
+Moves to the specified item, item can be a zero-indexed number, a vanilla DOM element
+or a jQuery object.
+
+#### addItems .carousel('addItems', items)
+This allows you to easily add items to the carousel whilst ensuring it's state is updated.
+
+items must be a jQuery object of list items.
+
+#### option .accordion('option', optionName , [value])
+Get or set any accordion option. If no value is specified, will act as a getter.
+
+#### option .accordion('option', options)
+Set multiple accordion options at once by providing an options object.
+
+#### widget .accordion('widget')
+Returns the .ui-accordion element.
+
+#### destroy
+Remove the carousel functionality completely. This will return the element back to its pre-init state.
+
+[If you have any questions or ideas you can contact me here](http://richardscarrott.co.uk/contact "Richard Scarrott").

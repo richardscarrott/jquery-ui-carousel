@@ -23,7 +23,7 @@
 		oldClass: null,
 		
 		options: {
-			itemsPerPage: 4,
+			itemsPerPage: 'auto',
 			itemsPerTransition: 'auto',
 			orientation: 'horizontal',
 			noOfRows: 1, // horizontal only
