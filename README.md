@@ -66,10 +66,10 @@ Allows you to override where in the DOM the pagination links are inserted.
 
 The function is passed the pagination links (ol) as it's context wrapped pre wrapped as a jQuery object, e.g.
 
-: function() {
-	// this === $paginationLinks
-	this.appendTo('body');
-}
+	function() {
+		// this === $paginationLinks
+		this.appendTo('body');
+	}
 
 NOTE: By default they are inserted after the mask (aka clipping div).
 
@@ -81,10 +81,10 @@ Allows you to override where in the DOM the next action is inserted.
 
 The function is passed the next action (a) as it's context , e.g.
 
-: function() {
-	// this === $nextAction
-	this.appendTo('body');
-}
+	function() {
+		// this === $nextAction
+		this.appendTo('body');
+	}
 
 NOTE: By default the next action is appended to the carousels container.
 
@@ -93,10 +93,10 @@ Allows you to override where in the DOM the prev action is inserted.
 
 The function is passed the prev action (a) as it's context , e.g.
 
-: function() {
-	// this === $prevAction
-	this.appendTo('body');
-}
+	function() {
+		// this === $prevAction
+		this.appendTo('body');
+	}
 
 NOTE: By default the prev action is appended to the carousels container.
 
