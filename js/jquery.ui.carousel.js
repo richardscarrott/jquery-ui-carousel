@@ -1,5 +1,5 @@
 ﻿/*
- * jQuery UI Carousel Plugin v0.5.1
+ * jQuery UI Carousel Plugin v0.5.2
  *
  * Copyright (c) 2011 Richard Scarrott
  *
@@ -13,24 +13,11 @@
  *
  */
  
- // TODO:
- // support disabled and enabled methods
- // add keyboard support
- // continuous option - i.e. append not slide back to beginning
- // theme roller support - does a carousel ever need a generic look and feel, maybe icons etc.?
- // moving from vertical to horizontal doesn't take into account noOfRows as vertical resets it to 1...store original somewhere
- // include addItems() input demo
- // add methdoverrideoption to append pagination, next and prev links yourself
- // move autoScroll into main Widget
- // include touch support?
- 
- // Drop noOfRows?
- 
 (function ($, undefined) {
 
 	$.widget('ui.carousel', {
 	
-		version: '0.5.1',
+		version: '0.5.2',
 		
 		// holds original class string
 		oldClass: null,
@@ -217,11 +204,13 @@
 			
 			// if itemsPerPage of type number don't dynamically calculate
 			if (typeof this.options.itemsPerPage === 'number') {
-				return;
+				// don't directly use options.itemsPerPage as reference to 'auto' needs to be kept if not number
+				this.itemsPerPage = this.options.itemsPerPage;
+			}
+			else {
+				this.itemsPerPage = Math.floor(this.maskDim / this.itemDim);
 			}
 			
-			this.options.itemsPerPage = Math.floor(this.maskDim / this.itemDim);
-		
 		},
 		
 		// sets no of items, not neccesarily the literal number of items if more than one row
@@ -230,8 +219,8 @@
 			this.noOfItems = Math.ceil(this.elements.items.length / this.options.noOfRows);
 			
 			// fixed 9 items, 3 rows, 4 shown 
-			if (this.noOfItems < this.options.itemsPerPage) {
-				this.noOfItems = this.options.itemsPerPage;
+			if (this.noOfItems < this.itemsPerPage) {
+				this.noOfItems = this.itemsPerPage;
 			}
 			
 		},
@@ -239,14 +228,14 @@
 		// sets noOfPages
 		_setNoOfPages: function () {
 		
-			this.noOfPages = Math.ceil((this.noOfItems - this.options.itemsPerPage) / this._getitemsPerTransition()) + 1;
+			this.noOfPages = Math.ceil((this.noOfItems - this.itemsPerPage) / this._getitemsPerTransition()) + 1;
 		
 		},
 		
 		_getitemsPerTransition: function () {
 		    
 		    if (this.options.itemsPerTransition === 'auto') {
-		        return this.options.itemsPerPage;
+		        return this.itemsPerPage;
 		    }
 		    
 		    return this.options.itemsPerTransition;
@@ -401,7 +390,7 @@
 				index = this.itemIndex,
 				
 				// add void class if ui doesn't make sense - can then be either hidden or styled like disabled / current
-				isVoid = this.noOfItems <= this.options.itemsPerPage;
+				isVoid = this.noOfItems <= this.itemsPerPage;
 		
 			if (this.options.pagination) {
 			
@@ -429,7 +418,7 @@
 				else {
 					nextPrev.removeClass('void');
 							
-					if (index === (this.noOfItems - this.options.itemsPerPage)) {
+					if (index === (this.noOfItems - this.itemsPerPage)) {
 						elems.nextAction.addClass('disabled');
 					}
 					else if (index === 0) {
@@ -447,8 +436,8 @@
 				pos;
 			
 			// check whether there are enough items to animate to
-			if (this.itemIndex > (this.noOfItems - this.options.itemsPerPage)) {
-				this.itemIndex = this.noOfItems - this.options.itemsPerPage; // go to last panel - items per transition
+			if (this.itemIndex > (this.noOfItems - this.itemsPerPage)) {
+				this.itemIndex = this.noOfItems - this.itemsPerPage; // go to last panel - items per transition
 			}
 			
 			if (this.itemIndex < 0) {
