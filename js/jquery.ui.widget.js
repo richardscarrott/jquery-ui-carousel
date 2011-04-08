@@ -35,13 +35,15 @@ if ( $.cleanData ) {
 }
 
 $.widget = function( name, base, prototype ) {
-	var namespace = name.split( "." )[ 0 ],
+
+	// ui.carousel
+	var namespace = name.split( "." )[ 0 ], // ui
 		fullName;
 	name = name.split( "." )[ 1 ];
-	fullName = namespace + "-" + name;
+	fullName = namespace + "-" + name; // ui-carousel
 
 	if ( !prototype ) {
-		prototype = base;
+		prototype = base; // {}
 		base = $.Widget;
 	}
 
@@ -50,8 +52,8 @@ $.widget = function( name, base, prototype ) {
 		return !!$.data( elem, name );
 	};
 
-	$[ namespace ] = $[ namespace ] || {};
-	$[ namespace ][ name ] = function( options, element ) {
+	$[ namespace ] = $[ namespace ] || {}; // $.ui = {}
+	$[ namespace ][ name ] = function( options, element ) { // $.ui.carousel
 		// allow instantiation without initializing for simple inheritance
 		if ( arguments.length ) {
 			this._createWidget( options, element );
@@ -59,6 +61,8 @@ $.widget = function( name, base, prototype ) {
 	};
 
 	var basePrototype = new base();
+	
+	console.log(basePrototype);
 	// we need to make the options hash a property directly on the new instance
 	// otherwise we'll modify the options hash on the prototype that we're
 	// inheriting from

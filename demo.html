@@ -4,19 +4,21 @@
 
 	<meta charset="utf-8" />
 	
-	<title>jQuery UI Carousel Plugin v0.5.2 - Richard Scarrott</title>
+	<title>jQuery UI Carousel Plugin - touch extension - Richard Scarrott</title>
 	
 	<link rel="stylesheet" type="text/css" href="css/demo.css" media="all" />
 	
 	<style type="text/css">
 		/* carousel */
-		.ui-carousel .mask {
+		.ui-carousel .mask,
+		.ui-touchCarousel .mask {
 		    position:relative;
 		    overflow:hidden;
 		    border:6px solid #444;
 		}
 		
-			.ui-carousel ul {
+			.ui-carousel ul,
+			.ui-touchCarousel ul {
 				position: absolute;
 				overflow: hidden;
 				margin: 0;
@@ -24,11 +26,13 @@
 				list-style: none;
 			}
 
-			.no-js .ui-carousel ul {
+			.no-js .ui-carousel ul,
+			.no-js .ui-touchCarousel ul {
 				position: static;
 			}
 			
-				.ui-carousel ul li {
+				.ui-carousel ul li,
+				.ui-touchCarousel ul li {
 					float: left;
 					width: 150px;
 					height: 150px;
@@ -38,46 +42,56 @@
 					margin: 0;
 				}
 		
-				.ui-carousel.ui-carousel-vertical ul li {
+				.ui-carousel.ui-carousel-vertical ul li,
+				.ui-touchCarousel.ui-touchCarousel-vertical ul li {
 					float: none;
 				}
 		
 		/* pagination */
-		.ui-carousel .pagination-links {
+		.ui-carousel .pagination-links,
+		.ui-touchCarousel .pagination-links {
 		    list-style: none;
 		    margin: 0;
 		    padding: 0;
 		}
 		 
-			.ui-carousel .pagination-links li {
+			.ui-carousel .pagination-links li,
+			.ui-touchCarousel .pagination-links li {
 				display: inline;
 			}
 
-				.ui-carousel .pagination-links a {
+				.ui-carousel .pagination-links a,
+				.ui-touchCarousel .pagination-links a {
 					padding: 2px 6px;	
 				}
 
-				.ui-carousel .pagination-links a:hover {
+				.ui-carousel .pagination-links a:hover,
+				.ui-touchCarousel .pagination-links a:hover {
 					text-decoration: none;
 				}
 
-				.ui-carousel .pagination-links li.current a {
+				.ui-carousel .pagination-links li.current a,
+				.ui-touchCarousel .pagination-links li.current a {
 					 background: #444;
 					 color: #fff;
 				}
 		 
-				.ui-carousel .disabled {
+				.ui-carousel .disabled,
+				.ui-touchCarousel .disabled {
 					color: gray;
 					cursor: default;
 				}
 				
-				.ui-carousel .pagination-links.void {
+				.ui-carousel .pagination-links.void,
+				.ui-touchCarousel .pagination-links.void {
 					display: none;
 				}
 				
 		/** next & prev actions **/
 		.ui-carousel .next.void,
-		.ui-carousel .prev.void	{
+		.ui-touchCarousel .next.void,
+		.ui-carousel .prev.void,
+		.ui-touchCarousel .prev.void {
 			display: none;
 		}
 		
@@ -92,54 +106,66 @@
 		#my-carousel-1 {}
 		
 			/** items per page **/
-			#my-carousel-1.ui-carousel-items-1 .mask {
+			#my-carousel-1.ui-carousel-items-1 .mask,
+			#my-carousel-1.ui-touchCarousel-items-1 .mask {
 				width: 150px;
 			}
 			
-			#my-carousel-1.ui-carousel-items-2 .mask {
+			#my-carousel-1.ui-carousel-items-2 .mask,
+			#my-carousel-1.ui-touchCarousel-items-2 .mask {
 				width: 300px;
 			}
 			
-			#my-carousel-1.ui-carousel-items-3 .mask {
+			#my-carousel-1.ui-carousel-items-3 .mask,
+			#my-carousel-1.ui-touchCarousel-items-3 .mask {
 				width: 450px;
 			}
 			
-			#my-carousel-1.ui-carousel-items-4 .mask {
+			#my-carousel-1.ui-carousel-items-4 .mask,
+			#my-carousel-1.ui-touchCarousel-items-4 .mask {
 				width: 600px;
 			}
 			
 			/** no of rows **/
-			#my-carousel-1.ui-carousel-rows-1 .mask {
+			#my-carousel-1.ui-carousel-rows-1 .mask,
+			#my-carousel-1.ui-touchCarousel-rows-1 .mask {
 				height: 150px;
 			}
 			
-			#my-carousel-1.ui-carousel-rows-2 .mask {
+			#my-carousel-1.ui-carousel-rows-2 .mask,
+			#my-carousel-1.ui-touchCarousel-rows-2 .mask {
 				height: 300px;
 			}
 			
-			#my-carousel-1.ui-carousel-rows-3 .mask {
+			#my-carousel-1.ui-carousel-rows-3 .mask,
+			#my-carousel-1.ui-touchCarousel-rows-3 .mask {
 				height: 450px;
 			}
 		
 		/** vertical **/
-		#my-carousel-1.ui-carousel-vertical .mask {
+		#my-carousel-1.ui-carousel-vertical .mask,
+		#my-carousel-1.ui-touchCarousel-vertical .mask {
 			width: 150px;
 		}
 		
 			/** items per page **/
-			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-1 .mask {
+			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-1 .mask,
+			#my-carousel-1.ui-touchCarousel-vertical.ui-touchCarousel-items-1 .mask {
 				height: 150px;
 			}
 			
-			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-2 .mask {
+			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-2 .mask,
+			#my-carousel-1.ui-touchCarousel-vertical.ui-touchCarousel-items-2 .mask {
 				height: 300px;
 			}
 			
-			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-3 .mask {
+			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-3 .mask,
+			#my-carousel-1.ui-touchCarousel-vertical.ui-touchCarousel-items-3 .mask {
 				height: 450px;
 			}
 			
-			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-4 .mask {
+			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-4 .mask,
+			#my-carousel-1.ui-touchCarousel-vertical.ui-touchCarousel-items-4 .mask {
 				height: 600px;
 			}
 
@@ -174,8 +200,219 @@
 	
 	<!--script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script-->
 	<script type="text/javascript" src="js/jquery.js"></script>
-	<script type="text/javascript" src="js/jquery.ui.widget.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.11.custom.min.js"></script>
+	<!--script type="text/javascript" src="js/jquery.ui.widget.js"></script-->
 	<script type="text/javascript" src="js/jquery.ui.carousel.js"></script>
+	
+	
+	<script>
+		// filename: jquery.touchify.js
+		
+		// adaption of Ross Posterous mouse -> touch events
+		// http://ross.posterous.com/2008/08/19/iphone-touch-events-in-javascript
+		// TODO: don't prevent default (AKA scroll) for direction opposite to that set to draggable (pass in condition to options, may have to save state in private vars...)
+		(function ($) {
+			
+			$.fn.touchify = function() {
+			
+				var touchHandler = function (e) {
+				
+					var touches = e.changedTouches,
+						first = touches[0],
+						type = "",
+						simulatedEvent,
+						moved;
+					
+					switch (e.type) {
+					
+					case "touchstart":
+					
+						type = "mousedown";
+						moved = false;
+						
+						break;
+					
+					case "touchmove":
+					
+						type = 'mousemove';
+						moved = true;
+						
+						break;
+						
+					case 'touchend':
+						
+						type = 'mouseup';
+						moved = false;
+						
+						break;
+							
+						default: return;
+					}
+					
+					// initMouseEvent(type, canBubble, cancelable, view, clickCount, 
+					//           screenX, screenY, clientX, clientY, ctrlKey, 
+					//           altKey, shiftKey, metaKey, button, relatedTarget);
+					
+					simulatedEvent = document.createEvent('MouseEvent');
+					simulatedEvent.initMouseEvent(type, true, true, window, 1, 
+											  first.screenX, first.screenY, 
+											  first.clientX, first.clientY, false, 
+											  false, false, false, 0/*left*/, null);
+					
+					first.target.dispatchEvent(simulatedEvent);
+					
+					if (moved) { // ensure anchor links aren't prevented
+						e.preventDefault();
+					}
+				};
+			
+				return this.each(function () {
+				
+					this.addEventListener("touchstart", touchHandler, true);
+					this.addEventListener("touchmove", touchHandler, true);
+					this.addEventListener("touchend", touchHandler, true);
+					this.addEventListener("touchcancel", touchHandler, true);
+								
+				});
+				
+			};
+			
+		})(jQuery);
+		
+	</script>
+	
+	<script>
+		// filename jquery-ui-touchCarousel.js
+		
+		(function ($, undefined) {
+		
+			var _super = $.ui.carousel.prototype;
+			
+			$.widget('ui.touchCarousel', $.ui.carousel, {
+			
+				options: {
+					sensitivity: 0.8
+				},
+				
+				_create: function () {
+					
+					_super._create.apply(this);
+					
+					var self = this;
+					
+					this._setAxis();
+				
+					this.elements.runner
+						.touchify() // maps draggables mouse events to touch events
+						.draggable({
+							axis: this.axis,
+							start: function (e) {
+								e = e.originalEvent.touches ? e.originalEvent.touches[0] : e;
+								self._dragStartHandler(e);
+							},
+							stop: function (e) {	
+								e = e.originalEvent.touches ? e.originalEvent.touches[0] : e;
+								self._dragStopHandler(e);
+							}
+								
+						});
+					
+				},
+				
+				_setAxis: function () {
+					
+					this.axis = this.horizontal ? 'x' : 'y';
+				
+				},
+				
+				_dragStartHandler: function (e) {
+				
+					this.startTime = this._getTime();
+					
+					this.startPos = {
+						x: e.pageX,
+						y: e.pageY
+					};
+				
+				},
+				
+				_dragStopHandler: function (e) {
+				
+					var time,
+						distance,
+						speed,
+						direction;
+						
+					// if touch direction changes start date should prob be reset to correctly determine speed...
+					this.endTime = this._getTime();
+					
+					time = this.endTime - this.startTime;
+					
+					this.endPos = {
+						x: e.pageX,
+						y: e.pageY
+					};
+					
+					distance = Math.abs(this.startPos[this.axis] - this.endPos[this.axis]);
+					speed = distance / time;
+					
+					direction = this.startPos[this.axis] > this.endPos[this.axis] ? 'next' : 'prev';
+					
+					if (speed > this.options.sensitivity || distance > (this.itemDim * this._getitemsPerTransition() / 2)) {
+						this[direction]();
+					}
+					else {
+						this.goTo(this.itemIndex); // go to current element
+					}
+				
+				},
+				
+				_getTime: function () {
+					
+					var date = new Date();
+					return date.getTime();
+				
+				},
+				
+				_setOption: function (option, value) {
+				
+					_super._setOption.apply(this, arguments);
+					
+					switch (option) {
+						
+					case 'orientation':
+						
+						this._setAxis();
+						this._switchAxis();
+						
+						break;
+					
+					}
+					
+				},
+				
+				_switchAxis: function () {
+				
+					this.elements.runner.draggable('option', 'axis', this.axis);
+				
+				},
+				
+				_destroy: function () {
+					
+					_super._destroy.apply(this);
+					
+					this.elements.runner.draggable('destroy');
+					
+					// must destroy touchify events...$.fn.untouchify?
+					
+				}
+				
+			});
+		
+		})(jQuery);
+		
+		
+	</script>
 	
 	<script type="text/javascript">
 	
@@ -223,7 +460,7 @@
 						
 					value = self.getValueAsOption(input);
 					
-					carousel.carousel('option', option, value);
+					carousel.touchCarousel('option', option, value);
 					
 				});
 				
@@ -241,14 +478,14 @@
 						
 					});
 					
-					carousel.carousel(opts);
+					carousel.touchCarousel(opts);
 				});
 				
 				elems.destroyBtn.click(function(e) {
 					e.preventDefault();
 					
 					$('body').addClass('no-js');
-					carousel.carousel('destroy');
+					carousel.touchCarousel('destroy');
 				});
 			},
 			
@@ -281,12 +518,14 @@
 			}
 				
 		};
+		
+		
 	
 		$(document).ready(function() {
 		
 			$('body').removeClass('no-js');
 			
-		    demo.init($('#container')); 
+		    demo.init($('#container'));
 			
 		});
 	</script>
@@ -295,10 +534,9 @@
 <body class="no-js">
 	<div id="container">
 	
-		<h1>jQuery UI Carousel plugin v0.5.2</h1>
+		<h1>jQuery UI Carousel Plugin - touch extension</h1>
 		
 		<form class="module">
-			
 			<div class="field">
 				<label for="orientation">orientation:</label>
 				<select id="orientation" name="orientation">
@@ -310,11 +548,11 @@
 			<div class="field">
 				<label for="itemsPerPage">itemsPerPage:</label>
 				<select id="itemsPerPage" name="itemsPerPage">
-					<option value="auto" selected="selected">auto</option>
+					<option value="auto">auto</option>
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
-					<option value="4">4</option>
+					<option value="4" selected="selected">4</option>
 				</select>
 			</div>
 			
@@ -371,11 +609,18 @@
 				<li class="color-4">2</li>
 				<li class="color-6">3</li>
 				<li class="color-2">4</li>
-				<li class="color-3">5</li>
+				<li class="color-3"><a href="http://richardscarrott.co.uk">5</a></li>
 				<li class="color-1">6</li>
 				<li class="color-5">7</li>
 				<li class="color-2">8</li>
-				<li class="color-7">9</li>
+				<li class="color-3">9</li>
+				<li class="color-1">10</li>
+				<li class="color-5">11</li>
+				<li class="color-2">12</li>
+				<li class="color-1">13</li>
+				<li class="color-4">14</li>
+				<li class="color-6">15</li>
+				<li class="color-2">16</li>
 			</ul>
 		</div>
 

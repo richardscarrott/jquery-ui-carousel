@@ -27,7 +27,7 @@
 			itemsPerTransition: 'auto',
 			orientation: 'horizontal',
 			noOfRows: 1, // horizontal only
-			unknownHeight: true, // horizontal only (allows unknown item height - useful if, for example, items contains textual content)
+			unknownHeight: false, // horizontal only (allows unknown item height - useful if, for example, items contains textual content)
 			pagination: true,
 			insertPagination: null,
 			nextPrevActions: true,
@@ -104,7 +104,8 @@
 		// removes ui-carousel* classes
 		_removeClasses: function () {
 		
-			var uiClasses = [],
+			var self = this,
+				uiClasses = [],
 				current,
 				fragments;
 		
@@ -117,7 +118,7 @@
 					current = currentClasses[i];
 					fragments = current.split('-');
 					
-					if (fragments[0] === 'ui' && fragments[1] === 'carousel') {
+					if (fragments[0] === self.namespace && fragments[1] === self.widgetName) {
 						uiClasses.push(current);
 					}
 					
@@ -260,7 +261,7 @@
 			var lastItem = this.elements.items.eq(this.noOfItems - 1);
 			
 			this.lastPos = lastItem.position()[this.helperStr.pos] + this.itemDim -
-				this.maskDim - parseInt(lastItem.css('margin-' + this.helperStr.pos2), 10);
+					this.maskDim - parseInt(lastItem.css('margin-' + this.helperStr.pos2), 10);
 				
 		},
 		
@@ -283,7 +284,7 @@
 			
 			elems.pagination = $('<ol class="pagination-links" />')
 				.append(links.join(''))
-				.delegate('a', 'click.carousel', function () {
+				.delegate('a', 'click.' + self.widgetName, function () {
 				
 					self.goTo(this.hash.split('-')[1] * self._getitemsPerTransition());
 					
@@ -340,13 +341,13 @@
 				opts = this.options;
 				
 			elems.prevAction = $('<a href="#" class="prev">Prev</a>')
-				.bind('click.carousel', function () {
+				.bind('click.' + self.widgetName, function () {
 					self.prev();
 					return false;
 				});;
 			
 			elems.nextAction = $('<a href="#" class="next">Next</a>')
-				.bind('click.carousel', function () {
+				.bind('click.' + self.widgetName, function () {
 					self.next();
 					return false;
 				});
@@ -450,6 +451,10 @@
 			
 			pos = this.itemIndex * this.itemDim;
 			
+			if (pos > this.lastPos) {
+				pos = this.lastPos;
+			}
+			
 			this._slide(pos);
 			this._updateUi();
 		},
@@ -460,11 +465,6 @@
 			var self = this,
 				elems = this.elements,
 				animateProps = {};
-				
-			// check pos doesn't go past last
-			if (pos > this.lastPos) {
-				pos = this.lastPos;
-			}
 			
 			animateProps[this.helperStr.pos] = -pos;
 		
@@ -631,7 +631,7 @@
 			
 			// overkill?
 			$.each(elems, function () {
-				$(this).unbind('.carousel');
+				$(this).unbind('.' + self.widgetName);
 			});
 			
 			$.Widget.prototype.destroy.apply(this, arguments);
