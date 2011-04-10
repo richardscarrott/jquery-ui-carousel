@@ -109,6 +109,16 @@ Sets the easing equation used.
 #### startAt: null (number)
 If set the carousel will start on the specified page (one based).
 
+#### autoScroll: false (boolean)
+Set to true to invoke auto scrolling, note when the mouse enters the carousel the interval will stop, it'll consequently begin when the mouse leaves.
+
+NOTE: Requires the autoScroll extension (jquery.ui.carousel-autoscroll.js).
+
+#### pause: 8000 (number)
+Sets the amount of time in miliseconds the carousel waits before it automatically scrolls.
+
+NOTE: Requires the autoScroll extension (jquery.ui.carousel-autoscroll.js).
+
 ### Events
 #### beforeAnimate: null (function)
 Fired before transition.
@@ -146,5 +156,15 @@ Returns the .ui-carousel element.
 
 #### destroy .carousel('destroy')
 Remove the carousel functionality completely. This will return the element back to its pre-init state.
+
+#### start: .carousel('start')
+Starts autoScroll
+
+NOTE: Requires the autoScroll extension (jquery.ui.carousel-autoscroll.js).
+
+#### stop: .carousel('stop')
+Stops autoScroll
+
+NOTE: Requires the autoScroll extension (jquery.ui.carousel-autoscroll.js).
 
 [If you have any questions or ideas you can contact me here](http://richardscarrott.co.uk/contact "Richard Scarrott").
