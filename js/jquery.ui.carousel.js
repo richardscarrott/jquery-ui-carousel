@@ -1,14 +1,15 @@
 ﻿/*
- * jQuery UI Carousel Plugin v0.5.2
+ * jQuery UI Carousel Plugin v0.6
  *
  * Copyright (c) 2011 Richard Scarrott
+ * http://www.richardscarrott.co.uk
  *
  * Dual licensed under the MIT and GPL licenses:
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl.html
  *
  * Requires:
- * jQuery v1.4+,
+ * jQuery v1.4+
  * jQuery UI Widget Factory 1.8+
  *
  */
@@ -17,7 +18,7 @@
 
 	$.widget('ui.carousel', {
 	
-		version: '0.5.2',
+		version: '0.6',
 		
 		// holds original class string
 		oldClass: null,
@@ -42,7 +43,7 @@
 		
 		_create: function () {
 		
-			this.itemIndex = 0;
+			this.pageIndex = 1;
 			
 			this._elements();
 			this._addClasses();
@@ -60,7 +61,7 @@
 			this._addNextPrevActions();
 			
 			if (this.options.startAt) {
-				this.goTo(this.options.startAt);
+				this.goToPage(this.options.startAt, false);
 			}
 			
 			this._updateUi();
@@ -277,19 +278,19 @@
 				links = [],
 				i;
 			
-			for (i = 0; i < this.noOfPages; i++) {
-				links[i] = '<li><a href="#item-' + i + '">' + (i + 1) + '</a></li>';
+			for (i = 1; i <= this.noOfPages; i++) {
+				links[i] = '<li><a href="#item-' + i + '">' + i + '</a></li>';
 			}
 			
 			elems.pagination = $('<ol class="pagination-links" />')
 				.append(links.join(''))
 				.delegate('a', 'click.carousel', function () {
-				
-					self.goTo(this.hash.split('-')[1] * self._getitemsPerTransition());
+					
+					self.goToPage(parseInt(this.hash.split('-')[1], 10));
 					
 					return false;
 					
-				})
+				});
 				
 			if ($.isFunction(opts.insertPagination)) {
 				$.proxy(opts.insertPagination, elems.pagination)();
@@ -313,18 +314,27 @@
 			
 		},
 		
-		// jumps to specific element
-		goTo: function (index) {
+		// shows specific page (one based)
+		goToPage: function (pageIndex, animate) {
 		
-			if (typeof index === 'number') {
-				this.itemIndex = index;
-			}
-			else {
-				// assume jquery or DOM element
-				this.itemIndex = $(index).index();
+			this.pageIndex = pageIndex;
+			
+			this._go(animate);
+			
+		},
+		
+		// shows specific item (one based)
+		goToItem: function(itemIndex, animate) {
+			
+			if (typeof itemIndex !== 'number') { // assume element or jQuery obj
+				itemIndex = $(itemIndex).index() + 1; // make one based
 			}
 			
-			this._go();
+			// perhaps a little inefficient to be converting item index to page index
+			// as _go() coverts back to item index...
+			this.pageIndex = Math.ceil(itemIndex / this._getitemsPerTransition());
+			
+			this._go(animate);
 			
 		},
 		
@@ -343,20 +353,20 @@
 				.bind('click.carousel', function () {
 					self.prev();
 					return false;
-				});;
-			
-			elems.nextAction = $('<a href="#" class="next">Next</a>')
-				.bind('click.carousel', function () {
-					self.next();
-					return false;
 				});
-			
+				
 			if ($.isFunction(opts.insertPrevAction)) {
 				$.proxy(opts.insertPrevAction, elems.prevAction)();
 			}
 			else {
 				elems.prevAction.appendTo(this.element);
 			}
+			
+			elems.nextAction = $('<a href="#" class="next">Next</a>')
+				.bind('click.carousel', function () {
+					self.next();
+					return false;
+				});
 				
 			if ($.isFunction(opts.insertNextAction)) {
 				$.proxy(opts.insertNextAction, elems.nextAction)();
@@ -370,7 +380,7 @@
 		// moves to next page
 		next: function () {
 		
-			this.itemIndex = this.itemIndex + this._getitemsPerTransition();
+			this.pageIndex += 1;
 			this._go();
 			
 		},
@@ -378,18 +388,19 @@
 		// moves to prev page
 		prev: function () {
 		
-			this.itemIndex = this.itemIndex - this._getitemsPerTransition();
+			this.pageIndex -= 1;
 			this._go();
 			
 		},
 		
-		// updates pagination, next and prev link status classes
+		// updates pagination, next and prev link status classes (NOTE: refactor this)
 		_updateUi: function () {
 		
 			var elems = this.elements,
-				index = this.itemIndex,
+				index = this.pageIndex,
 				
 				// add void class if ui doesn't make sense - can then be either hidden or styled like disabled / current
+				// better than setting pagination to false as this senario isn't an 'option change'
 				isVoid = this.noOfItems <= this.itemsPerPage;
 		
 			if (this.options.pagination) {
@@ -401,8 +412,8 @@
 					elems.pagination
 						.children('li')
 							.removeClass('current')
-							.eq(Math.ceil(index / this._getitemsPerTransition()))
-								.addClass('current');		
+							.filter(':nth-child(' + index + ')')
+								.addClass('current');
 				}
 				
 			}
@@ -411,17 +422,17 @@
 			
 				var nextPrev = elems.nextAction.add(elems.prevAction);
 				nextPrev.removeClass('disabled');
-			
+				
 				if (isVoid) {
-					nextPrev.addClass('void');		
+					nextPrev.addClass('void');
 				}
 				else {
 					nextPrev.removeClass('void');
-							
-					if (index === (this.noOfItems - this.itemsPerPage)) {
+					
+					if (index === this.noOfPages) {
 						elems.nextAction.addClass('disabled');
 					}
-					else if (index === 0) {
+					else if (index === 1) {
 						elems.prevAction.addClass('disabled');
 					}
 				}
@@ -429,61 +440,70 @@
 			
 		},
 		
-		// validates itemIndex and initiates slide
-		_go: function () {
-		
-			var elems = this.elements,
-				pos;
-			
-			// check whether there are enough items to animate to
-			if (this.itemIndex > (this.noOfItems - this.itemsPerPage)) {
-				this.itemIndex = this.noOfItems - this.itemsPerPage; // go to last panel - items per transition
-			}
-			
-			if (this.itemIndex < 0) {
-				this.itemIndex = 0; // go to first
-			}
-			
-			this._trigger('beforeAnimate', null, {
-				index: this.itemIndex
-			});
-			
-			pos = this.itemIndex * this.itemDim;
-			
-			this._slide(pos);
-			this._updateUi();
-		},
-		
-		// slides runner
-		_slide: function (pos) {
+		// validates itemIndex and slides
+		_go: function (animate, callback) {
 		
 			var self = this,
 				elems = this.elements,
-				animateProps = {};
+				speed = animate === false ? 0 : this.options.speed, // default to animate
+				animateProps = {},
+				itemIndex,
+				pos;
+			
+			// validate pageIndex
+			if (this.pageIndex < 1) { this.pageIndex = 1; }
+			
+			if (this.pageIndex > this.noOfPages) { this.pageIndex = this.noOfPages; }
 				
+			// get item to animate to based on page
+			itemIndex = (this.pageIndex - 1) * this._getitemsPerTransition();
+			
+			pos = itemIndex * this.itemDim;
+			
 			// check pos doesn't go past last
 			if (pos > this.lastPos) {
 				pos = this.lastPos;
 			}
 			
 			animateProps[this.helperStr.pos] = -pos;
+			
+			this._trigger('beforeAnimate', null, {
+				page: this.pageIndex
+			});
+			
+			/* CSS transitions perform very poorly
+			elems.runner.css({
+				left: -pos,
+				transition: 'left .3s linear',
+				'-o-transition': 'left .400s linear',
+				'-moz-transition': 'left .400s linear',
+				'-webkit-transition': 'left .400s linear',
+				'-webkit-transition': 'left .400s linear',
+				'-moz-transition': 'left .400s linear'
+			});*/
 		
 			elems.runner
 				.stop()
-				.animate(animateProps, this.options.speed, this.options.easing, function () {
+				.animate(animateProps, speed, this.options.easing, function() {
 					
 					self._trigger('afterAnimate', null, {
-						index: self.itemIndex
+						page: self.pageIndex
 					});
 					
+					if ($.isFunction(callback)) {
+						callback();
+					}
+					
 				});
-		
+			
+			this._updateUi();
 		},
 		
 		// refresh carousel
 		_refresh: function () {
 			
-			this.itemIndex = 0;
+			this.pageIndex = 1;
+			
 			this.elements.runner.css({
 				left: '',
 				top: ''
@@ -530,8 +550,7 @@
 				
 			case 'itemsPerTransition':
 				
-				this._refreshPagination();
-				this._updateUi();
+				this._refresh();
 				
 				break;
 				

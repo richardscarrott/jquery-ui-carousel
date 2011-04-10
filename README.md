@@ -107,7 +107,7 @@ Sets the speed of the carousel.
 Sets the easing equation used.
 
 #### startAt: null (number)
-If set the carousel will animate to the item specified on init (zero-index).
+If set the carousel will start on the specified page (one based).
 
 ### Events
 #### beforeAnimate: null (function)
@@ -123,8 +123,11 @@ Moves to the next page.
 #### prev .carousel('prev')
 Moves to the prev page.
 
-#### goTo .carousel('goTo', item)
-Moves to the specified item, item can be a zero-indexed number, a vanilla DOM element
+#### goToPage .carousel('goToPage', page, [animate])
+Moves to the specified 'page' (one based), if animate set to false it'll jump straight there.
+
+#### goToItem .carousel('goToItem', item, [animate])
+Moves to page containing item, item can be a one based number, a vanilla DOM element
 or a jQuery object.
 
 #### addItems .carousel('addItems', items)
@@ -141,7 +144,7 @@ Set multiple carousel options at once by providing an options object.
 #### widget .carousel('widget')
 Returns the .ui-carousel element.
 
-#### destroy .carousel
+#### destroy .carousel('destroy')
 Remove the carousel functionality completely. This will return the element back to its pre-init state.
 
 [If you have any questions or ideas you can contact me here](http://richardscarrott.co.uk/contact "Richard Scarrott").

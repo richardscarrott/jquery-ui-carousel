@@ -4,12 +4,16 @@
 
 	<meta charset="utf-8" />
 	
-	<title>jQuery UI Carousel Plugin v0.5.2 - Richard Scarrott</title>
+	<title>jQuery UI Carousel Plugin v0.6 - Richard Scarrott</title>
 	
 	<link rel="stylesheet" type="text/css" href="css/demo.css" media="all" />
 	
 	<style type="text/css">
 		/* carousel */
+		.ui-carousel {
+			overflow: hidden;
+		}
+		
 		.ui-carousel .mask {
 		    position:relative;
 		    overflow:hidden;
@@ -176,6 +180,7 @@
 	<script type="text/javascript" src="js/jquery.js"></script>
 	<script type="text/javascript" src="js/jquery.ui.widget.js"></script>
 	<script type="text/javascript" src="js/jquery.ui.carousel.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.carousel-autoscroll.js"></script>
 	
 	<script type="text/javascript">
 	
@@ -202,10 +207,13 @@
 			
 				this.elements.carousel = view.find('#my-carousel-1');
 				
-				form = this.elements.form = view.find('form');
+				form = this.elements.form = this.elements.form = view.find('form');
 				this.elements.inputs = form.find(':checkbox, select');
+				this.elements.addItemsBtn = form.find('#addItemsBtn');
 				this.elements.initBtn = form.find('#init');
 				this.elements.destroyBtn = form.find('#destroy');
+				
+				console.log(this.elements);
 				
 			
 			},
@@ -227,6 +235,31 @@
 					
 				});
 				
+				elems.addItemsBtn.click(function() {
+					
+					var currentNoOfItems = carousel.find('ul li').length,
+						noOfItems = parseInt(elems.form.find('#addItems').val(), 10),
+						items = [],
+						i,
+						colorClass;
+						
+						//console.log(currentNoOfITems, );
+						
+					for (i = 1; i <= noOfItems; i++) {
+						
+						colorClass = Math.floor(Math.random() * 7) + 1;
+						items.push('<li class="color-' + colorClass + '">' + (currentNoOfItems + i) + '</li>');
+						
+					}
+					
+					items = $(items.join(''));
+					
+					carousel.carousel('addItems', items);
+					
+					return false;
+					
+				});
+				
 				elems.initBtn.click(function(e) {
 					e.preventDefault();
 					
@@ -240,6 +273,8 @@
 						opts[this.name] = self.getValueAsOption($(this));
 						
 					});
+					
+					//opts.autoScroll = true;
 					
 					carousel.carousel(opts);
 				});
@@ -275,7 +310,7 @@
 				if (!isNaN(integer)) {
 					value = integer;
 				}
-					
+				
 				return value;
 				
 			}
@@ -295,7 +330,7 @@
 <body class="no-js">
 	<div id="container">
 	
-		<h1>jQuery UI Carousel plugin v0.5.2</h1>
+		<h1>jQuery UI Carousel plugin v0.6</h1>
 		
 		<form class="module">
 			
@@ -343,6 +378,23 @@
 			</div>
 			
 			<div class="field">
+				<label for="speed">speed:</label>
+				<select id="speed" name="speed">
+					<option value="slow">slow</option>
+					<option value="normal" selected="selected">normal</option>
+					<option value="fast">fast</option>
+				</select>
+			</div>
+			
+			<div class="field">
+				<label for="easing">easing:</label>
+				<select id="easing" name="easing">
+					<option value="swing" selected="selected">swing</option>
+					<option value="linear">linear</option>
+				</select>
+			</div>
+			
+			<div class="field">
 				<label for="pagination">pagination:</label>
 				<input type="checkbox" id="pagination" name="pagination" checked="checked" />
 			</div>
@@ -350,6 +402,20 @@
 			<div class="field">
 				<label for="nextPrevActions">nextPrevActions:</label>
 				<input type="checkbox" id="nextPrevActions" name="nextPrevActions" checked="checked" />
+			</div>
+			
+			<div class="field">
+				<label for="nextPrevActions">autoScroll:</label>
+				<input type="checkbox" id="autoScroll" name="autoScroll" />
+				<span>NOTE: defaults to 8 seconds and is cancelled on hover</span>
+			</div>
+			
+			<div class="field">
+				<label for="addItems">
+					<button id="addItemsBtn">Add</button>
+					<input type="text" name="addItems" id="addItems" style="width: 30px;" value="4" />
+					item(s)
+				</label>
 			</div>
 			
 			<div class="actions">
@@ -361,7 +427,6 @@
 						<input type="button" id="destroy" name="destroy" value="destroy" />
 					</li>
 				</ul>
-				
 			</div>
 		</form>
 		

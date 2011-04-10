@@ -1,74 +1,97 @@
 /*
- * jQuery UI Carousel Plugin v0.3 - Auto Scroll Extension
+ * jQuery UI Carousel Plugin v0.6 - Auto Scroll Extension
  *
  * Copyright (c) 2011 Richard Scarrott
+ * http://www.richardscarrott.co.uk
  *
  * Dual licensed under the MIT and GPL licenses:
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl.html
  *
  * Requires:
- * jQuery v1.4+,
- * jQuery UI Widget Factory 1.8+
- * jQuery UI Carousel 0.5+ 
+ * jQuery v1.4+
+ * jQuery UI Widget Factory v1.8+
+ * jQuery UI Carousel v0.6+
  *
  */
  
-(function($, carousel, undefined) {
+(function($, undefined) {
+
+	var _super = $.ui.carousel.prototype;
 	
-	var _create = carousel._create,
-		destroy = carousel.destroy;
+	$.widget('ui.carousel', $.ui.carousel, {
 	
-	$.extend(carousel.options, {
-		pause: 5000,
-		autoScroll: false
-	});
-	
-	$.extend(carousel, {
-	
+		options: {
+			pause: 8000,
+			autoScroll: false
+		},
+		
 		_create: function() {
 		
-			_create.apply(this);
+			_super._create.apply(this);
 			
 			if (!this.options.autoScroll) { return; }
 			
+			this.stopped = false;
+			
 			this.start();
 			this.element
-				.bind('mouseenter.carousel', $.proxy(this, 'stop'))
-				.bind('mouseleave.carousel', $.proxy(this, 'start'));
-				
+				.bind('mouseenter.' + this.widgetName, $.proxy(this, 'stop'))
+				.bind('mouseleave.' + this.widgetName, $.proxy(this, 'start'));
+			
 		},
 		
 		start: function() {
 		
 			var self = this;
 			
-			this._interval = setInterval(function() {
-			
-				self.itemIndex = self.itemIndex + self.options.itemsPerTransition;
-				if (self.itemIndex > (self.noOfItems - 1)) {
-					self.itemIndex = 0;
+			this.interval = setInterval(function() {
+				
+				self.pageIndex += 1;
+				
+				if (self.pageIndex > self.noOfPages) {
+					self.pageIndex = 0;
 				}
 				
 				self._go();
-				
+			
 			}, this.options.pause);
 			
 		},
 		
 		stop: function() {
 		
-			clearInterval(this._interval);
+			clearInterval(this.interval);
+						
+		},
+		
+		_setOption: function (option, value) {
+		
+			_super._setOption.apply(this, arguments);
 			
+			switch (option) {
+				
+			case 'autoScroll':
+			
+				this.stop();
+				
+				if (value) {
+					this.start();
+				}
+				
+				break;
+					
+			}
+		
 		},
 		
 		destroy: function() {
 			
-			destroy.apply(this);
+			_super.destroy.apply(this);
 			this.stop();
 			
 		}
-	
+		
 	});
 	
-})(jQuery, jQuery.ui.carousel.prototype);
+})(jQuery);
