@@ -1,5 +1,5 @@
 ﻿/*
- * jQuery UI Carousel Plugin v0.6
+ * jQuery UI Carousel Plugin v0.6.1
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -18,7 +18,7 @@
 
 	$.widget('ui.carousel', {
 	
-		version: '0.6',
+		version: '0.6.1',
 		
 		// holds original class string
 		oldClass: null,
