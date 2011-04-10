@@ -22,7 +22,7 @@
 	$.widget('ui.carousel', $.ui.carousel, {
 	
 		options: {
-			pause: 8000,
+			pause: 2000,
 			autoScroll: false
 		},
 		
@@ -32,16 +32,36 @@
 			
 			if (!this.options.autoScroll) { return; }
 			
-			this.stopped = false;
-			
-			this.start();
-			this.element
-				.bind('mouseenter.' + this.widgetName, $.proxy(this, 'stop'))
-				.bind('mouseleave.' + this.widgetName, $.proxy(this, 'start'));
+			this._bindAutoScroll();
+			this._start();
 			
 		},
 		
-		start: function() {
+		_bindAutoScroll: function() {
+			
+			if (this.autoScrollInitiated) {
+				return;
+			}
+			
+			this.element
+				.bind('mouseenter.' + this.widgetName, $.proxy(this, '_stop'))
+				.bind('mouseleave.' + this.widgetName, $.proxy(this, '_start'));
+				
+			this.autoScrollInitiated = true;
+			
+		},
+		
+		_unbindAutoScroll: function() {
+			
+			this.element
+				.unbind('mouseenter.' + this.widgetName)
+				.unbind('mouseleave.' + this.widgetName);
+				
+			this.autoScrollInitiated = false;
+			
+		},
+		
+		_start: function() {
 		
 			var self = this;
 			
@@ -59,7 +79,7 @@
 			
 		},
 		
-		stop: function() {
+		_stop: function() {
 		
 			clearInterval(this.interval);
 						
@@ -73,10 +93,14 @@
 				
 			case 'autoScroll':
 			
-				this.stop();
+				this._stop();
 				
 				if (value) {
-					this.start();
+					this._bindAutoScroll();
+					this._start();
+				}
+				else {
+					this._unbindAutoScroll();
 				}
 				
 				break;
@@ -88,7 +112,7 @@
 		destroy: function() {
 			
 			_super.destroy.apply(this);
-			this.stop();
+			this._stop();
 			
 		}
 		
