@@ -1,7 +1,8 @@
 ﻿/*
- * jQuery UI Carousel Plugin v0.5.2
+ * jQuery UI Carousel Plugin v0.6.2
  *
  * Copyright (c) 2011 Richard Scarrott
+ * http://www.richardscarrott.co.uk
  *
  * Dual licensed under the MIT and GPL licenses:
  * http://www.opensource.org/licenses/mit-license.php
@@ -35,8 +36,11 @@
 			insertPrevAction: null,
 			speed: 'normal',
 			easing: 'swing',
-			startAt: null,
-			beforeAnimate: null,
+			startAt: 4,
+			beforeAnimate: function(e, data) {
+				console.log('index ' + data.index);
+				console.log('page ' + data.page);
+			},
 			afterAnimate: null
 		},
 
@@ -60,7 +64,7 @@
 			this._addNextPrevActions();
 
 			if (this.options.startAt) {
-				this.goTo(this.options.startAt, false);
+				this.goToItem(this.options.startAt, false);
 			}
 
 			this._updateUi();
@@ -488,7 +492,7 @@
 
 			elems.runner
 				.stop()
-				.animate(animateProps, this.options.speed, this.options.easing, function () {
+				.animate(animateProps, speed, this.options.easing, function () {
 
 					self._trigger('afterAnimate', null, {
 						index: self.itemIndex,
