@@ -44,8 +44,8 @@
 			}
 			
 			this.element
-				.bind('mouseenter.' + this.widgetName, $.proxy(this, '_stop'))
-				.bind('mouseleave.' + this.widgetName, $.proxy(this, '_start'));
+				.bind('mouseover.' + this.widgetName, $.proxy(this, '_stop'))
+				.bind('mouseout.' + this.widgetName, $.proxy(this, '_start'));
 				
 			this.autoScrollInitiated = true;
 			
@@ -54,8 +54,8 @@
 		_unbindAutoScroll: function() {
 			
 			this.element
-				.unbind('mouseenter.' + this.widgetName)
-				.unbind('mouseleave.' + this.widgetName);
+				.unbind('mouseover.' + this.widgetName)
+				.unbind('mouseout.' + this.widgetName);
 				
 			this.autoScrollInitiated = false;
 			
@@ -67,10 +67,10 @@
 			
 			this.interval = setInterval(function() {
 				
-				self.pageIndex += 1;
+				self.itemIndex += self._getitemsPerTransition();
 				
-				if (self.pageIndex > self.noOfPages) {
-					self.pageIndex = 0;
+				if (self._getPage() === self.noOfPages) {
+					self.itemIndex = 0;
 				}
 				
 				self._go();
