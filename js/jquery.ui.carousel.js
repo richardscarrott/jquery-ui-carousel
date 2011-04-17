@@ -1,5 +1,5 @@
 ﻿/*
- * jQuery UI Carousel Plugin v0.6.2
+ * jQuery UI Carousel Plugin v0.6.3
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -18,8 +18,6 @@
 
 	$.widget('ui.carousel', {
 
-		version: '0.6.2',
-
 		// holds original class string
 		oldClass: null,
 
@@ -28,7 +26,7 @@
 			itemsPerTransition: 'auto',
 			orientation: 'horizontal',
 			noOfRows: 1, // horizontal only
-			unknownHeight: true, // horizontal only (allows unknown item height - useful if, for example, items contains textual content)
+			unknownHeight: false, // horizontal only (allows unknown item height - useful if, for example, items contains textual content)
 			pagination: true,
 			insertPagination: null,
 			nextPrevActions: true,
@@ -36,11 +34,8 @@
 			insertPrevAction: null,
 			speed: 'normal',
 			easing: 'swing',
-			startAt: 4,
-			beforeAnimate: function(e, data) {
-				console.log('index ' + data.index);
-				console.log('page ' + data.page);
-			},
+			startAt: null,
+			beforeAnimate: null,
 			afterAnimate: null
 		},
 
@@ -222,10 +217,10 @@
 
 			this.noOfItems = Math.ceil(this.elements.items.length / this.options.noOfRows);
 
-			// fixed 9 items, 3 rows, 4 shown 
-			if (this.noOfItems < this.itemsPerPage) {
+			// fixed 9 items, 3 rows, 4 shown
+			/*if (this.noOfItems < this.itemsPerPage) {
 				this.noOfItems = this.itemsPerPage;
-			}
+			}*/
 
 		},
 
@@ -262,9 +257,11 @@
 
 			// noOfrows means last theoretical item might not be the last item
 			var lastItem = this.elements.items.eq(this.noOfItems - 1);
-
-			this.lastPos = lastItem.position()[this.helperStr.pos] + this.itemDim -
-				this.maskDim - parseInt(lastItem.css('margin-' + this.helperStr.pos2), 10);
+			
+			if (lastItem.length) {
+				this.lastPos = lastItem.position()[this.helperStr.pos] + this.itemDim -
+					this.maskDim - parseInt(lastItem.css('margin-' + this.helperStr.pos2), 10);
+			}
 
 		},
 
@@ -413,7 +410,7 @@
 					elems.pagination
 						.children('li')
 							.removeClass('current')
-							.eq(Math.ceil(index / this._getitemsPerTransition()))
+							.eq(this._getPage())
 								.addClass('current');		
 				}
 
@@ -429,7 +426,7 @@
 				}
 				else {
 					nextPrev.removeClass('void');
-
+					
 					if (index === (this.noOfItems - this.itemsPerPage)) {
 						elems.nextAction.addClass('disabled');
 					}
@@ -441,7 +438,7 @@
 
 		},
 		
-		_getPage: function() {
+		_getPage: function () {
 		
 			return Math.ceil(this.itemIndex / this._getitemsPerTransition());
 			
@@ -455,13 +452,12 @@
 				speed = animate === false ? 0 : this.options.speed, // default to animate
 				animateProps = {},
 				pos;
-				
+			
 			// check whether there are enough items to animate to
 			if (this.itemIndex > (this.noOfItems - this.itemsPerPage)) {
 				this.itemIndex = this.noOfItems - this.itemsPerPage; // go to last panel - items per transition
 			}
-
-			if (this.itemIndex < 0) {
+			else if (this.itemIndex < 0) {
 				this.itemIndex = 0; // go to first
 			}
 
@@ -660,11 +656,13 @@
 			$.each(elems, function () {
 				$(this).unbind('.carousel');
 			});
-
+			
 			$.Widget.prototype.destroy.apply(this, arguments);
 
 		}
 
 	});
+	
+	$.ui.carousel.version = '0.6.3';
 
 })(jQuery);
