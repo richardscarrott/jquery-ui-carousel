@@ -107,7 +107,7 @@ Sets the speed of the carousel.
 Sets the easing equation used.
 
 #### startAt: null (number)
-If set the carousel will start on the specified page (one based).
+If set the carousel will start on the specified page (zero based).
 
 #### autoScroll: false (boolean)
 Set to true to invoke auto scrolling, note when the mouse enters the carousel the interval will stop, it'll consequently begin when the mouse leaves.
@@ -123,8 +123,36 @@ NOTE: Requires the autoScroll extension (jquery.ui.carousel-autoscroll.js).
 #### beforeAnimate: null (function)
 Fired before transition.
 
+It can be passed in the options object like this:
+
+	$('.carousel').tabs({
+	   beforeAnimate: function(event, data) { ... }
+	});
+	
+or bound to as an event like this:
+	
+	$('.carousel').bind( "carouselbeforeAnimate", function(event, data) {
+	  ...
+	});
+	
+Data contains both item index and page index.
+
 #### afterAnimate: null (function)
 Fired after transition.
+
+It can be passed in the options object like this:
+
+	$('.carousel').tabs({
+	   afterAnimate: function(event, data) { ... }
+	});
+	
+or bound to as an event like this:
+	
+	$('.carousel').bind( "carouselAfterAnimate", function(event, data) {
+	  ...
+	});
+	
+Data contains both item index and page index.
 
 ### Methods
 #### next .carousel('next')
@@ -134,10 +162,10 @@ Moves to the next page.
 Moves to the prev page.
 
 #### goToPage .carousel('goToPage', page, [animate])
-Moves to the specified 'page' (one based), if animate set to false it'll jump straight there.
+Moves to the specified 'page' (zero based), if animate set to false it'll jump straight there.
 
 #### goToItem .carousel('goToItem', item, [animate])
-Moves to page containing item, item can be a one based number, a vanilla DOM element
+Moves to page containing item, item can be a zero based number, a vanilla DOM element
 or a jQuery object.
 
 #### addItems .carousel('addItems', items)
