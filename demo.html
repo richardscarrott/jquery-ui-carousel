@@ -9,6 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="css/demo.css" media="all" />
 	
 	<style type="text/css">
+		
 		/* carousel */
 		.ui-carousel {
 			overflow: hidden;
@@ -320,6 +321,19 @@
 			$('body').removeClass('no-js');
 			
 		    demo.init($('#container')); 
+			
+			// example of unknownHeight (allows unknown item height - useful if, for example, items contains textual content)
+			/*$('#my-carousel-1').carousel({
+				
+				init: function() {
+				
+					var el = $(this);
+					
+					el.find('.mask').height(el.find('ul').height());
+					
+				}
+				
+			});*/
 			
 		});
 	</script>

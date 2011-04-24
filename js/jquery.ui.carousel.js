@@ -28,7 +28,6 @@
 			itemsPerTransition: 'auto',
 			orientation: 'horizontal',
 			noOfRows: 1, // horizontal only
-			unknownHeight: false, // horizontal only (allows unknown item height - useful if, for example, items contains textual content)
 			pagination: true,
 			insertPagination: null,
 			nextPrevActions: true,
@@ -37,6 +36,7 @@
 			speed: 'normal',
 			easing: 'swing',
 			startAt: null,
+			init: null,
 			beforeAnimate: null,
 			afterAnimate: null
 		},
@@ -55,7 +55,6 @@
 			this._setNoOfItems();
 			this._setNoOfPages();
 			this._setRunnerWidth();
-			this._setMaskHeight();
 			this._setLastPos();
 			this._addPagination();
 			this._addNextPrevActions();
@@ -65,6 +64,11 @@
 			}
 
 			this._updateUi();
+			
+			this._trigger('init', null, {
+				index: this.itemIndex,
+				page: this._getPage()
+			});
 
 		},
 
@@ -175,20 +179,6 @@
 		_setMaskDim: function () {
 
 			this.maskDim = this.elements.mask[this.helperStr.dim]();
-
-		},
-
-		// sets masks height allowing items to have an unknown height (not applicable to vertical orientation)
-		_setMaskHeight: function () {
-
-			if (!this.horizontal || !this.options.unknownHeight) {
-				return;
-			}
-
-			var elems = this.elements,
-				maskHeight = elems.runner.outerHeight(true);
-
-			elems.mask.height(maskHeight);
 
 		},
 
@@ -520,7 +510,6 @@
 			this._setItemsPerPage();
 			this._setNoOfItems();
 			this._setRunnerWidth();
-			this._setMaskHeight();
 			this._setLastPos();
 			this._refreshPagination();
 			this._updateUi();
@@ -568,17 +557,6 @@
 				else {
 					// noOfRows must be 1 if vertical
 					opts.noOfRows = 1;
-				}
-
-				break;
-
-			case 'unknownHeight':
-
-				if (value) {
-					this._setMaskHeight();
-				}
-				else {
-					elems.mask.height('');
 				}
 
 				break;
