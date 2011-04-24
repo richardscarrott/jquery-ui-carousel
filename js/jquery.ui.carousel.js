@@ -285,7 +285,7 @@
 				})
 
 			if ($.isFunction(opts.insertPagination)) {
-				$.proxy(opts.insertPagination, elems.pagination)();
+				opts.insertPagination.apply(elems.pagination[0]);
 			}
 			else {
 				elems.pagination.insertAfter(elems.mask);
@@ -352,14 +352,14 @@
 				});
 
 			if ($.isFunction(opts.insertPrevAction)) {
-				$.proxy(opts.insertPrevAction, elems.prevAction)();
+				opts.insertPrevAction.apply(elems.prevAction[0]);
 			}
 			else {
 				elems.prevAction.appendTo(this.element);
 			}
 
 			if ($.isFunction(opts.insertNextAction)) {
-				$.proxy(opts.insertNextAction, elems.nextAction)();
+				opts.insertNextAction.apply(elems.nextAction[0]);
 			}
 			else {
 				elems.nextAction.appendTo(this.element);
@@ -452,8 +452,10 @@
 			else if (this.itemIndex < 0) {
 				this.itemIndex = 0; // go to first
 			}
-
-			pos = this.itemIndex * this.itemDim;
+			
+			
+			pos = this.elements.items.eq(this.itemIndex).position()[this.helperStr.pos];
+			// pos = this.itemIndex * this.itemDim;
 			
 			// check pos doesn't go past last
 			if (pos > this.lastPos) {
