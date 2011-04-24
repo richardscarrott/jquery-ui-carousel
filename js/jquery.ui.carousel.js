@@ -1,5 +1,5 @@
 ﻿/*
- * jQuery UI Carousel Plugin v0.6.3
+ * jQuery UI Carousel Plugin v0.6.4
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -611,16 +611,12 @@
 				cssProps = {};
 
 			this.element.removeClass().addClass(this.oldClass);
-
-			if ('maskAdded' in this) {
+			
+			if (this.maskAdded) {
 				elems.runner
 					.unwrap('.mask');
 			}
-			else {
-				elems.mask.height('');
-			}
 
-			// should really store original value?
 			cssProps[this.helperStr.pos] = '';
 			cssProps[this.helperStr.dim] = '';
 			elems.runner.css(cssProps);
@@ -633,11 +629,6 @@
 				elems.nextAction.remove();
 				elems.prevAction.remove();
 			}
-
-			// overkill?
-			$.each(elems, function () {
-				$(this).unbind('.carousel');
-			});
 			
 			_super.destroy.apply(this, arguments);
 
@@ -645,6 +636,6 @@
 
 	});
 	
-	$.ui.carousel.version = '0.6.3';
+	$.ui.carousel.version = '0.6.4';
 
 })(jQuery);
