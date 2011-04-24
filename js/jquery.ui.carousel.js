@@ -16,6 +16,8 @@
  
 (function ($, undefined) {
 
+	var _super = $.Widget.prototype;
+
 	$.widget('ui.carousel', {
 
 		// holds original class string
@@ -542,7 +544,7 @@
 			var elems = this.elements,
 				opts = this.options;
 
-			$.Widget.prototype._setOption.apply(this, arguments);
+			_super._setOption.apply(this, arguments);
 
 			switch (option) {
 
@@ -657,7 +659,7 @@
 				$(this).unbind('.carousel');
 			});
 			
-			$.Widget.prototype.destroy.apply(this, arguments);
+			_super.destroy.apply(this, arguments);
 
 		}
 
