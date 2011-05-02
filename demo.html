@@ -182,6 +182,7 @@
 	<script type="text/javascript" src="js/jquery.ui.widget.js"></script>
 	<script type="text/javascript" src="js/jquery.ui.carousel.js"></script>
 	<script type="text/javascript" src="js/jquery.ui.carousel-autoscroll.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.carousel-continuous.js"></script>
 	
 	<script type="text/javascript">
 	
@@ -236,7 +237,7 @@
 				
 				elems.addItemsBtn.click(function() {
 					
-					var currentNoOfItems = carousel.find('ul li').length,
+					var currentNoOfItems = carousel.find('ul li:not(.ui-carousel-cloned)').length,
 						noOfItems = parseInt(elems.form.find('#addItems').val(), 10),
 						items = [],
 						i,
@@ -251,7 +252,7 @@
 						
 					}
 					
-					self.view.find('.ui-carousel .mask ul').append(items.join(''));
+					self.view.find('.ui-carousel .mask li:not(.ui-carousel-cloned)').last().after(items.join(''));
 					
 					carousel.carousel('refresh');
 					

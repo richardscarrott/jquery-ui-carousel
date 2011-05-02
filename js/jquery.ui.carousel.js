@@ -1,5 +1,5 @@
 ﻿/*
- * jQuery UI Carousel Plugin v0.6.4
+ * jQuery UI Carousel Plugin v0.7
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -233,13 +233,13 @@
 		},
 
 		// sets runners width
-		_setRunnerWidth: function () {
+		_setRunnerWidth: function (noOfItems) {
 
 			if (!this.horizontal) {
 				return;
 			}
 
-			var width = this.itemDim * this.noOfItems;
+			var width = this.itemDim * (noOfItems || this.noOfItems);
 			this.elements.runner.width(width);
 
 		},
@@ -307,8 +307,17 @@
 		// shows specific page (zero based)
 		goToPage: function (pageIndex, animate) {
 			
-			this.itemIndex = pageIndex * this._getitemsPerTransition();
+			var itemIndex;
 			
+			itemIndex = pageIndex * this._getitemsPerTransition();
+			
+			// validate itemIndex
+			if (itemIndex > this.noOfItems - 1) {
+				itemIndex = this.noOfItems - 1;
+			}
+			
+			this.oldItemIndex = this.itemIndex;
+			this.itemIndex = itemIndex;
 			this._go(animate);
 			
 		},
@@ -320,6 +329,12 @@
 				itemIndex = $(itemIndex).index();
 			}
 			
+			// validate itemIndex
+			if (itemIndex > this.noOfItems - 1) {
+				itemIndex = this.noOfItems - 1;
+			}
+			
+			this.oldItemIndex = this.itemIndex;
 			this.itemIndex = itemIndex;
 			
 			this._go(animate);
@@ -385,7 +400,8 @@
 
 		// moves to next page
 		next: function () {
-
+			
+			this.oldItemIndex = this.itemIndex;
 			this.itemIndex += this._getitemsPerTransition();
 			this._go();
 
@@ -393,7 +409,8 @@
 
 		// moves to prev page
 		prev: function () {
-
+			
+			this.oldItemIndex = this.itemIndex;
 			this.itemIndex -= this._getitemsPerTransition();
 			this._go();
 
@@ -446,41 +463,34 @@
 
 		},
 		
-		_getPage: function () {
+		// return page based on itemIndex
+		_getPage: function (index) {
 		
-			return Math.ceil(this.itemIndex / this._getitemsPerTransition());
+			var index = index || this.itemIndex;
+		
+			return Math.ceil(index / this._getitemsPerTransition());
 			
 		},
-
-		// validates itemIndex and initiates slide
-		_go: function (animate, callback) {
-
+		
+		_go: function (animate) {
+		
 			var self = this,
-				elems = this.elements,
 				speed = animate === false ? 0 : this.options.speed, // default to animate
 				animateProps = {},
 				pos;
-			
-			// check whether there are enough items to animate to
-			if (this.itemIndex > (this.noOfItems - this.itemsPerPage)) {
-				this.itemIndex = this.noOfItems - this.itemsPerPage; // go to last panel - items per transition
-			}
-			else if (this.itemIndex < 0) {
-				this.itemIndex = 0; // go to first
-			}
-			
-			
-			pos = this.elements.items.eq(this.itemIndex).position()[this.helperStr.pos];
-			// pos = this.itemIndex * this.itemDim;
-			
-			// check pos doesn't go past last
-			if (pos > this.lastPos) {
-				pos = this.lastPos;
-			}
+				
+			pos = this._getPos();
 
 			animateProps[this.helperStr.pos] = -pos;
+		
+			this._trigger('beforeAnimate', null, {
+				index: this.itemIndex,
+				page: this._getPage(),
+				oldIndex: this.oldItemIndex,
+				oldPage: this._getPage(this.oldItemIndex)
+			});
 			
-			/* CSS transitions perform very poorly
+			/* CSS transitions perform very poorly (however 'translate3d()' invokes hardware acceleration in iOS / webkit...)
 			elems.runner.css({
 				left: -pos,
 				transition: 'left .3s linear',
@@ -490,35 +500,54 @@
 				'-webkit-transition': 'left .400s linear',
 				'-moz-transition': 'left .400s linear'
 			});*/
-			
-			this._trigger('beforeAnimate', null, {
-				index: this.itemIndex,
-				page: this._getPage()
-			});
 
-			elems.runner
+			this.elements.runner
 				.stop()
 				.animate(animateProps, speed, this.options.easing, function () {
 
 					self._trigger('afterAnimate', null, {
 						index: self.itemIndex,
-						page: self._getPage()
+						page: self._getPage(),
+						oldIndex: self.oldItemIndex,
+						oldPage: self._getPage(self.oldItemIndex)
 					});
-					
-					if ($.isFunction(callback)) {
-						callback();
-					}
 
 				});
 				
 			this._updateUi();
+		
+		},
+		
+		// gets items pos
+		_getPos: function () {
+		
+			var pos;
+			
+			// check whether there are enough items to animate to
+			if (this.itemIndex > (this.noOfItems - this.itemsPerPage)) {
+				this.itemIndex = this.noOfItems - this.itemsPerPage; // go to last panel - items per transition
+			}
+			else if (this.itemIndex < 0) {
+				this.itemIndex = 0; // go to first
+			}
+			
+			pos = this.elements.items.eq(this.itemIndex).position()[this.helperStr.pos];
+			// pos = this.itemIndex * this.itemDim;
+			
+			// check pos doesn't go past last
+			if (pos > this.lastPos) {
+				pos = this.lastPos;
+			}
+			
+			return pos;
+			
 		},
 
 		// refresh carousel
-		refresh: function () {
+		refresh: function (items) {
 			
-			// recache items in case new items have been added 
-			this.elements.items = this.elements.runner.children('li');
+			// re-cache items in case new items have been added
+			this.elements.items = items || this.elements.runner.children('li');
 			
 			// setup
 			this._addClasses();
@@ -536,17 +565,6 @@
 			this.goToItem(this.itemIndex, false);
 			
 			this._updateUi();
-
-		},
-
-		// adds items to end and refreshes carousel, items === jquery obj
-		addItems: function (items) {
-
-			var elems = this.elements;
-
-			items.appendTo(elems.runner);
-			elems.items = elems.runner.children('li');
-			this.refresh();
 
 		},
 

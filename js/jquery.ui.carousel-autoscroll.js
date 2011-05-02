@@ -1,5 +1,5 @@
 /*
- * jQuery UI Carousel Plugin v0.6.4 - Auto Scroll Extension
+ * jQuery UI Carousel Plugin v0.7 - Auto Scroll Extension
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
