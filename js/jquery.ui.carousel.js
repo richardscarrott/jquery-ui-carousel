@@ -269,6 +269,8 @@
 				opts = this.options,
 				links = [],
 				i;
+				
+			this._removePagination();
 
 			for (i = 0; i < this.noOfPages; i++) {
 				links[i] = '<li><a href="#item-' + i + '">' + (i + 1) + '</a></li>';
@@ -282,7 +284,7 @@
 
 					return false;
 
-				})
+				});
 
 			if ($.isFunction(opts.insertPagination)) {
 				opts.insertPagination.apply(elems.pagination[0]);
@@ -292,18 +294,14 @@
 			}
 
 		},
-
-		// refreshes pagination links
-		_refreshPagination: function () {
-
-			if (!this.options.pagination) {
-				return;
+		
+		_removePagination: function () {
+		
+			if (this.elements.pagination) {
+				this.elements.pagination.remove();
+				this.elements.pagination = null;
 			}
-
-			this.elements.pagination.remove();
-			this._setNoOfPages();
-			this._addPagination();
-
+		
 		},
 		
 		// shows specific page (zero based)
@@ -338,6 +336,8 @@
 			var self = this,
 				elems = this.elements,
 				opts = this.options;
+				
+			this._removeNextPrevActions();
 
 			elems.prevAction = $('<a href="#" class="prev">Prev</a>')
 				.bind('click.carousel', function () {
@@ -365,6 +365,22 @@
 				elems.nextAction.appendTo(this.element);
 			}
 
+		},
+		
+		_removeNextPrevActions: function() {
+		
+			var elems = this.elements;
+		
+			if (elems.nextAction) {
+				elems.nextAction.remove();
+				elems.nextAction = null;
+			}	
+			
+			if (elems.prevAction) {
+				elems.prevAction.remove();
+				elems.prevAction = null;
+			}
+					
 		},
 
 		// moves to next page
@@ -499,13 +515,12 @@
 		},
 
 		// refresh carousel
-		_refresh: function () {
-
-			this.itemIndex = 0;
-			this.elements.runner.css({
-				left: '',
-				top: ''
-			});
+		refresh: function () {
+			
+			// recache items in case new items have been added 
+			this.elements.items = this.elements.runner.children('li');
+			
+			// setup
 			this._addClasses();
 			this._setMaskDim();
 			this._setItemDim();
@@ -513,7 +528,13 @@
 			this._setNoOfItems();
 			this._setRunnerWidth();
 			this._setLastPos();
-			this._refreshPagination();
+			
+			// pagination
+			this._setNoOfPages();
+			this._addPagination();
+			
+			this.goToItem(this.itemIndex, false);
+			
 			this._updateUi();
 
 		},
@@ -525,7 +546,7 @@
 
 			items.appendTo(elems.runner);
 			elems.items = elems.runner.children('li');
-			this._refresh();
+			this.refresh();
 
 		},
 
@@ -541,20 +562,20 @@
 
 			case 'itemsPerPage':
 
-				this._refresh();
+				this.refresh();
 
 				break;
 
 			case 'itemsPerTransition':
 
-				this._refresh();
+				this.refresh();
 
 				break;
 
 			case 'noOfRows':
 
 				if (this.horizontal) {
-					this._refresh();
+					this.refresh();
 				}
 				else {
 					// noOfRows must be 1 if vertical
@@ -568,34 +589,30 @@
 				this._defineOrientation();
 				elems.mask.height('');
 				elems.runner.width('');
-				this._refresh();
+				this.refresh();
 
 				break;
 
 			case 'pagination':
 
-				if (value && !elems.pagination) {
+				if (value) {
 					this._addPagination();
 					this._updateUi();
 				}
-				else if (!value && elems.pagination) {
-					elems.pagination.remove();
-					elems.pagination = null;
+				else {
+					this._removePagination();
 				}
 
 				break;
 
 			case 'nextPrevActions':
 
-				if (value && !elems.nextAction) {
+				if (value) {
 					this._addNextPrevActions();
 					this._updateUi();
 				}
-				else if (!value && elems.nextAction) {
-					elems.nextAction.remove();
-					elems.nextAction = null;
-					elems.prevAction.remove();
-					elems.prevAction = null;
+				else {
+					this._removeNextPrevActions();
 				}
 
 				break;

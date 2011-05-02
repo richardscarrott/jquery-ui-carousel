@@ -251,9 +251,9 @@
 						
 					}
 					
-					items = $(items.join(''));
+					self.view.find('.ui-carousel .mask ul').append(items.join(''));
 					
-					carousel.carousel('addItems', items);
+					carousel.carousel('refresh');
 					
 					return false;
 					
