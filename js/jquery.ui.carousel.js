@@ -219,11 +219,11 @@
 		// sets noOfPages
 		_setNoOfPages: function () {
 
-			this.noOfPages = Math.ceil((this.noOfItems - this.itemsPerPage) / this._getitemsPerTransition()) + 1;
+			this.noOfPages = Math.ceil((this.noOfItems - this.itemsPerPage) / this._getItemsPerTransition()) + 1;
 
 		},
 
-		_getitemsPerTransition: function () {
+		_getItemsPerTransition: function () {
 
 		    if (this.options.itemsPerTransition === 'auto') {
 		        return this.itemsPerPage;
@@ -310,7 +310,7 @@
 			
 			var itemIndex;
 			
-			itemIndex = pageIndex * this._getitemsPerTransition();
+			itemIndex = pageIndex * this._getItemsPerTransition();
 			
 			// validate itemIndex
 			if (itemIndex > this.noOfItems - 1) {
@@ -403,7 +403,7 @@
 		next: function () {
 			
 			this.oldItemIndex = this.itemIndex;
-			this.itemIndex += this._getitemsPerTransition();
+			this.itemIndex += this._getItemsPerTransition();
 			this._go();
 
 		},
@@ -412,7 +412,7 @@
 		prev: function () {
 			
 			this.oldItemIndex = this.itemIndex;
-			this.itemIndex -= this._getitemsPerTransition();
+			this.itemIndex -= this._getItemsPerTransition();
 			this._go();
 
 		},
@@ -469,7 +469,7 @@
 		
 			var index = index || this.itemIndex;
 		
-			return Math.ceil(index / this._getitemsPerTransition());
+			return Math.ceil(index / this._getItemsPerTransition());
 			
 		},
 		

@@ -67,7 +67,7 @@
 			
 			this.interval = setInterval(function() {
 				
-				self.itemIndex += self._getitemsPerTransition();
+				self.itemIndex += self._getItemsPerTransition();
 				
 				if (self._getPage() === self.noOfPages) {
 					self.itemIndex = 0;

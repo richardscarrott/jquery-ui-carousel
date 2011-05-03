@@ -45,7 +45,7 @@
 			if (this.options.continuous) {
 			
 				// warn if items arn't divisible by items per transition (means current page cannot be accurately determined as items shown won't always be the same set)
-				if (this.options.pagination && this.noOfItems % this._getitemsPerTransition() != 0) {
+				if (this.options.pagination && this.noOfItems % this._getItemsPerTransition() != 0) {
 					warn('jquery.ui.carousel: number of items isn\'t divisible by itemsPerTransition meaning current page cannot be accurately deteremined');
 				}
 			
@@ -66,8 +66,8 @@
 		_addClonedItems: function () {
 		
 			var elems = this.elements,
-				beginning = this._getitemsPerTransition() + this.itemsPerPage, 
-				end = this.noOfItems - this._getitemsPerTransition() - 1;
+				beginning = this._getItemsPerTransition() + this.itemsPerPage, 
+				end = this.noOfItems - this._getItemsPerTransition() - 1;
 				
 			this._removeClonedItems();
 		
@@ -120,7 +120,7 @@
 					
 					// why have I puts brackets around these calculations?
 					var realItems = (this.noOfItems - 1) - this.oldItemIndex,
-						clonedItems = (this._getitemsPerTransition() - 1) - realItems;
+						clonedItems = (this._getItemsPerTransition() - 1) - realItems;
 						
 					cssProps[this.helperStr.pos] = -elems.clonedEnd.eq(clonedItems).position()[this.helperStr.pos];
 					elems.runner.css(cssProps);
@@ -133,7 +133,7 @@
 					cssProps[this.helperStr.pos] = -elems.clonedBeginning.eq(this.oldItemIndex).position()[this.helperStr.pos];
 					elems.runner.css(cssProps);
 					
-					this.itemIndex = this.noOfItems - (this._getitemsPerTransition() - this.oldItemIndex);
+					this.itemIndex = this.noOfItems - (this._getItemsPerTransition() - this.oldItemIndex);
 					
 				}
 				
