@@ -205,8 +205,8 @@
 		},
 
 		// sets no of items, not neccesarily the literal number of items if more than one row
-		_setNoOfItems: function () {
-
+		_setNoOfItems: function (length) {
+			
 			this.noOfItems = Math.ceil(this.elements.items.length / this.options.noOfRows);
 
 			// fixed 9 items, 3 rows, 4 shown
@@ -238,7 +238,8 @@
 			if (!this.horizontal) {
 				return;
 			}
-
+			
+			// allow noOfItems to be overwritten with arg, use case: when cloned items need to be included but shouldn't be part of this.noOfItems
 			var width = this.itemDim * (noOfItems || this.noOfItems);
 			this.elements.runner.width(width);
 
