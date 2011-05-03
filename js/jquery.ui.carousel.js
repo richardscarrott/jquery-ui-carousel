@@ -1,5 +1,5 @@
 ﻿/*
- * jQuery UI Carousel Plugin v0.7
+ * jQuery UI Carousel Plugin v0.7.1
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -435,7 +435,7 @@
 						.children('li')
 							.removeClass('current')
 							.eq(this._getPage())
-								.addClass('current');		
+								.addClass('current');
 				}
 
 			}
@@ -464,9 +464,13 @@
 		
 		// return page based on itemIndex
 		_getPage: function (index) {
-		
-			var index = index || this.itemIndex;
-		
+			
+			// allow index to be overwritten with arg, use case: when old page needs to be calculated after this.itemIndex has been modified
+			// see: before and after animate callbacks
+			
+			// check if undefined, as 0 === false
+			index = index !== undefined ? index : this.itemIndex;
+			
 			return Math.ceil(index / this._getItemsPerTransition());
 			
 		},
@@ -490,6 +494,7 @@
 			});
 			
 			/* CSS transitions perform very poorly (however 'translate3d()' invokes hardware acceleration in iOS / webkit...)
+			v. smooth, however means touch .draggable extension would have to be modified...
 			elems.runner.css({
 				left: -pos,
 				transition: 'left .3s linear',
