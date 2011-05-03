@@ -668,6 +668,6 @@
 
 	});
 	
-	$.ui.carousel.version = '0.6.4';
+	$.ui.carousel.version = '0.7.1';
 
 })(jQuery);
