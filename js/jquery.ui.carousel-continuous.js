@@ -66,7 +66,7 @@
 		_addClonedItems: function () {
 		
 			var elems = this.elements,
-				beginning = this._getItemsPerTransition() + this.itemsPerPage, 
+				beginning = this._getItemsPerTransition() + this._getItemsPerPage(), 
 				end = this.noOfItems - this._getItemsPerTransition() - 1;
 				
 			this._removeClonedItems();

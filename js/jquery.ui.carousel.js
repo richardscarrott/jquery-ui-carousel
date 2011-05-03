@@ -51,7 +51,6 @@
 			this._addMask();
 			this._setMaskDim();
 			this._setItemDim();
-			this._setItemsPerPage();
 			this._setNoOfItems();
 			this._setNoOfPages();
 			this._setRunnerWidth();
@@ -190,17 +189,15 @@
 
 		},
 
-		// sets options.itemsPerPage based on maskdim
-		_setItemsPerPage: function () {
+		// gets options.itemsPerPage. If set to not number it's calculated based on maskdim
+		_getItemsPerPage: function () {
 
 			// if itemsPerPage of type number don't dynamically calculate
 			if (typeof this.options.itemsPerPage === 'number') {
-				// don't directly use options.itemsPerPage as reference to 'auto' needs to be kept if not number
-				this.itemsPerPage = this.options.itemsPerPage;
+				return this.options.itemsPerPage;
 			}
-			else {
-				this.itemsPerPage = Math.floor(this.maskDim / this.itemDim);
-			}
+			
+			return Math.floor(this.maskDim / this.itemDim);
 
 		},
 
@@ -210,8 +207,8 @@
 			this.noOfItems = Math.ceil(this.elements.items.length / this.options.noOfRows);
 
 			// fixed 9 items, 3 rows, 4 shown
-			/*if (this.noOfItems < this.itemsPerPage) {
-				this.noOfItems = this.itemsPerPage;
+			/*if (this.noOfItems < this._getItemsPerPage()) {
+				this.noOfItems = this._getItemsPerPage();
 			}*/
 
 		},
@@ -219,17 +216,18 @@
 		// sets noOfPages
 		_setNoOfPages: function () {
 
-			this.noOfPages = Math.ceil((this.noOfItems - this.itemsPerPage) / this._getItemsPerTransition()) + 1;
+			this.noOfPages = Math.ceil((this.noOfItems - this._getItemsPerPage()) / this._getItemsPerTransition()) + 1;
 
 		},
 
 		_getItemsPerTransition: function () {
 
-		    if (this.options.itemsPerTransition === 'auto') {
-		        return this.itemsPerPage;
+		    if (typeof this.options.itemsPerTransition === 'number') {
+				return this.options.itemsPerTransition;
 		    }
 
-		    return this.options.itemsPerTransition;
+		    return this._getItemsPerPage();
+			
 		},
 
 		// sets runners width
@@ -425,7 +423,7 @@
 
 				// add void class if ui doesn't make sense - can then be either hidden or styled like disabled / current
 				// better than setting pagination to false as this senario isn't an 'option change'
-				isVoid = this.noOfItems <= this.itemsPerPage;
+				isVoid = this.noOfItems <= this._getItemsPerPage();
 
 			if (this.options.pagination) {
 
@@ -453,7 +451,7 @@
 				else {
 					nextPrev.removeClass('void');
 					
-					if (index === (this.noOfItems - this.itemsPerPage)) {
+					if (index === (this.noOfItems - this._getItemsPerPage())) {
 						elems.nextAction.addClass('disabled');
 					}
 					else if (index === 0) {
@@ -525,8 +523,8 @@
 			var pos;
 			
 			// check whether there are enough items to animate to
-			if (this.itemIndex > (this.noOfItems - this.itemsPerPage)) {
-				this.itemIndex = this.noOfItems - this.itemsPerPage; // go to last panel - items per transition
+			if (this.itemIndex > (this.noOfItems - this._getItemsPerPage())) {
+				this.itemIndex = this.noOfItems - this._getItemsPerPage(); // go to last panel - items per transition
 			}
 			else if (this.itemIndex < 0) {
 				this.itemIndex = 0; // go to first
@@ -554,7 +552,6 @@
 			this._addClasses();
 			this._setMaskDim();
 			this._setItemDim();
-			this._setItemsPerPage();
 			this._setNoOfItems();
 			this._setRunnerWidth();
 			this._setLastPos();
