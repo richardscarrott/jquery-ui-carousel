@@ -653,15 +653,9 @@
 			cssProps[this.helperStr.pos] = '';
 			cssProps[this.helperStr.dim] = '';
 			elems.runner.css(cssProps);
-
-			if (elems.pagination) {
-				elems.pagination.remove();
-			}
-
-			if (elems.nextAction) {
-				elems.nextAction.remove();
-				elems.prevAction.remove();
-			}
+			
+			this._removePagination();
+			this._removeNextPrevActions();
 			
 			_super.destroy.apply(this, arguments);
 
