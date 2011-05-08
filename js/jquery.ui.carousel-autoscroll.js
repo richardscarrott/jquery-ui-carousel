@@ -1,5 +1,5 @@
 /*
- * jQuery UI Carousel Plugin v0.7.1 - Auto Scroll Extension
+ * jQuery UI Carousel Plugin v0.7.2 - Auto Scroll Extension
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -11,7 +11,7 @@
  * Requires:
  * jQuery v1.4+
  * jQuery UI Widget Factory v1.8+
- * jQuery UI Carousel v0.7.1+
+ * jQuery UI Carousel v0.7.2+
  *
  */
  
@@ -67,13 +67,12 @@
 			
 			this.interval = setInterval(function() {
 				
-				self.itemIndex += self._getItemsPerTransition();
-				
-				if (self._getPage() === self.noOfPages) {
-					self.itemIndex = 0;
+				if (self.itemIndex === self.lastItem) {
+					self.goToItem(1);
 				}
-				
-				self._go();
+				else {
+					self.next();
+				}
 			
 			}, this.options.pause);
 			

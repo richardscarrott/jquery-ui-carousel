@@ -1,5 +1,5 @@
 ﻿/*
- * jQuery UI Carousel Plugin v0.7.1
+ * jQuery UI Carousel Plugin v0.7.2
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -16,8 +16,18 @@
  
 (function ($, undefined) {
 
-	var _super = $.Widget.prototype;
-
+	var _super = $.Widget.prototype,
+		horizontal = {
+			pos: 'left',
+			pos2: 'right',
+			dim: 'width'
+		},
+		vertical = {
+			pos: 'top',
+			pos2: 'bottom',
+			dim: 'height'
+		};
+	
 	$.widget('ui.carousel', {
 
 		// holds original class string
@@ -43,7 +53,7 @@
 
 		_create: function () {
 
-			this.itemIndex = 0;
+			this.itemIndex = 1;
 
 			this._elements();
 			this._addClasses();
@@ -55,6 +65,7 @@
 			this._setNoOfPages();
 			this._setRunnerWidth();
 			this._setLastPos();
+			this._setLastItem();
 			this._addPagination();
 			this._addNextPrevActions();
 
@@ -64,10 +75,7 @@
 
 			this._updateUi();
 			
-			this._trigger('init', null, {
-				index: this.itemIndex,
-				page: this._getPage()
-			});
+			this._trigger('init', null, this._getData());
 
 		},
 
@@ -137,20 +145,12 @@
 		_defineOrientation: function () {
 
 			if (this.options.orientation === 'horizontal') {
-				this.horizontal = true;
-				this.helperStr = {
-					pos: 'left',
-					pos2: 'right',
-					dim: 'width'
-				};
+				this.isHorizontal = true;
+				this.helperStr = horizontal;
 			}
 			else {
-				this.horizontal = false;
-				this.helperStr = {
-					pos: 'top',
-					pos2: 'bottom',
-					dim: 'height'
-				};	
+				this.isHorizontal = false;
+				this.helperStr = vertical;
 				this.options.noOfRows = 1;
 			}
 
@@ -174,7 +174,7 @@
 
 		},
 
-		// sets maskDim to later detemine lastPos
+		// sets maskDim to later detemine lastPos, // should be getter? keep it dynamic
 		_setMaskDim: function () {
 
 			this.maskDim = this.elements.mask[this.helperStr.dim]();
@@ -202,14 +202,14 @@
 		},
 
 		// sets no of items, not neccesarily the literal number of items if more than one row
-		_setNoOfItems: function (length) {
+		_setNoOfItems: function () {
 			
 			this.noOfItems = Math.ceil(this.elements.items.length / this.options.noOfRows);
-
-			// fixed 9 items, 3 rows, 4 shown
-			/*if (this.noOfItems < this._getItemsPerPage()) {
+			
+			// this ensures runner width is correctly calculated
+			if (this.options.noOfRows > 1 && this.noOfItems < this._getItemsPerPage()) {
 				this.noOfItems = this._getItemsPerPage();
-			}*/
+			}
 
 		},
 
@@ -230,10 +230,10 @@
 			
 		},
 
-		// sets runners width
+		// sets runners width // perhaps arg should be actual width to set...?
 		_setRunnerWidth: function (noOfItems) {
 
-			if (!this.horizontal) {
+			if (!this.isHorizontal) {
 				return;
 			}
 			
@@ -255,6 +255,13 @@
 			}
 
 		},
+		
+		// sets last logical item
+		_setLastItem: function () {
+			
+			this.lastItem = this.noOfItems - (this._getItemsPerPage() - 1);
+			
+		},
 
 		// adds pagination links and binds associated events
 		_addPagination: function () {
@@ -271,8 +278,8 @@
 				
 			this._removePagination();
 
-			for (i = 0; i < this.noOfPages; i++) {
-				links[i] = '<li><a href="#item-' + i + '">' + (i + 1) + '</a></li>';
+			for (i = 1; i <= this.noOfPages; i++) {
+				links[i] = '<li><a href="#page-' + i + '">' + i + '</a></li>';
 			}
 
 			elems.pagination = $('<ol class="pagination-links" />')
@@ -303,40 +310,28 @@
 		
 		},
 		
-		// shows specific page (zero based)
+		// shows specific page (one based)
 		goToPage: function (pageIndex, animate) {
 			
-			var itemIndex;
-			
-			itemIndex = pageIndex * this._getItemsPerTransition();
-			
-			// validate itemIndex
-			if (itemIndex > this.noOfItems - 1) {
-				itemIndex = this.noOfItems - 1;
-			}
+			var itemIndex = (pageIndex - 1) * this._getItemsPerTransition() + 1;
 			
 			this.oldItemIndex = this.itemIndex;
 			this.itemIndex = itemIndex;
-			this._go(animate);
+			this._slide(animate);
 			
 		},
 		
-		// shows specific item (zero based)
+		// shows specific item (one based)
 		goToItem: function(itemIndex, animate) {
 			
 			if (typeof itemIndex !== 'number') { // assume element or jQuery obj
-				itemIndex = $(itemIndex).index();
-			}
-			
-			// validate itemIndex
-			if (itemIndex > this.noOfItems - 1) {
-				itemIndex = this.noOfItems - 1;
+				itemIndex = $(itemIndex).index() + 1;
 			}
 			
 			this.oldItemIndex = this.itemIndex;
 			this.itemIndex = itemIndex;
 			
-			this._go(animate);
+			this._slide(animate);
 			
 		},
 
@@ -402,7 +397,7 @@
 			
 			this.oldItemIndex = this.itemIndex;
 			this.itemIndex += this._getItemsPerTransition();
-			this._go();
+			this._slide();
 
 		},
 
@@ -411,7 +406,7 @@
 			
 			this.oldItemIndex = this.itemIndex;
 			this.itemIndex -= this._getItemsPerTransition();
-			this._go();
+			this._slide();
 
 		},
 
@@ -434,7 +429,7 @@
 					elems.pagination
 						.children('li')
 							.removeClass('current')
-							.eq(this._getPage())
+							.eq(this._getPage() - 1)
 								.addClass('current');
 				}
 
@@ -451,10 +446,10 @@
 				else {
 					nextPrev.removeClass('void');
 					
-					if (index === (this.noOfItems - this._getItemsPerPage())) {
+					if (index === this.lastItem) {
 						elems.nextAction.addClass('disabled');
 					}
-					else if (index === 0) {
+					else if (index === 1) {
 						elems.prevAction.addClass('disabled');
 					}
 				}
@@ -470,12 +465,13 @@
 			
 			// check if undefined, as 0 === false
 			index = index !== undefined ? index : this.itemIndex;
+			index -= 1;
 			
-			return Math.ceil(index / this._getItemsPerTransition());
+			return Math.ceil(index / this._getItemsPerTransition()) + 1;
 			
 		},
 		
-		_go: function (animate) {
+		_slide: function (animate) {
 		
 			var self = this,
 				speed = animate === false ? 0 : this.options.speed, // default to animate
@@ -486,12 +482,7 @@
 
 			animateProps[this.helperStr.pos] = -pos;
 		
-			this._trigger('beforeAnimate', null, {
-				index: this.itemIndex,
-				page: this._getPage(),
-				oldIndex: this.oldItemIndex,
-				oldPage: this._getPage(this.oldItemIndex)
-			});
+			this._trigger('beforeAnimate', null, this._getData());
 			
 			/* CSS transitions perform very poorly (however 'translate3d()' invokes hardware acceleration in iOS / webkit...)
 			v. smooth, however means touch .draggable extension would have to be modified...
@@ -509,12 +500,7 @@
 				.stop()
 				.animate(animateProps, speed, this.options.easing, function () {
 
-					self._trigger('afterAnimate', null, {
-						index: self.itemIndex,
-						page: self._getPage(),
-						oldIndex: self.oldItemIndex,
-						oldPage: self._getPage(self.oldItemIndex)
-					});
+					self._trigger('afterAnimate', null, self._getData());
 
 				});
 				
@@ -528,14 +514,14 @@
 			var pos;
 			
 			// check whether there are enough items to animate to
-			if (this.itemIndex > (this.noOfItems - this._getItemsPerPage())) {
-				this.itemIndex = this.noOfItems - this._getItemsPerPage(); // go to last panel - items per transition
+			if (this.itemIndex > this.lastItem) {
+				this.itemIndex = this.lastItem;
 			}
-			else if (this.itemIndex < 0) {
-				this.itemIndex = 0; // go to first
+			else if (this.itemIndex < 1) {
+				this.itemIndex = 1; // go to first
 			}
 			
-			pos = this.elements.items.eq(this.itemIndex).position()[this.helperStr.pos];
+			pos = this.elements.items.eq(this.itemIndex - 1).position()[this.helperStr.pos];
 			// pos = this.itemIndex * this.itemDim;
 			
 			// check pos doesn't go past last
@@ -544,6 +530,21 @@
 			}
 			
 			return pos;
+			
+		},
+		
+		// returns obj with useful data to be passed into callback events
+		_getData: function () {
+		
+			return {
+				index: this.itemIndex,
+				page: this._getPage(),
+				oldIndex: this.oldItemIndex,
+				oldPage: this._getPage(this.oldItemIndex),
+				noOfItems: this.noOfItems,
+				noOfPages: this.noOfPages,
+				elements: this.elements
+			}
 			
 		},
 
@@ -560,6 +561,7 @@
 			this._setNoOfItems();
 			this._setRunnerWidth();
 			this._setLastPos();
+			this._setLastItem();
 			
 			// pagination
 			this._setNoOfPages();
@@ -595,7 +597,7 @@
 
 			case 'noOfRows':
 
-				if (this.horizontal) {
+				if (this.isHorizontal) {
 					this.refresh();
 				}
 				else {
@@ -606,10 +608,10 @@
 				break;
 
 			case 'orientation':
-
-				this._defineOrientation();
-				elems.mask.height('');
+			
 				elems.runner.width('');
+				elems.runner.css(this.helperStr.pos, '');
+				this._defineOrientation();
 				this.refresh();
 
 				break;
@@ -668,6 +670,6 @@
 
 	});
 	
-	$.ui.carousel.version = '0.7.1';
+	$.ui.carousel.version = '0.7.2';
 
 })(jQuery);
