@@ -1,4 +1,4 @@
-﻿## Quick start
+## Quick start
 
 ### This is the basic HTML structure required:
 
@@ -50,25 +50,17 @@ Sets the number of rows.
 
 NOTE: This is only applicable to horizontal carousels
 
-#### unknownHeight: true, (boolean)
-If set to true the height of the mask (aka clipping div) will be dynamically calculated.
-
-This can be useful if, for example, the carousel's items contain textual content which cannot be determined due
-to varying font sizes etc.
-
-NOTE: This is only applicable to horizontal carousels.
-
 #### pagination: true (boolean)
 Sets whether pagination links should be included, pagination links are inserted as an ordered list.
 
 #### insertPagination: null (function)
 Allows you to override where in the DOM the pagination links are inserted.
 
-The function is passed the pagination links (ol) as it's context wrapped pre wrapped as a jQuery object, e.g.
+The context of the function will be the pagination links, e.g.
 
 	function() {
-		// this === $paginationLinks
-		this.appendTo('body');
+		// this === <ol class="pagination-links"></ol>
+		$(this).appendTo('body');
 	}
 
 NOTE: By default they are inserted after the mask (aka clipping div).
@@ -79,11 +71,11 @@ Sets whether the next and prev actions are included, next and prev actions are i
 #### insertNextAction: null (function)
 Allows you to override where in the DOM the next action is inserted.
 
-The function is passed the next action (a) as it's context , e.g.
+The context of the function will be the next action, e.g.
 
 	function() {
-		// this === $nextAction
-		this.appendTo('body');
+		// this === <a href="#" class="next">Next</a>
+		$(this).appendTo('body');
 	}
 
 NOTE: By default the next action is appended to the carousels container.
@@ -91,11 +83,11 @@ NOTE: By default the next action is appended to the carousels container.
 #### insertPrevAction: null (function)
 Allows you to override where in the DOM the prev action is inserted.
 
-The function is passed the prev action (a) as it's context , e.g.
+The context of the function will be the prev action, e.g.
 
 	function() {
-		// this === $prevAction
-		this.appendTo('body');
+		// this === <a href="#" class="prev">Prev</a>
+		$(this).appendTo('body');
 	}
 
 NOTE: By default the prev action is appended to the carousels container.
@@ -107,7 +99,7 @@ Sets the speed of the carousel.
 Sets the easing equation used.
 
 #### startAt: null (number)
-If set the carousel will start on the specified page (zero based).
+If set the carousel will start on the specified page (one based).
 
 #### autoScroll: false (boolean)
 Set to true to invoke auto scrolling, note when the mouse enters the carousel the interval will stop, it'll consequently begin when the mouse leaves.
@@ -120,39 +112,83 @@ Sets the amount of time in miliseconds the carousel waits before it automaticall
 NOTE: Requires the autoScroll extension (jquery.ui.carousel-autoscroll.js).
 
 ### Events
-#### beforeAnimate: null (function)
-Fired before transition.
+#### init: null (function)
+Fired on init.
 
 It can be passed in the options object like this:
 
-	$('.carousel').tabs({
+	$('.carousel').carousel({
 	   beforeAnimate: function(event, data) { ... }
 	});
 	
 or bound to as an event like this:
 	
-	$('.carousel').bind( "carouselbeforeAnimate", function(event, data) {
+	$('.carousel').bind("carouselbeforeAnimate", function(event, data) {
+	  ...
+	});
+
+data:
+    {	
+	    index (number)
+	    page (number)
+	    oldIndex (number)
+	    oldPage (number)
+	    noOfItems (number)
+	    noOfPages (number)
+        elements (object) contains jquery objs of all associated elements
+    }
+
+#### beforeAnimate: null (function)
+Fired before transition.
+
+It can be passed in the options object like this:
+
+	$('.carousel').carousel({
+	   beforeAnimate: function(event, data) { ... }
+	});
+	
+or bound to as an event like this:
+	
+	$('.carousel').bind("carouselbeforeAnimate", function(event, data) {
 	  ...
 	});
 	
-Data contains both item index and page index.
+data:
+    {	
+	    index (number)
+	    page (number)
+	    oldIndex (number)
+	    oldPage (number)
+	    noOfItems (number)
+	    noOfPages (number)
+        elements (object) contains jquery objs of all associated elements
+    }
 
 #### afterAnimate: null (function)
 Fired after transition.
 
 It can be passed in the options object like this:
 
-	$('.carousel').tabs({
+	$('.carousel').carousel({
 	   afterAnimate: function(event, data) { ... }
 	});
 	
 or bound to as an event like this:
 	
-	$('.carousel').bind( "carouselAfterAnimate", function(event, data) {
+	$('.carousel').bind("carouselAfterAnimate", function(event, data) {
 	  ...
 	});
 	
-Data contains both item index and page index.
+data:
+    {	
+	    index (number)
+	    page (number)
+	    oldIndex (number)
+	    oldPage (number)
+	    noOfItems (number)
+	    noOfPages (number)
+        elements (object) contains jquery objs of all associated elements
+    }
 
 ### Methods
 #### next .carousel('next')
@@ -162,16 +198,11 @@ Moves to the next page.
 Moves to the prev page.
 
 #### goToPage .carousel('goToPage', page, [animate])
-Moves to the specified 'page' (zero based), if animate set to false it'll jump straight there.
+Moves to the specified 'page' (one based). If animate is set to false it'll jump straight there.
 
 #### goToItem .carousel('goToItem', item, [animate])
-Moves to page containing item, item can be a zero based number, a vanilla DOM element
-or a jQuery object.
-
-#### addItems .carousel('addItems', items)
-This allows you to easily add items to the carousel whilst ensuring it's state is updated.
-
-items must be a jQuery object of list items.
+Moves to page containing item, item can be a one based number, a vanilla DOM element
+or a jQuery object. If animate is set to false it'll jump straight there.
 
 #### option .carousel('option', optionName , [value])
 Get or set any carousel option. If no value is specified, will act as a getter.
