@@ -128,7 +128,8 @@ or bound to as an event like this:
 	});
 
 data:
-    {	
+
+    {
 	    index (number)
 	    page (number)
 	    oldIndex (number)
@@ -154,6 +155,7 @@ or bound to as an event like this:
 	});
 	
 data:
+
     {	
 	    index (number)
 	    page (number)
@@ -180,6 +182,7 @@ or bound to as an event like this:
 	});
 	
 data:
+
     {	
 	    index (number)
 	    page (number)
