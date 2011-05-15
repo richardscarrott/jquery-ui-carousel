@@ -44,8 +44,8 @@
 			}
 			
 			this.element
-				.bind('mouseover.' + this.widgetName, $.proxy(this, '_stop'))
-				.bind('mouseout.' + this.widgetName, $.proxy(this, '_start'));
+				.bind('touchstart.' + this.widgetName + ' mouseover.' + this.widgetName, $.proxy(this, '_stop'))
+				.bind('touchend.' + this.widgetName + ' mouseout.' + this.widgetName, $.proxy(this, '_start'));
 				
 			this.autoScrollInitiated = true;
 			

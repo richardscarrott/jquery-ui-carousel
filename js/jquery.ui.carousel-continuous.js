@@ -1,5 +1,5 @@
 /*
- * jQuery UI Carousel Plugin v0.7.2 - Continuous Extension
+ * jQuery UI Carousel Plugin v0.7.3 - Continuous Extension (in development)
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -11,7 +11,7 @@
  * Requires:
  * jQuery v1.4+
  * jQuery UI Widget Factory v1.8+
- * jQuery UI Carousel v0.7.2+
+ * jQuery UI Carousel v0.7.3+
  *
  */
  

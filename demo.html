@@ -4,11 +4,15 @@
 
 	<meta charset="utf-8" />
 	
-	<title>jQuery UI Carousel Plugin v0.7.2 - Richard Scarrott</title>
+	<title>jQuery UI Carousel Plugin v0.7.3 - Richard Scarrott</title>
 	
-	<link rel="stylesheet" type="text/css" href="css/demo.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="css/lib/demo.css" media="all" />
 	
 	<style type="text/css">
+	
+		#container {
+			position: relative;
+		}
 		
 		/* carousel */
 		.ui-carousel {
@@ -133,7 +137,7 @@
 		
 			/** items per page **/
 			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-1 .mask {
-				height: 150px;
+				height: 150px
 			}
 			
 			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-2 .mask {
@@ -177,11 +181,17 @@
 		}
 	</style>
 	
-	<!--script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script-->
-	<script type="text/javascript" src="js/jquery.js"></script>
-	<script type="text/javascript" src="js/jquery.ui.widget.js"></script>
+	<!-- third party -->
+	<script type="text/javascript" src="js/lib/modernizr.3dtransforms.js"></script>
+	<script type="text/javascript" src="js/lib/jquery.js"></script>
+	<script type="text/javascript" src="js/lib/jquery.ui.widget.js"></script>
+	<script type="text/javascript" src="js/lib/jquery.ui.mouse.js"></script>
+	<script type="text/javascript" src="js/lib/jquery.ui.touch-punch.js"></script>
+	
+	<!-- carousel -->
 	<script type="text/javascript" src="js/jquery.ui.carousel.js"></script>
 	<script type="text/javascript" src="js/jquery.ui.carousel-autoscroll.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.carousel-touch.js"></script>
 	<!--script type="text/javascript" src="js/jquery.ui.carousel-continuous.js"></script-->
 	
 	<script type="text/javascript">
@@ -274,8 +284,6 @@
 						
 					});
 					
-					//opts.autoScroll = true;
-					
 					carousel.carousel(opts);
 				});
 				
@@ -343,7 +351,7 @@
 <body class="no-js">
 	<div id="container">
 	
-		<h1>jQuery UI Carousel plugin v0.7.2</h1>
+		<h1>jQuery UI Carousel plugin v0.7.3</h1>
 		
 		<form class="module">
 			
@@ -454,6 +462,13 @@
 				<li class="color-5">7</li>
 				<li class="color-2">8</li>
 				<li class="color-7">9</li>
+				<li class="color-1">10</li>
+				<li class="color-6">11</li>
+				<li class="color-3">12</li>
+				<li class="color-2">13</li>
+				<li class="color-1">14</li>
+				<li class="color-6">15</li>
+				<li class="color-7">16</li>
 			</ul>
 		</div>
 
