@@ -8,9 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl.html
  *
- * Requires:
- * jQuery v1.4+,
- * jQuery UI Widget Factory 1.8+
+ * Depends:
+ *  jquery.js v1.4+
+ *  jquery.ui.widget.js v1.8+
  *
  */
  

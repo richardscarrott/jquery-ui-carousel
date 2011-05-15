@@ -8,15 +8,15 @@
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl.html
  *
- * Requires:
- * jQuery v1.4+,
- * jQuery UI Widget Factory v1.8+
- * jQuery UI Mouse v1.8+
- * jQuery UI Carousel v0.7.3+
+ * Depends:
+ *  jquery.js v1.4+
+ *  jquery.ui.widget.js v1.8+
+ *  jquery.ui.mouse.js v1.8+
+ *  jquery.ui.touch-punch.js v0.1.0+ (https://github.com/furf/jquery-ui-touch-punch)
+ *  jquery.ui.carousel.js v0.7.3+
  *
  * Optional:
- * Modernizr.csstransforms3d.js (used to detect hardware acceleration support)
- *
+ *  modernizr.csstransforms3d.js (used to detect hardware acceleration support)
  */
 
 (function ($) {

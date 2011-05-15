@@ -8,10 +8,10 @@
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl.html
  *
- * Requires:
- * jQuery v1.4+
- * jQuery UI Widget Factory v1.8+
- * jQuery UI Carousel v0.7.2+
+ * Depends:
+ *  jquery.js v1.4+
+ *  jquery.ui.widget.js v1.8+
+ *  jquery.ui.carousel.js v0.7.3+
  *
  */
  
