@@ -46,6 +46,8 @@
 			speed: 'normal',
 			easing: 'swing',
 			startAt: null,
+			
+			// callbacks
 			init: null,
 			beforeAnimate: null,
 			afterAnimate: null

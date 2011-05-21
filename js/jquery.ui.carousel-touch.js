@@ -12,16 +12,14 @@
  *  jquery.js v1.4+
  *  jquery.ui.widget.js v1.8+
  *  jquery.ui.mouse.js v1.8+
- *  jquery.ui.touch-punch.js v0.1.0+ (https://github.com/furf/jquery-ui-touch-punch)
+ *  jquery.ui.touch-punch.js v0.1.0+ - at least until $.ui.mouse.js supports touch events (https://github.com/furf/jquery-ui-touch-punch)
  *  jquery.ui.carousel.js v0.7.3+
  *
- * Optional:
- *  modernizr.csstransforms3d.js (used to detect hardware acceleration support)
  */
-
+ 
+// CSS transform() hook currently just deals with webkit...
 (function ($) {
-
-	// currently just deals with webkit...
+	
 	$.cssHooks.carouselTransform = {
 		set: function(elem, value) {
 			elem.style['-webkit-transform'] = value;
@@ -37,23 +35,26 @@
 			}
 		}
 	};
-
-	var _super = $.ui.mouse.prototype,
-		// currently using Modernizr for detection; doesn't pick up chrome...
-		supports3d = $.browser.webkit && Modernizr && Modernizr.csstransforms3d;
 	
-	// custom drag, if supported it uses 'translate3d' instead of 'left / top'
+})(jQuery);
+
+// custom drag, if supported it uses 'translate3d' instead of 'left / top' for hardware acceleration
+(function ($) {
+
+	var _super = $.ui.mouse.prototype;
+	
 	$.widget('ui._carouselDrag', $.ui.mouse, {
 	
 		options: {
-			axis: 'x'
+			axis: 'x',
+			translate3d: false
 		},
 		
 		_create: function () {
 		
 			var cssProps = {};
 			
-			if (supports3d) {
+			if (this.options.translate3d) {
 				this.element.css('carousel-transform', 'translate3d(0, 0, 0)');
 			}
 			else {
@@ -75,7 +76,7 @@
 			
 			this.mouseStartPos = this.options.axis === 'x' ? e.pageX : e.pageY;
 			
-			if (supports3d) {
+			if (this.options.translate3d) {
 				this.runnerPos = this.element.css('carousel-transform')[this.options.axis];
 			}
 			else {
@@ -92,7 +93,7 @@
 				pos = (page - this.mouseStartPos) + this.runnerPos,
 				cssProps = {};
 			
-			if (supports3d) {
+			if (this.options.translate3d) {
 				cssProps['carousel-transform'] = this.options.axis === 'x' ? 'translate3d(' + pos + 'px, 0, 0)' : 'translate3d(0, ' + pos + 'px, 0)';
 			}
 			else {
@@ -113,7 +114,7 @@
 		
 			var cssProps = {};
 			
-			if (supports3d) {
+			if (this.options.translate3d) {
 				cssProps['carousel-transform'] = '';
 			}
 			else {
@@ -135,13 +136,13 @@
 // touch extension
 (function ($) {
 	
-	var _super = $.ui.carousel.prototype,
-		supports3d = $.browser.webkit && Modernizr && Modernizr.csstransforms3d;
+	var _super = $.ui.carousel.prototype;
 		
 	$.widget('ui.carousel', $.ui.carousel, {
 	
 		options: {
-			sensitivity: 0.8
+			sensitivity: 0.8,
+			translate3d: false
 		},
 		
 		_create: function () {
@@ -152,6 +153,7 @@
 			
 			this.elements.runner
 				._carouselDrag({
+					translate3d: this.options.translate3d,
 					axis: this._getAxis(),
 					start: function (e) {
 						e = e.originalEvent.touches ? e.originalEvent.touches[0] : e;
@@ -164,7 +166,7 @@
 				});
 				
 			// bind CSS transition callback
-			if (supports3d) {
+			if (this.options.translate3d) {
 				this.elements.runner.bind('webkitTransitionEnd', function(e) {
 					self._trigger('afterAnimate', e, self._getData());
 					e.preventDefault(); // stops page from jumping to top...
@@ -246,7 +248,7 @@
 			
 			this._trigger('beforeAnimate', null, this._getData());
 			
-			if (supports3d) {
+			if (this.options.translate3d) {
 				
 				this.elements.runner.css({
 					'-webkit-transition': '-webkit-transform .' + speed + 's ' + this._getEasing(),
@@ -274,7 +276,7 @@
 		// translates speed to ensure CSS transforms get type number
 		_getSpeed: function () {
 		
-			if (!supports3d) {
+			if (!this.options.translate3d) {
 				return this.options.speed;
 			}
 		
@@ -301,7 +303,7 @@
 		// ensures easing is a valid css timing function name
 		_getEasing: function () {
 			
-			if (!supports3d) {
+			if (!this.options.translate3d) {
 				return this.options.easing;
 			}
 			

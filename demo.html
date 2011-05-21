@@ -270,6 +270,7 @@
 					
 				});
 				
+				// carousel is initiated here
 				elems.initBtn.click(function(e) {
 					e.preventDefault();
 					
@@ -283,6 +284,9 @@
 						opts[this.name] = self.getValueAsOption($(this));
 						
 					});
+					
+					// css translate3d() support detection
+					opts.translate3d = $.browser.webkit && Modernizr && Modernizr.csstransforms3d;
 					
 					carousel.carousel(opts);
 				});
@@ -333,15 +337,15 @@
 			
 			// example of unknownHeight (allows unknown item height - useful if, for example, items contains textual content)
 			/*$('#my-carousel-1').carousel({
-				
 				init: function() {
-				
 					var el = $(this);
-					
 					el.find('.mask').height(el.find('ul').height());
-					
 				}
-				
+			});*/
+			
+			// example of hardware support (translate3d) detection, uses Modernizr
+			/*$('#my-carousel-1').carousel({
+				translate3d: $.browser.webkit && Modernizr && Modernizr.csstransforms3d
 			});*/
 			
 		});
