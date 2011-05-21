@@ -1,5 +1,5 @@
 /*
- * jQuery UI Carousel Plugin v0.7.3 - Touch Extension
+ * jQuery UI Carousel Plugin v0.7.4 - Touch Extension
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -13,7 +13,7 @@
  *  jquery.ui.widget.js v1.8+
  *  jquery.ui.mouse.js v1.8+
  *  jquery.ui.touch-punch.js v0.1.0+ - at least until $.ui.mouse.js supports touch events (https://github.com/furf/jquery-ui-touch-punch)
- *  jquery.ui.carousel.js v0.7.3+
+ *  jquery.ui.carousel.js v0.7.4+
  *
  */
  

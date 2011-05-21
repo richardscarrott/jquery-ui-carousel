@@ -1,5 +1,5 @@
 /*
- * jQuery UI Carousel Plugin v0.7.3
+ * jQuery UI Carousel Plugin v0.7.4
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -672,6 +672,6 @@
 
 	});
 	
-	$.ui.carousel.version = '0.7.2';
+	$.ui.carousel.version = '0.7.4';
 
 })(jQuery);
