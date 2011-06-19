@@ -86,9 +86,9 @@
 
 			var elems = this.elements = {};
 
-			elems.mask = this.element.find('.mask');
-			elems.runner = this.element.find('ul');
-			elems.items = elems.runner.children('li');
+			elems.mask = this.element.children('.mask');
+			elems.runner = this.element.find('ul').first();
+			elems.items = elems.runner.children();
 			elems.pagination = null;
 			elems.nextAction = null;
 			elems.prevAction = null;
