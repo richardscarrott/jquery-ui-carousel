@@ -13,6 +13,8 @@
  *  jquery.ui.widget.js v1.8+
  *
  */
+
+//= require jquery-ui
  
 (function ($, undefined) {
 
