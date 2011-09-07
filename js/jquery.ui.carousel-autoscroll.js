@@ -14,6 +14,8 @@
  *  jquery.ui.carousel.js v0.7.5+
  *
  */
+
+//= require ./jquery.ui.carousel.js
  
 (function($, undefined) {
 

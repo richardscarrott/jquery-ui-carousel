@@ -16,6 +16,8 @@
  *  jquery.ui.carousel.js v0.7.5+
  *
  */
+
+//= require ./jquery.ui.carousel.js
  
 // CSS transform() hook currently just deals with webkit...
 (function ($) {
