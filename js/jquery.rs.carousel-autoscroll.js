@@ -1,5 +1,5 @@
 /*
- * jQuery UI Carousel Plugin v0.7.5 - Auto Scroll Extension
+ * jquery.rs.carousel-autoscroll v0.8
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -11,15 +11,15 @@
  * Depends:
  *  jquery.js v1.4+
  *  jquery.ui.widget.js v1.8+
- *  jquery.ui.carousel.js v0.7.5+
+ *  jquery.rs.carousel.js v0.8+
  *
  */
  
 (function($, undefined) {
 
-	var _super = $.ui.carousel.prototype;
+	var _super = $.rs.carousel.prototype;
 	
-	$.widget('ui.carousel', $.ui.carousel, {
+	$.widget('rs.carousel', $.rs.carousel, {
 	
 		options: {
 			pause: 8000,
@@ -30,11 +30,14 @@
 		
 			_super._create.apply(this);
 			
-			if (!this.options.autoScroll) { return; }
+			if (!this.options.autoScroll) {
+				return;
+			}
 			
 			this._bindAutoScroll();
 			this._start();
 			
+			return;
 		},
 		
 		_bindAutoScroll: function() {
@@ -44,11 +47,12 @@
 			}
 			
 			this.element
-				.bind('touchstart.' + this.widgetName + ' mouseover.' + this.widgetName, $.proxy(this, '_stop'))
-				.bind('touchend.' + this.widgetName + ' mouseout.' + this.widgetName, $.proxy(this, '_start'));
+				.bind('mouseover.' + this.widgetName, $.proxy(this, '_stop'))
+				.bind('mouseout.' + this.widgetName, $.proxy(this, '_start'));
 				
 			this.autoScrollInitiated = true;
 			
+			return;
 		},
 		
 		_unbindAutoScroll: function() {
@@ -59,6 +63,7 @@
 				
 			this.autoScrollInitiated = false;
 			
+			return;
 		},
 		
 		_start: function() {
@@ -66,9 +71,9 @@
 			var self = this;
 			
 			this.interval = setInterval(function() {
-				
-				if (self.itemIndex === self.lastItem) {
-					self.goToItem(1);
+
+				if (self.page === self._getNoOfPages()) {
+					self.goToPage(1);
 				}
 				else {
 					self.next();
@@ -76,12 +81,14 @@
 			
 			}, this.options.pause);
 			
+			return;
 		},
 		
 		_stop: function() {
 		
 			clearInterval(this.interval);
-						
+			
+			return;		
 		},
 		
 		_setOption: function (option, value) {
@@ -105,16 +112,20 @@
 				break;
 					
 			}
-		
+			
+			return;
 		},
 		
 		destroy: function() {
 			
-			_super.destroy.apply(this);
 			this._stop();
+			_super.destroy.apply(this);
 			
+			return;
 		}
 		
 	});
+
+	$.rs.carousel.version = '0.8';
 	
 })(jQuery);

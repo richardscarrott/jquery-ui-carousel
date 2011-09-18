@@ -4,7 +4,7 @@
 
 	<meta charset="utf-8" />
 	
-	<title>jQuery UI Carousel Plugin v0.7.5 - Richard Scarrott</title>
+	<title>jquery.rs.carousel.js v0.8 - Richard Scarrott</title>
 	
 	<link rel="stylesheet" type="text/css" href="css/lib/demo.css" media="all" />
 	
@@ -15,17 +15,17 @@
 		}
 		
 		/* carousel */
-		.ui-carousel {
+		.rs-carousel {
 			overflow: hidden;
 		}
 		
-		.ui-carousel .mask {
+		.rs-carousel .rs-carousel-mask {
 		    position:relative;
 		    overflow:hidden;
 		    border:6px solid #444;
 		}
 		
-			.ui-carousel ul {
+			.rs-carousel .rs-carousel-runner {
 				position: absolute;
 				overflow: hidden;
 				margin: 0;
@@ -33,11 +33,11 @@
 				list-style: none;
 			}
 
-			.no-js .ui-carousel ul {
+			.no-js .rs-carousel .rs-carousel-runner {
 				position: static;
 			}
 			
-				.ui-carousel ul li {
+				.rs-carousel .rs-carousel-item {
 					float: left;
 					width: 150px;
 					height: 150px;
@@ -47,108 +47,83 @@
 					margin: 0;
 				}
 		
-				.ui-carousel.ui-carousel-vertical ul li {
+				.rs-carousel.rs-carousel-vertical .rs-carousel-item {
 					float: none;
 				}
 		
 		/* pagination */
-		.ui-carousel .pagination-links {
+		.rs-carousel-pagination {
 		    list-style: none;
 		    margin: 0;
 		    padding: 0;
 		}
 		 
-			.ui-carousel .pagination-links li {
+			.rs-carousel-pagination-link {
 				display: inline;
 			}
 
-				.ui-carousel .pagination-links a {
+				.rs-carousel-pagination-link a {
 					padding: 2px 6px;	
 				}
 
-				.ui-carousel .pagination-links a:hover {
+				.rs-carousel-pagination-link a:hover {
 					text-decoration: none;
 				}
 
-				.ui-carousel .pagination-links li.current a {
+				.rs-carousel-pagination-link-active a {
 					 background: #444;
 					 color: #fff;
 				}
-		 
-				.ui-carousel .disabled {
-					color: gray;
-					cursor: default;
-				}
-				
-				.ui-carousel .pagination-links.void {
-					display: none;
-				}
-				
-		/** next & prev actions **/
-		.ui-carousel .next.void,
-		.ui-carousel .prev.void	{
-			display: none;
+		 	
+	 	/* next & prev actions */
+		.rs-carousel-action-disabled {
+			color: gray;
+			cursor: default;
 		}
-		
-		
-		
-		
-		
 		
 		/** my carousel 1 **/
 		
 		/** horizontal **/
-		#my-carousel-1 {}
+		#my-carousel-1 .rs-carousel-mask {
+			height: 150px;
+		}
 		
 			/** items per page **/
-			#my-carousel-1.ui-carousel-items-1 .mask {
+			#my-carousel-1.rs-carousel-items-1 .rs-carousel-mask {
 				width: 150px;
 			}
 			
-			#my-carousel-1.ui-carousel-items-2 .mask {
+			#my-carousel-1.rs-carousel-items-2 .rs-carousel-mask {
 				width: 300px;
 			}
 			
-			#my-carousel-1.ui-carousel-items-3 .mask {
+			#my-carousel-1.rs-carousel-items-3 .rs-carousel-mask {
 				width: 450px;
 			}
 			
-			#my-carousel-1.ui-carousel-items-4 .mask {
+			#my-carousel-1.rs-carousel-items-4 .rs-carousel-mask {
 				width: 600px;
-			}
-			
-			/** no of rows **/
-			#my-carousel-1.ui-carousel-rows-1 .mask {
-				height: 150px;
-			}
-			
-			#my-carousel-1.ui-carousel-rows-2 .mask {
-				height: 300px;
-			}
-			
-			#my-carousel-1.ui-carousel-rows-3 .mask {
-				height: 450px;
 			}
 		
 		/** vertical **/
-		#my-carousel-1.ui-carousel-vertical .mask {
+		#my-carousel-1.rs-carousel-vertical .rs-carousel-mask {
 			width: 150px;
 		}
 		
 			/** items per page **/
-			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-1 .mask {
+			#my-carousel-1.rs-carousel-vertical.rs-carousel-items-1 .rs-carousel-mask {
 				height: 150px
 			}
 			
-			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-2 .mask {
+			#my-carousel-1.rs-carousel-vertical.rs-carousel-items-2 .rs-carousel-mask {
 				height: 300px;
 			}
 			
-			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-3 .mask {
+			#my-carousel-1.rs-carousel-vertical.rs-carousel-items-3 .rs-carousel-mask {
 				height: 450px;
 			}
 			
-			#my-carousel-1.ui-carousel-vertical.ui-carousel-items-4 .mask {
+			#my-carousel-1.rs-carousel-vertical.rs-carousel-items-4 .rs-carousel-mask {
 				height: 600px;
 			}
 
@@ -164,6 +139,10 @@
 		.color-5 {background:#86bbe0;}
 		.color-6 {background:#a7c7de;}
 		.color-7 {background:#d5dbdf;}
+
+		.rs-carousel-cloned {
+			background: red;	
+		}
 		
 		.field,
 		.actions {
@@ -182,18 +161,18 @@
 	</style>
 	
 	<!-- third party -->
-	<script type="text/javascript" src="js/lib/modernizr.3dtransforms.js"></script>
+	<!--script type="text/javascript" src="js/lib/modernizr.3dtransforms.js"></script-->
 	<script type="text/javascript" src="js/lib/jquery.js"></script>
 	<script type="text/javascript" src="js/lib/jquery.ui.widget.js"></script>
-	<script type="text/javascript" src="js/lib/jquery.ui.mouse.js"></script>
-	<script type="text/javascript" src="js/lib/jquery.ui.touch-punch.js"></script>
+	<!--script type="text/javascript" src="js/lib/jquery.ui.mouse.js"></script-->
+	<!--script type="text/javascript" src="js/lib/jquery.ui.touch-punch.js"></script-->
 	
 	<!-- carousel -->
-	<script type="text/javascript" src="js/jquery.ui.carousel.js"></script>
-	<script type="text/javascript" src="js/jquery.ui.carousel-autoscroll.js"></script>
-	<script type="text/javascript" src="js/jquery.ui.carousel-touch.js"></script>
-	<!--script type="text/javascript" src="js/jquery.ui.carousel-continuous.js"></script-->
-	
+	<script type="text/javascript" src="js/jquery.rs.carousel.js"></script>
+	<script type="text/javascript" src="js/jquery.rs.carousel-autoscroll.js"></script>
+	<script type="text/javascript" src="js/jquery.rs.carousel-continuous.js"></script>
+	<!--script type="text/javascript" src="js/jquery.ui.carousel-touch.js"></script-->
+
 	<script type="text/javascript">
 	
 		// this demo JS has def become ridiculous
@@ -207,6 +186,7 @@
 				this.events();
 				
 				this.elements.initBtn.click();
+				this.updateItemCount();
 			
 			},
 			
@@ -222,6 +202,7 @@
 				form = this.elements.form = this.elements.form = view.find('form');
 				this.elements.inputs = form.find(':checkbox, select');
 				this.elements.addItemsBtn = form.find('#addItemsBtn');
+				this.elements.itemCount = form.find('#itemCount');
 				this.elements.initBtn = form.find('#init');
 				this.elements.destroyBtn = form.find('#destroy');
 				
@@ -247,24 +228,21 @@
 				
 				elems.addItemsBtn.click(function() {
 					
-					var currentNoOfItems = carousel.find('ul li:not(.ui-carousel-cloned)').length,
+					var currentNoOfItems = carousel.carousel('getNoOfItems'),
 						noOfItems = parseInt(elems.form.find('#addItems').val(), 10),
 						items = [],
 						i,
 						colorClass;
 						
-						//console.log(currentNoOfITems, );
-						
 					for (i = 1; i <= noOfItems; i++) {
 						
 						colorClass = Math.floor(Math.random() * 7) + 1;
-						items.push('<li class="color-' + colorClass + '">' + (currentNoOfItems + i) + '</li>');
+						items.push('<li class="rs-carousel-item color-' + colorClass + '">' + (currentNoOfItems + i) + '</li>');
 						
 					}
 					
-					self.view.find('.ui-carousel .mask li:not(.ui-carousel-cloned)').last().after(items.join(''));
-					
-					carousel.carousel('refresh');
+					self.elements.carousel.carousel('add', items.join(''));
+					self.updateItemCount();
 					
 					return false;
 					
@@ -286,7 +264,7 @@
 					});
 					
 					// css translate3d() support detection
-					opts.translate3d = $.browser.webkit && Modernizr && Modernizr.csstransforms3d;
+					// opts.translate3d = $.browser.webkit && Modernizr && Modernizr.csstransforms3d;
 					
 					carousel.carousel(opts);
 				});
@@ -297,6 +275,14 @@
 					$('body').addClass('no-js');
 					carousel.carousel('destroy');
 				});
+			},
+
+			updateItemCount: function () {
+				
+				// perhaps make getItemCount as a public method..?
+				this.elements.itemCount.find('.count').text(this.elements.carousel.carousel('getNoOfItems'));
+
+				return;
 			},
 			
 			// ensures option are correct type (not always string)
@@ -333,13 +319,13 @@
 		
 			$('body').removeClass('no-js');
 			
-		    demo.init($('#container')); 
+		    demo.init($('#container'));
 			
 			// example of unknownHeight (allows unknown item height - useful if, for example, items contains textual content)
 			/*$('#my-carousel-1').carousel({
-				init: function() {
+				create: function() {
 					var el = $(this);
-					el.find('.mask').height(el.find('ul').height());
+					el.find('.rs-carousel-mask').height(el.find('ul').height());
 				}
 			});*/
 			
@@ -355,9 +341,9 @@
 <body class="no-js">
 	<div id="container">
 	
-		<h1>jQuery UI Carousel plugin v0.7.5</h1>
+		<h1>jquery.rs.carousel.js v0.8</h1>
 		
-		<p>Watch on <a href="https://github.com/richardscarrott/jquery-ui-carousel">Github</a></p>
+		<p>Watch on <a href="https://github.com/richardscarrott/jquery-rs-carousel">Github</a></p>
 		
 		<form class="module">
 			
@@ -396,15 +382,6 @@
 			</div>
 			
 			<div class="field">
-				<label for="noOfRows">noOfRows:</label>
-				<select id="noOfRows" name="noOfRows">
-					<option value="1" selected="selected">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-				</select>
-			</div>
-			
-			<div class="field">
 				<label for="speed">speed:</label>
 				<select id="speed" name="speed">
 					<option value="slow">slow</option>
@@ -432,9 +409,14 @@
 			</div>
 			
 			<div class="field">
-				<label for="nextPrevActions">autoScroll:</label>
+				<label for="autoScroll">autoScroll:</label>
 				<input type="checkbox" id="autoScroll" name="autoScroll" />
 				<span>NOTE: defaults to 8 seconds and is cancelled on hover</span>
+			</div>
+
+			<div class="field">
+				<label for="continuous">continuous:</label>
+				<input type="checkbox" id="continuous" name="continuous" />
 			</div>
 			
 			<div class="field">
@@ -443,6 +425,10 @@
 					<input type="text" name="addItems" id="addItems" style="width: 30px;" value="4" />
 					item(s)
 				</label>
+			</div>
+
+			<div id="itemCount" class="field item-count">
+				Total Items: <span class="count">0</span>
 			</div>
 			
 			<div class="actions">
@@ -457,24 +443,24 @@
 			</div>
 		</form>
 		
-		<div id="my-carousel-1" class="ui-carousel module">
-			<ul>
-				<li class="color-1">1</li>
-				<li class="color-4">2</li>
-				<li class="color-6">3</li>
-				<li class="color-2">4</li>
-				<li class="color-3">5</li>
-				<li class="color-1">6</li>
-				<li class="color-5">7</li>
-				<li class="color-2">8</li>
-				<li class="color-7">9</li>
-				<li class="color-1">10</li>
-				<li class="color-6">11</li>
-				<li class="color-3">12</li>
-				<li class="color-2">13</li>
-				<li class="color-1">14</li>
-				<li class="color-6">15</li>
-				<li class="color-7">16</li>
+		<div id="my-carousel-1" class="rs-carousel module">
+			<ul class="rs-carousel-runner">
+				<li class="rs-carousel-item color-1">1</li>
+				<li class="rs-carousel-item color-4">2</li>
+				<li class="rs-carousel-item color-6">3</li>
+				<li class="rs-carousel-item color-2">4</li>
+				<li class="rs-carousel-item color-3">5</li>
+				<li class="rs-carousel-item color-1">6</li>
+				<li class="rs-carousel-item color-1">7</li>
+				<li class="rs-carousel-item color-2">8</li>
+				<li class="rs-carousel-item color-6">9</li>
+				<li class="rs-carousel-item color-1">10</li>
+				<li class="rs-carousel-item color-4">11</li>
+				<li class="rs-carousel-item color-5">12</li>
+				<li class="rs-carousel-item color-1">13</li>
+				<li class="rs-carousel-item color-7">14</li>
+				<li class="rs-carousel-item color-5">15</li>
+				<li class="rs-carousel-item color-2">16</li>
 			</ul>
 		</div>
 

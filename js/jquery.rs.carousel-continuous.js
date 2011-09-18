@@ -1,5 +1,5 @@
 /*
- * jQuery UI Carousel Plugin v0.7.5 - Continuous Extension (in development)
+ * jquery.rs.carousel-continuous v0.8
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -11,54 +11,33 @@
  * Depends:
  *  jquery.js v1.4+
  *  jquery.ui.widget.js v1.8+
- *  jquery.ui.carousel.js v0.7.5+
+ *  jquery.rs.carousel.js v0.8+
  *
  */
  
- // TODO:
- // .updateUi needs to take into account continuous
- // look into multiple rows compatibility with continuous...going to have to be clever about this one!
- // cloned items need to be updated when items are added...
- // how should autoscroll interface?
- 
 (function($, undefined) {
 
-	function warn(message) {
-		if (console && console.warn) {
-			console.warn(message);
-		}
-	}
-
-	var _super = $.ui.carousel.prototype;
+	var _super = $.rs.carousel.prototype;
 	
-	$.widget('ui.carousel', $.ui.carousel, {
+	$.widget('rs.carousel', $.rs.carousel, {
 	
 		options: {
-			continuous: true // temp, default to false
+			continuous: false
 		},
 		
 		_create: function () {
 		
 			_super._create.apply(this, arguments);
-			
-			// continious
-			if (this.options.continuous) {
-			
-				// warn if items arn't divisible by items per transition (means current page cannot be accurately determined as items shown won't always be the same set)
-				if (this.options.pagination && this.noOfItems % this._getItemsPerTransition() != 0) {
-					warn('jquery.ui.carousel: number of items isn\'t divisible by itemsPerTransition meaning current page cannot be accurately deteremined');
-				}
-			
-				this._addClonedItems();
-				
-				// calculate width with cloned items
-				this._setRunnerWidth(this.elements.runner.children('li').length / this.options.noOfRows);
-				
-				// jump to first item to ignore cloned items
-				if (!this.options.startAt) {
-					this.goToItem(0, false);
-				}
+
+			if (!this.options.continuous) {
+				return;
 			}
+			
+			this._addClonedItems();
+			this._setRunnerWidth();
+
+			// go to page (again) to ensure we ignore clones
+			this.goToPage(this.options.startAt || 1, false);
 			
 		},
 		
@@ -66,129 +45,256 @@
 		_addClonedItems: function () {
 		
 			var elems = this.elements,
-				beginning = this._getItemsPerTransition() + this._getItemsPerPage(), 
-				end = this.noOfItems - this._getItemsPerTransition() - 1;
-				
+				cloneCount = this._getCloneCount(),
+				cloneClass = this.widgetBaseClass + '-item-clone';
+
 			this._removeClonedItems();
 		
-			elems.clonedBeginning = $(this.elements.items
-				.eq(beginning)
-					.prevAll()
-						.clone()
-							.removeAttr('id')
-							.addClass('ui-carousel-cloned')
-							.get()
-							.reverse());
-			
+			elems.clonedBeginning = this.elements.items
+				.slice(0, cloneCount)
+					.clone()
+						.removeAttr('id') // keep it valid
+						.addClass(cloneClass);
+
 			elems.clonedEnd = this.elements.items
-				.eq(end)
-					.nextAll()
-						.clone()
-							.removeAttr('id')
-							.addClass('ui-carousel-cloned')
-							.prependTo(this.elements.runner);
+				.slice(-cloneCount)
+					.clone()
+						.removeAttr('id')
+						.addClass(cloneClass);
 			
 			elems.clonedBeginning.appendTo(elems.runner);
 			elems.clonedEnd.prependTo(elems.runner);
-		
+			
+			return;
 		},
-		
+
 		_removeClonedItems: function () {
 		
 			var elems = this.elements;
 		
 			if (elems.clonedBeginning) {
 				elems.clonedBeginning.remove();
+				elems.clonedBeginning = undefined;
 			}
 			
 			if (elems.clonedEnd) {
 				elems.clonedEnd.remove();
+				elems.clonedEnd = undefined;
 			}
 		
 		},
+
+		// number of cloned items should equal itemsPerPage or, if greater, itemsPerTransition
+		_getCloneCount: function () {
+			
+			var itemsPerPage = this._getItemsPerPage(),
+				itemsPerTransition = this._getItemsPerTransition();
+			
+			return itemsPerPage >= itemsPerTransition ? itemsPerPage : itemsPerTransition;
+		},
+
+		// needs to be overridden to take into account cloned items
+		_setRunnerWidth: function () {
+
+			if (!this.isHorizontal) {
+				return;
+			}
+
+			var self = this;
+			
+			if (this.options.continuous) {
 				
-		// gets position
-		_getPos: function () {
+				this.elements.runner.width(function () {
+					return self._getItemDim() * (self.getNoOfItems() + (self._getCloneCount() * 2));
+				});
+
+			}
+			else {
+				_super._setRunnerWidth.apply(this, arguments);
+			}
+
+			return;
+		},
+
+		// next and prev links are always valid when continuous
+		_isValid: function (page) {
+			
+			if (this.options.continuous) {
+				return true;
+			}
+			else {
+				return _super._isValid.apply(this, arguments);
+			}
+			
+		},
+
+		// if first or last page jump to cloned before slide 
+		_go: function () {
+			
+			var self = this;
+
+			if (this.options.continuous) {
+
+				if (this.page > this._getNoOfPages()) {
+
+					// jump to clonedEnd
+					var realIndex,
+						cloneIndex;
+
+					this.elements.runner.css(this.helperStr.pos, function () {
+
+						// get item index of old page in context of clonedEnd
+						realIndex = self.pages[self.oldPage - 1];
+						cloneIndex = self.elements.items.slice(-self._getCloneCount()).index(self.elements.items.eq(realIndex - 1));
+
+						return -self.elements.clonedEnd.eq(cloneIndex).position()[self.helperStr.pos];
+					});
+
+					this.page = 1;
+
+				}
+				else if (this.page < 1) {
+
+					// jump to clonedBeginning
+					this.elements.runner.css(this.helperStr.pos, function () {
+						return -self.elements.clonedBeginning.eq(self.oldPage - 1).position()[self.helperStr.pos];
+					});
+
+					this.page = this._getNoOfPages();
+												
+				}
+
+			}
+
+			// continue
+			return _super._go.apply(this, arguments);
+
+		},
+
+		// don't need to take into account itemsPerPage when continuous as there's no absolute last pos
+		_getNoOfPages: function () {
+			
+			if (this.options.continuous) {
+				return Math.ceil(this.getNoOfItems() / this._getItemsPerTransition());
+			}
+
+			return _super._getNoOfPages.apply(this, arguments);
+		},
+
+		// not required as cloned items fill space
+		_getAbsoluteLastPos: function () {
+			
+			if (this.options.continuous) {
+				return undefined;
+			}
+
+			return _super._getAbsoluteLastPos.apply(this, arguments);
+		},
+		
+		// next and prev links are always active
+		_updateNextPrevActions: function () {
+
+			var elems = this.elements;
 
 			if (this.options.continuous) {
 			
-				var elems = this.elements,
-					pos,
-					cssProps = {};
-			
-				if (this.itemIndex > this.noOfItems - 1) {
-					
-					// why have I puts brackets around these calculations?
-					var realItems = (this.noOfItems - 1) - this.oldItemIndex,
-						clonedItems = (this._getItemsPerTransition() - 1) - realItems;
-						
-					cssProps[this.helperStr.pos] = -elems.clonedEnd.eq(clonedItems).position()[this.helperStr.pos];
-					elems.runner.css(cssProps);
-				
-					this.itemIndex = clonedItems;
-					
-				}			
-				else if (this.itemIndex < 0) {
-					
-					cssProps[this.helperStr.pos] = -elems.clonedBeginning.eq(this.oldItemIndex).position()[this.helperStr.pos];
-					elems.runner.css(cssProps);
-					
-					this.itemIndex = this.noOfItems - (this._getItemsPerTransition() - this.oldItemIndex);
-					
+				if (this.options.nextPrevActions) {
+
+					elems.nextAction
+						.add(elems.prevAction)
+							.removeClass(this.widgetBaseClass + '-action-disabled');
 				}
-				
-				return elems.items.eq(this.itemIndex).position()[this.helperStr.pos];
+
 			}
 			else {
-				
-				return _super._getItemIndex.apply(this, arguments);
-				
+				_super._updateNextPrevActions.apply(this, arguments);
 			}
-			
+
+			return;
 		},
-		
-		refresh: function(items) {
+
+		refresh: function() {
 			
 			if (this.options.continuous) {
-				
-				var items = this.elements.runner.children('li');
-				
-				// pass in items explicitly as not to include cloned items
-				_super.refresh.call(this, items.filter(':not(.ui-carousel-cloned)'));
-				
-				// currently has to be called again as it should include cloned items...
-				this._setRunnerWidth(this.elements.runner.children('li').length / this.options.noOfRows);
+
+				var noOfPages;
+
+				// re-cache items in case new items have been added, avoiding cloned
+				this.elements.items = this.elements.runner.children('li').not('.' + this.widgetBaseClass + '-item-clone');
+				this._addClasses();
+				this._addClonedItems();
+				this._setRunnerWidth();
+				this._setPages();
+				this._addPagination();
+
+				// validate page
+				noOfPages = this._getNoOfPages();
+				if (this.page > noOfPages) {
+					this.page = noOfPages;
+				}
+				this.goToPage(this.page, false);
+
 			}
 			else {
 				_super.refresh.apply(this, arguments);
 			}
-		
+			
+			return;
 		},
-		
+
+		add: function (items) {
+
+			this.elements.items
+				.last()
+					.after(items);
+
+			this.refresh();
+
+			return;
+		},
+
 		_setOption: function (option, value) {
-		
+			
 			_super._setOption.apply(this, arguments);
 			
 			switch (option) {
 				
 			case 'continuous':
 			
-				var items;
-				
-				if (value) {
-					this._addClonedItems();
-				}
-				else {
+				if (!value) {
 					this._removeClonedItems();
-					this._setLastPos();
 				}
 				
 				this.refresh();
 				
 				break;
-					
 			}
-		
+
+			return;
+		},
+
+		// autoscrolls _start overridden to support continuous
+		// this however means that autoscroll must be included before continuous...
+		_start: function() {
+
+			var self = this;
+
+			if (this.options.continuous) {
+				
+				this.interval = setInterval(function() {
+					
+					self.next();
+				
+				}, this.options.pause);
+			
+			}
+
+			// _super._start won't exist if autoscroll hasn't been included
+			else if ($.isFunction(_super._start)) {
+				_super._start.apply(this, arguments);
+			}
+			
+			return;
 		},
 		
 		destroy: function() {
@@ -197,8 +303,11 @@
 			
 			_super.destroy.apply(this);
 			
+			return;
 		}
 		
 	});
+
+	$.rs.carousel.version = '0.8';
 	
 })(jQuery);
