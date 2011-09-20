@@ -4,7 +4,7 @@
 
 	<meta charset="utf-8" />
 	
-	<title>jquery.rs.carousel.js v0.8 - Richard Scarrott</title>
+	<title>jQuery RS Carousel - Richard Scarrott</title>
 	
 	<link rel="stylesheet" type="text/css" href="css/lib/demo.css" media="all" />
 	
@@ -12,6 +12,7 @@
 	
 		#container {
 			position: relative;
+			width: 80%;
 		}
 		
 		/* carousel */
@@ -57,13 +58,17 @@
 		    margin: 0;
 		    padding: 0;
 		}
+
+		.rs-carousel-disabled .rs-carousel-pagination {
+			display: none;
+		}
 		 
 			.rs-carousel-pagination-link {
 				display: inline;
 			}
 
 				.rs-carousel-pagination-link a {
-					padding: 2px 6px;	
+					padding: 2px 6px;
 				}
 
 				.rs-carousel-pagination-link a:hover {
@@ -76,6 +81,11 @@
 				}
 		 	
 	 	/* next & prev actions */
+		.rs-carousel-disabled .rs-carousel-action-next,
+		.rs-carousel-disabled .rs-carousel-action-prev {
+			display: none;
+		}		
+
 		.rs-carousel-action-disabled {
 			color: gray;
 			cursor: default;
@@ -202,6 +212,7 @@
 				form = this.elements.form = this.elements.form = view.find('form');
 				this.elements.inputs = form.find(':checkbox, select');
 				this.elements.addItemsBtn = form.find('#addItemsBtn');
+				this.elements.removeItemsBtn = form.find('#removeItemsBtn');
 				this.elements.itemCount = form.find('#itemCount');
 				this.elements.initBtn = form.find('#init');
 				this.elements.destroyBtn = form.find('#destroy');
@@ -247,6 +258,22 @@
 					return false;
 					
 				});
+
+				elems.removeItemsBtn.click(function () {
+
+					var currentNoOfItems = carousel.carousel('getNoOfItems'),
+						noOfItems = parseInt(elems.form.find('#removeItems').val(), 10),
+						index = currentNoOfItems - noOfItems;
+
+						if (index < 0) {
+							index = 0;
+						}
+					
+					self.elements.carousel.carousel('remove', ':eq(' + index + '), :gt(' + index + ')');
+					self.updateItemCount();
+
+					return false;
+				});
 				
 				// carousel is initiated here
 				elems.initBtn.click(function(e) {
@@ -274,6 +301,10 @@
 					
 					$('body').addClass('no-js');
 					carousel.carousel('destroy');
+				});
+
+				$(window).resize(function () {
+					elems.carousel.carousel('refresh');
 				});
 			},
 
@@ -323,7 +354,7 @@
 			
 			// example of unknownHeight (allows unknown item height - useful if, for example, items contains textual content)
 			/*$('#my-carousel-1').carousel({
-				create: function() {
+				create_: function() {
 					var el = $(this);
 					el.find('.rs-carousel-mask').height(el.find('ul').height());
 				}
@@ -341,9 +372,9 @@
 <body class="no-js">
 	<div id="container">
 	
-		<h1>jquery.rs.carousel.js v0.8</h1>
+		<h1>jQuery RS Carousel</h1>
 		
-		<p>Watch on <a href="https://github.com/richardscarrott/jquery-rs-carousel">Github</a></p>
+		<p>Download from <a href="https://github.com/richardscarrott/jquery-rs-carousel">Github</a></p>
 		
 		<form class="module">
 			
@@ -427,6 +458,14 @@
 				</label>
 			</div>
 
+			<div class="field">
+				<label for="removeItems">
+					<button id="removeItemsBtn">Remove</button>
+					<input type="text" name="removeItems" id="removeItems" style="width: 30px;" value="4" />
+					item(s)
+				</label>
+			</div>
+
 			<div id="itemCount" class="field item-count">
 				Total Items: <span class="count">0</span>
 			</div>
@@ -445,22 +484,20 @@
 		
 		<div id="my-carousel-1" class="rs-carousel module">
 			<ul class="rs-carousel-runner">
-				<li class="rs-carousel-item color-1">1</li>
-				<li class="rs-carousel-item color-4">2</li>
-				<li class="rs-carousel-item color-6">3</li>
+				<li class="rs-carousel-item color-2">1</li>
+				<li class="rs-carousel-item color-3">2</li>
+				<li class="rs-carousel-item color-1">3</li>
 				<li class="rs-carousel-item color-2">4</li>
-				<li class="rs-carousel-item color-3">5</li>
-				<li class="rs-carousel-item color-1">6</li>
-				<li class="rs-carousel-item color-1">7</li>
-				<li class="rs-carousel-item color-2">8</li>
-				<li class="rs-carousel-item color-6">9</li>
-				<li class="rs-carousel-item color-1">10</li>
-				<li class="rs-carousel-item color-4">11</li>
-				<li class="rs-carousel-item color-5">12</li>
-				<li class="rs-carousel-item color-1">13</li>
-				<li class="rs-carousel-item color-7">14</li>
-				<li class="rs-carousel-item color-5">15</li>
-				<li class="rs-carousel-item color-2">16</li>
+				<li class="rs-carousel-item color-4">5</li>
+				<li class="rs-carousel-item color-7">6</li>
+				<li class="rs-carousel-item color-5">7</li>
+				<li class="rs-carousel-item color-6">8</li>
+				<li class="rs-carousel-item color-1">9</li>
+				<li class="rs-carousel-item color-2">10</li>
+				<li class="rs-carousel-item color-3">11</li>
+				<li class="rs-carousel-item color-4">12</li>
+				<li class="rs-carousel-item color-3">13</li>
+				<li class="rs-carousel-item color-2">14</li>
 			</ul>
 		</div>
 
