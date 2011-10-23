@@ -1,96 +1,82 @@
-/*=======================================
- File Name: demo.css
- Author: Richard Scarrott
- Copyright: Richard Scarrott
- Created (updated): 08/08/10 (08/10/10)
-=======================================*/
 
-/*=======================================
-=============== contents ================
-1..................................=reset
-2............................=base styles
-=======================================*/
+	/* layout */
+	#container {
+		position: relative;
+		width: 80%;
+	}
 
-/*=======================================
- 1. =reset
-=======================================*/
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, font, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td
-{margin:0;padding:0;border:none;outline:0;}
+	/* rs carousel */
+	#rs-carousel .rs-carousel-mask {
+	    border: 6px solid #444;
+	}
 
-/*=======================================
- 2. =base styles
-=======================================*/
-body {
-	background:#444;
-	font-family:arial, helvetica, sans-serif;
-	font-size:81.25%; /** 13px **/
-	color:#444;
-	line-height:1.4;
-}
+		#rs-carousel .rs-carousel-item {
+			color: #fff;
+			font-size: 8em;
+			text-align: center;
+			width: 150px;
+			height: 150px;
+		}
 
-/** block level **/
-p, pre, blockquote, dl, ul, ol, address {margin:0 0 1.384em;}
+	#rs-carousel .rs-carousel-pagination-link {
+		display: inline;
+	}
 
-ul, ol {padding:0 0 0 20px;}
+		#rs-carousel .rs-carousel-pagination-link a {
+			padding: 2px 6px;
+		}
 
-li {margin:0 0  0.461em;}
+			#rs-carousel .rs-carousel-pagination-link a:hover {
+				text-decoration: none;
+			}
 
-h1, h2, h3, h4 {
-	line-height:1.2;
-	font-weight:normal;
-	margin:0 0 0.3em;
-	font-family:trebuchet ms, lucida sans unicode, arial, sans-serif;
-	font-size:1.538em;
-}
+		#rs-carousel .rs-carousel-pagination-link-active a {
+			background: #444;
+			color: #fff;
+		}
 
-table {border-collapse:collapse;}
+	#rs-carousel.rs-carousel-disabled .rs-carousel-pagination-link a,
+	#rs-carousel.rs-carousel-disabled .rs-carousel-action-next,
+	#rs-carousel.rs-carousel-disabled .rs-carousel-action-prev,
+	#rs-carousel .rs-carousel-action-disabled {
+		color: gray;
+		cursor: default;
+	}
 
-th {text-align:left;}
+	/** horizontal **/
+	#rs-carousel.rs-carousel-horizontal.rs-carousel-items-1 .rs-carousel-mask {
+		width: 150px;
+	}
+	
+	#rs-carousel.rs-carousel-horizontal.rs-carousel-items-2 .rs-carousel-mask {
+		width: 300px;
+	}
+	
+	#rs-carousel.rs-carousel-horizontal.rs-carousel-items-3 .rs-carousel-mask {
+		width: 450px;
+	}
+	
+	#rs-carousel.rs-carousel-horizontal.rs-carousel-items-4 .rs-carousel-mask {
+		width: 600px;
+	}
+	
+	/** vertical **/
+	#rs-carousel.rs-carousel-vertical .rs-carousel-mask {
+		width: 150px;
+	}
 
-iframe {
-	border-width:0;
-	background:#DDD;
-}
-
-/** inline **/
-a {
-	color:#1788D7;
-	text-decoration:none;
-}
-
-a:hover {text-decoration:underline;}
-
-img {vertical-align:bottom;}
-
-strong, dt {font-weight:bold;}
-
-em {font-style:italic;}
-
-cite {font-style:normal;}
-
-acronym, abbr {
-	border-bottom:1px dotted #333;
-	cursor:help;
-}
-
-pre, kbd, code, samp, tt, var {font-family:monospace;}
-
-pre {white-space:pre-wrap;}
-
-.module {
-	margin:0 0 1.384em;
-}
-
-#container {
-	width:666px;
-	margin:0 auto;
-	background:#F5F5F5;
-	padding:30px;
-}
+	#rs-carousel.rs-carousel-vertical.rs-carousel-items-1 .rs-carousel-mask {
+		height: 150px;
+	}
+	
+	#rs-carousel.rs-carousel-vertical.rs-carousel-items-2 .rs-carousel-mask {
+		height: 300px;
+	}
+	
+	#rs-carousel.rs-carousel-vertical.rs-carousel-items-3 .rs-carousel-mask {
+		height: 450px;
+	}
+	
+	#rs-carousel.rs-carousel-vertical.rs-carousel-items-4 .rs-carousel-mask {
+		height: 600px;
+	}

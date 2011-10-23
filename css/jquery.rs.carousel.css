@@ -1,0 +1,25 @@
+/*
+ * jquery.rs.carousel.css v0.8.1
+ *
+ * Copyright (c) 2011 Richard Scarrott
+ * http://www.richardscarrott.co.uk
+ *
+ * Dual licensed under the MIT and GPL licenses:
+ * http://www.opensource.org/licenses/mit-license.php
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Depends:
+ *  a basic reset + items must have width & height
+ */
+	
+.rs-carousel .rs-carousel-mask {
+	overflow: hidden;
+}
+
+	.rs-carousel .rs-carousel-runner {
+	    position: relative;
+	}
+		
+		.rs-carousel.rs-carousel-horizontal .rs-carousel-item {
+			float: left;
+		}
