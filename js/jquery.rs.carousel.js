@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel.js v0.8.1
+ * jquery.rs.carousel.js v0.8.2
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -56,9 +56,8 @@
             this._defineOrientation();
             this._addMask();
             this._addNextPrevActions();
-            // pass in false to avoid re-caching items again
             this.refresh(false);
-            this._trigger('create_', null, this._getData());
+            this._trigger('create_', null, this.elements);
 
             return;
         },
@@ -251,7 +250,7 @@
                 opts = this.options,
                 baseClass = this.widgetBaseClass,
                 links = [],
-                noOfPages = this._getNoOfPages(),
+                noOfPages = this.getNoOfPages(),
                 i;
                 
             this._removePagination();
@@ -293,7 +292,7 @@
                 
             this.pages = [];
             
-            while (page < this._getNoOfPages()) {
+            while (page < this.getNoOfPages()) {
                 
                 // if index is greater than total number of items just go to last
                 if (index > this.getNoOfItems()) {
@@ -301,22 +300,28 @@
                 }
 
                 this.pages[page] = index;
-                index += this._getItemsPerTransition(); // this._getItemsPerPage(index);
+                index += this.getItemsPerTransition(); // this.getItemsPerPage(index);
                 page++;
             }
 
             return;
         },
 
-        // gets noOfPages
-        _getNoOfPages: function () {
-
-            return Math.ceil((this.getNoOfItems() - this._getItemsPerPage()) / this._getItemsPerTransition()) + 1;
+        getPages: function () {
+            
+            return this.pages;
 
         },
 
-        // gets options.itemsPerPage. If set to not number it's calculated based on maskdim
-        _getItemsPerPage: function () {
+        // returns noOfPages
+        getNoOfPages: function () {
+
+            return Math.ceil((this.getNoOfItems() - this.getItemsPerPage()) / this.getItemsPerTransition()) + 1;
+
+        },
+
+        // returns options.itemsPerPage. If not a number it's calculated based on maskdim
+        getItemsPerPage: function () {
 
             // if itemsPerPage of type number don't dynamically calculate
             if (typeof this.options.itemsPerPage === 'number') {
@@ -327,13 +332,13 @@
 
         },
 
-        _getItemsPerTransition: function () {
+        getItemsPerTransition: function () {
 
             if (typeof this.options.itemsPerTransition === 'number') {
                 return this.options.itemsPerTransition;
             }
 
-            return this._getItemsPerPage();
+            return this.getItemsPerPage();
             
         },
 
@@ -361,7 +366,7 @@
         goToPage: function (page, animate) {
 
             if (!this.options.disabled && this._isValid(page)) {
-                this.oldPage = this.page;
+                this.prevPage = this.page;
                 this.page = page;
                 this._go(animate);
             }
@@ -372,7 +377,7 @@
         // returns true if page index is valid, false if not
         _isValid: function (page) {
             
-            if (page <= this._getNoOfPages() && page >= 1) {
+            if (page <= this.getNoOfPages() && page >= 1) {
                 return true;
             }
             
@@ -385,24 +390,11 @@
             if (page < 1) {
                 page = 1;
             }
-            else if (page > this._getNoOfPages()) {
-                page = this._getNoOfPages();
+            else if (page > this.getNoOfPages()) {
+                page = this.getNoOfPages();
             }
 
             return page;
-        },
-
-        // returns obj with useful data to be passed into callback events
-        _getData: function () {
-        
-            return {
-                page: this.page,
-                oldPage: this.oldPage,
-                noOfItems: this.getNoOfItems(),
-                noOfPages: this._getNoOfPages(),
-                elements: this.elements
-            };
-            
         },
 
         // abstract _slide to easily override within extensions
@@ -415,7 +407,7 @@
 
         _slide: function (animate) {
         
-            this._trigger('beforeAnimate', null, this._getData());
+            this._trigger('beforeAnimate', null, this.elements);
 
             var self = this,
                 speed = animate === false ? 0 : this.options.speed, // default to animate
@@ -436,7 +428,7 @@
                 .stop()
                 .animate(animateProps, speed, this.options.easing, function () {
 
-                    self._trigger('afterAnimate', null, self._getData());
+                    self._trigger('afterAnimate', null, self.elements);
 
                 });
                 
@@ -493,7 +485,7 @@
                 .add(elems.prevAction)
                     .removeClass(disabledClass);
                 
-            if (page === this._getNoOfPages()) {
+            if (page === this.getNoOfPages()) {
                 elems.nextAction.addClass(disabledClass);
             }
             else if (page === 1) {
@@ -585,7 +577,7 @@
         // if no of items is less than items per page we disable carousel
         _checkDisabled: function () {
             
-            if (this.getNoOfItems() <= this._getItemsPerPage()) {
+            if (this.getNoOfItems() <= this.getItemsPerPage()) {
                 this.elements.runner.css(this.helperStr.pos, '');
                 this.disable();
             }
@@ -651,10 +643,22 @@
             _super.destroy.apply(this, arguments);
 
             return;
+        },
+
+        getPage: function () {
+            
+            return this.page;
+
+        },
+
+        getPrevPage: function () {
+            
+            return this.prevPage;
+
         }
 
     });
     
-    $.rs.carousel.version = '0.8.1';
+    $.rs.carousel.version = '0.8.2';
 
 })(jQuery);

@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel-continuous v0.8.1
+ * jquery.rs.carousel-continuous v0.8.2
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -90,8 +90,8 @@
         // perhaps allow number to be adjusted with extra clone option...
         _getCloneCount: function () {
             
-            var itemsPerPage = this._getItemsPerPage(),
-                itemsPerTransition = this._getItemsPerTransition();
+            var itemsPerPage = this.getItemsPerTransition(),
+                itemsPerTransition = this.getItemsPerTransition();
             
             return itemsPerPage >= itemsPerTransition ? itemsPerPage : itemsPerTransition;
         },
@@ -139,13 +139,13 @@
             // if first or last page jump to cloned before slide
             if (this.options.continuous) {
 
-                if (this.page > this._getNoOfPages()) {
+                if (this.page > this.getNoOfPages()) {
 
                     // jump to clonedEnd
                     this.elements.runner.css(this.helperStr.pos, function () {
 
                         // get item index of old page in context of clonedEnd
-                        realIndex = self.pages[self.oldPage - 1];
+                        realIndex = self.pages[self.prevPage - 1];
 
                         // do we need to slice here? try self.elements.clonedEnd.index(self.elements.items.eq(realIndex)); maybe..
                         cloneIndex = self.elements.items.slice(-self._getCloneCount()).index(self.elements.items.eq(realIndex - 1));
@@ -161,10 +161,10 @@
                     // jump to clonedBeginning
                     this.elements.runner.css(this.helperStr.pos, function () {
                         // .eq should be .first()?
-                        return -self.elements.clonedBeginning.eq(self.oldPage - 1).position()[self.helperStr.pos];
+                        return -self.elements.clonedBeginning.eq(self.prevPage - 1).position()[self.helperStr.pos];
                     });
 
-                    this.page = this._getNoOfPages();
+                    this.page = this.getNoOfPages();
                                                 
                 }
 
@@ -177,13 +177,13 @@
         },
 
         // don't need to take into account itemsPerPage when continuous as there's no absolute last pos
-        _getNoOfPages: function () {
+        getNoOfPages: function () {
             
             if (this.options.continuous) {
-                return Math.ceil(this.getNoOfItems() / this._getItemsPerTransition());
+                return Math.ceil(this.getNoOfItems() / this.getItemsPerTransition());
             }
 
-            return _super._getNoOfPages.apply(this, arguments);
+            return _super.getNoOfPages.apply(this, arguments);
         },
 
         // not required as cloned items fill space
