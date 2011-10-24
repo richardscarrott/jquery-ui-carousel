@@ -662,7 +662,7 @@
 
             // assume element or jQuery obj
             if (typeof index !== 'number') {
-                index = $(index).index() + 1;
+                index = this.elements.items.index(index) + 1;
             }
 
             if (index <= this.getNoOfItems()) {
