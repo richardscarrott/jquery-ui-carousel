@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel.js v0.8.2
+ * jquery.rs.carousel.js v0.8.3
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -655,10 +655,25 @@
             
             return this.prevPage;
 
+        },
+
+        // item can be $obj, element or 1 based index
+        goToItem: function (index, animate) {
+
+            // assume element or jQuery obj
+            if (typeof index !== 'number') {
+                index = $(index).index() + 1;
+            }
+
+            if (index <= this.getNoOfItems()) {
+                this.goToPage(Math.ceil(index / this.getItemsPerTransition()), animate);
+            }
+
+            return;
         }
 
     });
     
-    $.rs.carousel.version = '0.8.2';
+    $.rs.carousel.version = '0.8.3';
 
 })(jQuery);
