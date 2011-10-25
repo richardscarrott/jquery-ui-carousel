@@ -84,7 +84,7 @@ Allows you to override where in the DOM the pagination links are inserted.
 The context of the function will be the pagination links, e.g.
 
     function () {
-        // this === <ol class="pagination-links"></ol>
+        // this === <ol class="rs-carousel-pagination"></ol>
         $(this).appendTo('body');
     }
 
@@ -237,7 +237,7 @@ Moves to the specified 'page' (one based). If animate is set to false it'll jump
 Moves to page containing item, item can be a one based number, a vanilla DOM element
 or a jQuery object. If animate is set to false it'll jump straight there.
 
-#### getNoOfItems .carousel('getNoOfITems')
+#### getNoOfItems .carousel('getNoOfItems')
 Returns current number of items in carousel.
 
 #### getNoOfPages .carousel('getNoOfPages')
@@ -261,11 +261,11 @@ Refreshes carousel based on new state.
 #### getPage .carousel('getPage')
 Returns current page.
 
-#### getPage .carousel('getPrevPage')
+#### getPrevPage .carousel('getPrevPage')
 Returns previous page.
 
 #### getPages .carousel('getPages')
-Returns pages array. e.g. [1, 5, 9, 13] // where the index === page number and the value === first item in page.
+Returns pages array. e.g. [1, 5, 9, 13] // where the index + 1 === page number and the value === index of first item in page.
 
 #### option .carousel('option', optionName , [value])
 Get or set any carousel option. If no value is specified, will act as a getter.
@@ -274,7 +274,7 @@ Get or set any carousel option. If no value is specified, will act as a getter.
 Set multiple carousel options at once by providing an options object.
 
 #### widget .carousel('widget')
-Returns the .ui-carousel element.
+Returns the .rs-carousel element.
 
 #### destroy .carousel('destroy')
 Removes the carousel functionality completely. This will return the element back to its pre-init state.
