@@ -593,7 +593,7 @@
 
             // assume true (undefined should pass condition)
             if (recache !== false) {
-                this.recacheItems();
+                this._recacheItems();
             }
 
             this._addClasses();
@@ -610,7 +610,7 @@
         // re-cache items in case new items have been added,
         // moved to own method so continuous can easily override
         // to avoid clones
-        recacheItems: function () {
+        _recacheItems: function () {
 
             this.elements.items = this.elements.runner
                 .children('.' + this.widgetBaseClass + '-item');

@@ -231,7 +231,7 @@
         },
 
         // override to avoid clones
-        recacheItems: function () {
+        _recacheItems: function () {
 
             var baseClass = '.' + this.widgetBaseClass;
 
