@@ -273,10 +273,10 @@ Get or set any carousel option. If no value is specified, will act as a getter.
 #### option .carousel('option', options)
 Set multiple carousel options at once by providing an options object.
 
-#### disable .carousel('disabled')
+#### disable .carousel('disable')
 Disables the carousel.
 
-#### enable .carousel('disabled')
+#### enable .carousel('enable')
 Enables the carousel.
 
 #### widget .carousel('widget')
