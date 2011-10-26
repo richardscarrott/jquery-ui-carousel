@@ -273,6 +273,12 @@ Get or set any carousel option. If no value is specified, will act as a getter.
 #### option .carousel('option', options)
 Set multiple carousel options at once by providing an options object.
 
+#### disable .carousel('disabled')
+Disables the carousel.
+
+#### enable .carousel('disabled')
+Enables the carousel.
+
 #### widget .carousel('widget')
 Returns the .rs-carousel element.
 
