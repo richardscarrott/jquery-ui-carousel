@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel-continuous v0.8.2
+ * jquery.rs.carousel-continuous v0.8.4
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -11,7 +11,7 @@
  * Depends:
  *  jquery.js v1.4+
  *  jquery.ui.widget.js v1.8+
- *  jquery.rs.carousel.js v0.8.1+
+ *  jquery.rs.carousel.js v0.8.4+
  *
  */
  
@@ -139,7 +139,7 @@
             // if first or last page jump to cloned before slide
             if (this.options.continuous) {
 
-                if (this.page > this.getNoOfPages()) {
+                if (this.page > this.getNoOfPages() && this.elements.clonedEnd.length) {
 
                     // jump to clonedEnd
                     this.elements.runner.css(this.helperStr.pos, function () {
@@ -156,7 +156,7 @@
                     this.page = 1;
 
                 }
-                else if (this.page < 1) {
+                else if (this.page < 1 && this.elements.clonedBeginning.length) {
 
                     // jump to clonedBeginning
                     this.elements.runner.css(this.helperStr.pos, function () {
@@ -179,8 +179,17 @@
         // don't need to take into account itemsPerPage when continuous as there's no absolute last pos
         getNoOfPages: function () {
             
+            var itemsPerTransition;
+
             if (this.options.continuous) {
-                return Math.ceil(this.getNoOfItems() / this.getItemsPerTransition());
+
+                itemsPerTransition = this.getItemsPerTransition();
+
+                if (itemsPerTransition <= 0) {
+                    return 0;
+                }
+
+                return Math.ceil(this.getNoOfItems() / itemsPerTransition);
             }
 
             return _super.getNoOfPages.apply(this, arguments);
@@ -316,6 +325,6 @@
         
     });
 
-    $.rs.carousel.version = '0.8.1';
+    $.rs.carousel.version = '0.8.4';
     
 })(jQuery);

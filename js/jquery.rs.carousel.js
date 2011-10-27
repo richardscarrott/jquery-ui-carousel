@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel.js v0.8.3
+ * jquery.rs.carousel.js v0.8.4
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -288,11 +288,12 @@
         _setPages: function () {
 
             var index = 1,
-                page = 0;
+                page = 0,
+                noOfPages = this.getNoOfPages();
                 
             this.pages = [];
             
-            while (page < this.getNoOfPages()) {
+            while (page < noOfPages) {
                 
                 // if index is greater than total number of items just go to last
                 if (index > this.getNoOfItems()) {
@@ -316,7 +317,14 @@
         // returns noOfPages
         getNoOfPages: function () {
 
-            return Math.ceil((this.getNoOfItems() - this.getItemsPerPage()) / this.getItemsPerTransition()) + 1;
+            var itemsPerTransition = this.getItemsPerTransition();
+
+            // #18 - ensure we don't return Infinity
+            if (itemsPerTransition <= 0) {
+                return 0;
+            }
+
+            return Math.ceil((this.getNoOfItems() - this.getItemsPerPage()) / itemsPerTransition) + 1;
 
         },
 
@@ -674,6 +682,6 @@
 
     });
     
-    $.rs.carousel.version = '0.8.3';
+    $.rs.carousel.version = '0.8.4';
 
 })(jQuery);
