@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel.js v0.8.4
+ * jquery.rs.carousel.js v0.8.5
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -34,6 +34,7 @@
             itemsPerPage: 'auto',
             itemsPerTransition: 'auto',
             orientation: 'horizontal',
+            loop: false,
             pagination: true,
             insertPagination: null,
             nextPrevActions: true,
@@ -51,7 +52,7 @@
 
         _create: function () {
 
-            this.page = 0;
+            this.page = 1;
             this._elements();
             this._defineOrientation();
             this._addMask();
@@ -357,15 +358,27 @@
         },
 
         next: function (animate) {
+
+            var page = this.page + 1;
+
+            if (this.options.loop && page > this.getNoOfPages()) {
+                page = 1;
+            }
             
-            this.goToPage(this.page + 1, animate);
+            this.goToPage(page, animate);
 
             return;
         },
 
         prev: function (animate) {
+
+            var page = this.page - 1;
+
+            if (this.options.loop && page < 1) {
+                page = this.getNoOfPages();
+            }
             
-            this.goToPage(this.page - 1, animate);
+            this.goToPage(page, animate);
 
             return;
         },
@@ -492,19 +505,23 @@
             elems.nextAction
                 .add(elems.prevAction)
                     .removeClass(disabledClass);
+
+            if (!this.options.loop) {
                 
-            if (page === this.getNoOfPages()) {
-                elems.nextAction.addClass(disabledClass);
-            }
-            else if (page === 1) {
-                elems.prevAction.addClass(disabledClass);
+                if (page === this.getNoOfPages()) {
+                    elems.nextAction.addClass(disabledClass);
+                }
+                else if (page === 1) {
+                    elems.prevAction.addClass(disabledClass);
+                }
+
             }
 
             return;
         },
 
         // formalise appending items as continuous adding complexity by inserting
-        //  cloned items
+        // cloned items
         add: function (items) {
 
             this.elements.runner.append(items);
@@ -571,6 +588,12 @@
                 else {
                     this._removeNextPrevActions();
                 }
+
+                break;
+
+            case 'loop':
+
+                this._updateUi();
 
                 break;
             }
@@ -682,6 +705,6 @@
 
     });
     
-    $.rs.carousel.version = '0.8.4';
+    $.rs.carousel.version = '0.8.5';
 
 })(jQuery);

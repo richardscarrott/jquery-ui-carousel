@@ -75,6 +75,9 @@ will match itemsPerPage.
 #### orientation: 'horizontal' (string)
 Sets the orientation of the carousel, either 'horizontal' or 'vertical'.
 
+#### loop: false (boolean)
+If set to true carousel will loop back to first or last page accordingly.
+
 #### pagination: true (boolean)
 Sets whether pagination links should be included, pagination links are inserted as an ordered list.
 
