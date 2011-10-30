@@ -8,20 +8,22 @@
 	
 	<link rel="stylesheet" type="text/css" href="css/lib/base.css" media="all" />
 	<link rel="stylesheet" type="text/css" href="css/jquery.rs.carousel.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="css/jquery.rs.carousel-touch.css" media="all" />
 	<link rel="stylesheet" type="text/css" href="css/demo.css" media="all" />
 	
 	<!-- lib -->
-	<!--script type="text/javascript" src="js/lib/modernizr.3dtransforms.js"></script-->
+	<script type="text/javascript" src="js/lib/modernizr.3dtransforms.js"></script>
 	<script type="text/javascript" src="js/lib/jquery.js"></script>
+	<script type="text/javascript" src="js/lib/jquery.translate3d.js"></script>
 	<script type="text/javascript" src="js/lib/jquery.ui.widget.js"></script>
-	<!--script type="text/javascript" src="js/lib/jquery.ui.mouse.js"></script-->
-	<!--script type="text/javascript" src="js/lib/jquery.ui.touch-punch.js"></script-->
+	<script type="text/javascript" src="js/lib/jquery.ui.mouse.js"></script>
+	<script type="text/javascript" src="js/lib/jquery.ui.touch-punch.js"></script>
 	
 	<!-- carousel -->
 	<script type="text/javascript" src="js/jquery.rs.carousel.js"></script>
 	<script type="text/javascript" src="js/jquery.rs.carousel-autoscroll.js"></script>
 	<script type="text/javascript" src="js/jquery.rs.carousel-continuous.js"></script>
-	<!--script type="text/javascript" src="js/jquery.ui.carousel-touch.js"></script-->
+	<script type="text/javascript" src="js/jquery.rs.carousel-touch.js"></script>
 
 	<!-- demo -->
 	<script type="text/javascript" src="js/demo/demo.js"></script>
@@ -161,7 +163,7 @@
 			<ul class="rs-carousel-runner">
 				<li class="rs-carousel-item color-2">1</li>
 				<li class="rs-carousel-item color-3">2</li>
-				<li class="rs-carousel-item color-1">3</li>
+				<li class="rs-carousel-item color-1"><a href="javascript:alert('Clicked');">3</a></li>
 				<li class="rs-carousel-item color-2">4</li>
 				<li class="rs-carousel-item color-4">5</li>
 				<li class="rs-carousel-item color-7">6</li>

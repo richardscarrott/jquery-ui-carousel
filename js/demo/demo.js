@@ -103,7 +103,8 @@
 				});
 				
 				// css translate3d() support detection
-				// opts.translate3d = $.browser.webkit && Modernizr && Modernizr.csstransforms3d;
+				opts.translate3d = Modernizr && Modernizr.csstransforms3d;
+				opts.touch = Modernizr && Modernizr.touch;
 				
 				carousel.carousel(opts);
 			});

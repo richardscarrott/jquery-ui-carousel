@@ -1,5 +1,5 @@
 /*
- * jQuery UI Carousel Plugin v0.7.5 - Touch Extension
+ * jQuery RS Carousel Plugin v0.8.5 - Touch Extension
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -10,40 +10,21 @@
  *
  * Depends:
  *  jquery.js v1.4+
+ *  jquery.translate3d.js v0.1+ // if passing in translate3d true for hardware acceleration
  *  jquery.ui.widget.js v1.8+
- *  jquery.ui.mouse.js v1.8+
- *  jquery.ui.touch-punch.js v0.1.0+ - at least until $.ui.mouse.js supports touch events (https://github.com/furf/jquery-ui-touch-punch)
- *  jquery.ui.carousel.js v0.7.5+
+ *	jquery.ui.mouse.js v1.8+
+ *	jquery.ui.touch-punch.js v0.1.0 // at least until jquery ui implement touch support
+ *  jquery.rs.carousel.js v0.8.5+
  *
  */
- 
-// CSS transform() hook currently just deals with webkit...
-(function ($) {
-	
-	$.cssHooks.carouselTransform = {
-		set: function(elem, value) {
-			elem.style['-webkit-transform'] = value;
-		},
-		get: function (elem) {
-			var value = elem.style['-webkit-transform'];
-			if (value) {
-				value = value.split('(')[1].split(',');  // a bit rubbish me thinks...
-				return {
-					x: parseInt(value[0]),
-					y: parseInt(value[1])
-				}
-			}
-		}
-	};
-	
-})(jQuery);
 
-// custom drag, if supported it uses 'translate3d' instead of 'left / top' for hardware acceleration
 (function ($) {
 
 	var _super = $.ui.mouse.prototype;
 	
-	$.widget('ui._carouselDrag', $.ui.mouse, {
+	// custom drag, if supported it uses 'translate3d' instead of 'left / top'
+	// for hardware acceleration in iOS et al.
+	$.widget('rs.draggable3d', $.ui.mouse, {
 	
 		options: {
 			axis: 'x',
@@ -51,19 +32,12 @@
 		},
 		
 		_create: function () {
-		
-			var cssProps = {};
-			
-			if (this.options.translate3d) {
-				this.element.css('carousel-transform', 'translate3d(0, 0, 0)');
-			}
-			else {
-				cssProps[this._getPosStr()] = 0;
-				this.element.css(cssProps);
-			}
-			
+
+			var self = this;
+
 			this._mouseInit();
-		
+			
+			return;
 		},
 		
 		_getPosStr: function () {
@@ -77,14 +51,15 @@
 			this.mouseStartPos = this.options.axis === 'x' ? e.pageX : e.pageY;
 			
 			if (this.options.translate3d) {
-				this.runnerPos = this.element.css('carousel-transform')[this.options.axis];
+				this.runnerPos = this.element.css('translate3d')[this.options.axis];
 			}
 			else {
-				this.runnerPos = parseInt(this.element.css(this._getPosStr()), 10);
+				this.runnerPos = parseInt(this.element.position()[this._getPosStr()], 10);
 			}
 			
 			this._trigger('start', e);
-			
+
+			return;
 		},
 		
 		_mouseDrag: function(e) {
@@ -94,20 +69,22 @@
 				cssProps = {};
 			
 			if (this.options.translate3d) {
-				cssProps['carousel-transform'] = this.options.axis === 'x' ? 'translate3d(' + pos + 'px, 0, 0)' : 'translate3d(0, ' + pos + 'px, 0)';
+				cssProps.translate3d = this.options.axis === 'x' ? {x: pos} : {y: pos};
 			}
 			else {
 				cssProps[this._getPosStr()] = pos;
 			}
 			
 			this.element.css(cssProps);
-		
+			
+			return;
 		},
 		
 		_mouseStop: function (e) {
 			
 			this._trigger('stop', e);
 			
+			return;
 		},
 		
 		destroy: function () {
@@ -115,7 +92,7 @@
 			var cssProps = {};
 			
 			if (this.options.translate3d) {
-				cssProps['carousel-transform'] = '';
+				cssProps.translate3d = {};
 			}
 			else {
 				cssProps[this._getPosStr()] = '';
@@ -125,6 +102,7 @@
 			this._mouseDestroy();
 			_super.destroy.apply(this);
 			
+			return;
 		}
 		
 	});
@@ -136,13 +114,14 @@
 // touch extension
 (function ($) {
 	
-	var _super = $.ui.carousel.prototype;
+	var _super = $.rs.carousel.prototype;
 		
-	$.widget('ui.carousel', $.ui.carousel, {
+	$.widget('rs.carousel', $.rs.carousel, {
 	
 		options: {
-			sensitivity: 0.8,
-			translate3d: false
+			touch: false,
+			translate3d: false,
+			sensitivity: 0.8
 		},
 		
 		_create: function () {
@@ -150,29 +129,34 @@
 			_super._create.apply(this);
 			
 			var self = this;
-			
-			this.elements.runner
-				._carouselDrag({
-					translate3d: this.options.translate3d,
-					axis: this._getAxis(),
-					start: function (e) {
-						e = e.originalEvent.touches ? e.originalEvent.touches[0] : e;
-						self._dragStartHandler(e);
-					},
-					stop: function (e) {
-						e = e.originalEvent.touches ? e.originalEvent.touches[0] : e;
-						self._dragStopHandler(e);
-					}
-				});
+
+			if (this.options.touch) {
+				
+				this.elements.runner
+					.draggable3d({
+						translate3d: this.options.translate3d,
+						axis: this._getAxis(),
+						start: function (e) {
+							e = e.originalEvent.touches ? e.originalEvent.touches[0] : e;
+							self._dragStartHandler(e);
+						},
+						stop: function (e) {
+							e = e.originalEvent.touches ? e.originalEvent.touches[0] : e;
+							self._dragStopHandler(e);
+						}
+					});
+
+			}
 				
 			// bind CSS transition callback
 			if (this.options.translate3d) {
-				this.elements.runner.bind('webkitTransitionEnd', function(e) {
-					self._trigger('afterAnimate', e, self._getData());
+				this.elements.runner.bind('webkitTransitionEnd transitionend oTransitionEnd', function (e) {
+					self._trigger('afterAnimate', e, self.elements);
 					e.preventDefault(); // stops page from jumping to top...
 				});
 			}
 			
+			return;
 		},
 		
 		_getAxis: function () {
@@ -183,10 +167,10 @@
 		
 		_dragStartHandler: function (e) {
 		
-			// reset transition prop to ensure drag doesn't transition
-			this.elements.runner.css({
-				'-webkit-transition': 'none'
-			});
+			// remove transition class to ensure drag doesn't transition
+			if (this.options.translate3d) {
+				this.elements.runner.removeClass(this.widgetBaseClass + '-runner-transition');
+			}
 		
 			this.startTime = this._getTime();
 			
@@ -194,7 +178,8 @@
 				x: e.pageX,
 				y: e.pageY
 			};
-		
+			
+			return;
 		},
 		
 		_dragStopHandler: function (e) {
@@ -217,16 +202,22 @@
 			
 			distance = Math.abs(this.startPos[axis] - this.endPos[axis]);
 			speed = distance / time;
-			
 			direction = this.startPos[axis] > this.endPos[axis] ? 'next' : 'prev';
 			
-			if (speed > this.options.sensitivity || distance > (this.itemDim * this._getItemsPerTransition() / 2)) {
-				this[direction]();
+			if (speed > this.options.sensitivity || distance > (this._getItemDim() * this.getItemsPerTransition() / 2)) {
+				if ((this.page === this.getNoOfPages() && direction === 'next')
+					|| (this.page === 1 && direction === 'prev')) {
+					this.goToPage(this.page);
+				}
+				else {
+					this[direction]();
+				}
 			}
 			else {
-				this.goToItem(this.itemIndex); // go to current element
+				this.goToPage(this.page); // go back to current page
 			}
-		
+			
+			return;
 		},
 		
 		_getTime: function () {
@@ -239,84 +230,47 @@
 		// override _slide to work with tanslate3d
 		_slide: function (animate) {
 		
-			var self = this,
-				speed = animate === false ? 0 : this._getSpeed(), // default to animate
-				animateProps = {},
-				pos;
-				
-			pos = this._getPos();
-			
-			this._trigger('beforeAnimate', null, this._getData());
+			this._trigger('beforeAnimate', null, this.elements);
+
+            var self = this,
+                speed = animate === false ? 0 : this.options.transitionSpeed, // default to animate
+                animateProps = {},
+                lastPos = this._getAbsoluteLastPos(),
+                
+                pos = this.elements.items
+                    .eq(this.pages[this.page - 1] - 1) // arrays and .eq() are zero based, carousel is 1 based
+                        .position()[this.helperStr.pos];
+
+            // check pos doesn't go past last posible pos
+            if (pos > lastPos) {
+                pos = lastPos;
+            }
 			
 			if (this.options.translate3d) {
 				
-				this.elements.runner.css({
-					'-webkit-transition': '-webkit-transform .' + speed + 's ' + this._getEasing(),
-					'carousel-transform': this.isHorizontal ? 'translate3d(' + -pos + 'px, 0, 0)' : 'translate3d(0, ' + -pos + 'px, 0)'
-				});
+				this.elements.runner
+					.addClass(this.widgetBaseClass + '-runner-transition')
+					.css({
+						translate3d: this.isHorizontal ? {x: -pos} : {y: -pos}
+					});
 				
 			}
 			else {
 				
 				animateProps[this.helperStr.pos] = -pos;
-				
-				this.elements.runner
-					.stop()
-					.animate(animateProps, speed, this.options.easing, function () {
+				animateProps.useTranslate3d = true;
+	            this.elements.runner
+	                .stop()
+	                .animate(animateProps, speed, this.options.easing, function () {
 
-						self._trigger('afterAnimate', null, self._getData());
+	                    self._trigger('afterAnimate', null, self.elements);
 
-					});
+	                });
 			}
 				
 			this._updateUi();
-		
-		},
-		
-		// translates speed to ensure CSS transforms get type number
-		_getSpeed: function () {
-		
-			if (!this.options.translate3d) {
-				return this.options.speed;
-			}
-		
-			var speed = this.options.speed,
-				$speeds = $.fx.speeds;
 			
-			switch (speed) {
-				
-			case 'slow':
-				speed = $speeds.slow;
-				break;
-			case 'normal':
-				speed = $speeds._default;
-				break;
-			case 'fast':
-				speed = $speeds.fast;
-				break;
-			}
-			
-			return speed;
-			
-		},
-		
-		// ensures easing is a valid css timing function name
-		_getEasing: function () {
-			
-			if (!this.options.translate3d) {
-				return this.options.easing;
-			}
-			
-			var easing = this.options.easing,
-				allowed = ['ease', 'linear', 'ease-in', 'ease-out', 'ease-in-out'];
-			
-			// default to ease
-			if ($.inArray(easing, allowed) === -1) {
-				easing = 'ease';
-			}
-			
-			return easing;
-		
+			return;
 		},
 		
 		_setOption: function (option, value) {
@@ -330,21 +284,26 @@
 				break;
 			}
 			
+			return;
 		},
 		
 		_switchAxis: function () {
 		
-			this.elements.runner._carouselDrag('option', 'axis', this._getAxis());
-		
+			this.elements.runner.draggable3d('option', 'axis', this._getAxis());
+			
+			return;
 		},
 		
 		destroy: function () {
 			
-			this.elements.runner._carouselDrag('destroy');
+			this.elements.runner.draggable3d('destroy');
 			_super.destroy.apply(this);
 			
+			return;
 		}
 		
 	});
+
+	$.rs.carousel.version = '0.8.5';
 
 })(jQuery);
