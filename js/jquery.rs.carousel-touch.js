@@ -237,8 +237,10 @@
         
         // override _slide to work with tanslate3d
         _slide: function (animate) {
-        
-            this._trigger('beforeAnimate', null, this.elements);
+            
+            if (animate !== false) {
+                this._trigger('beforeAnimate', null, this.elements);
+            }
 
             var self = this,
                 speed = animate === false ? 0 : this.options.transitionSpeed, // default to animate
@@ -270,8 +272,10 @@
                 this.elements.runner
                     .stop()
                     .animate(animateProps, speed, this.options.easing, function () {
-
-                        self._trigger('afterAnimate', null, self.elements);
+                        
+                        if (animate !== false) {
+                            self._trigger('afterAnimate', null, self.elements);
+                        }
 
                     });
             }
