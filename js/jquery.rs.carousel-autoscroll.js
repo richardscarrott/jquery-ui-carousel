@@ -47,8 +47,8 @@
             }
             
             this.element
-                .bind('mouseover.' + this.widgetName, $.proxy(this, '_stop'))
-                .bind('mouseout.' + this.widgetName, $.proxy(this, '_start'));
+                .bind('mouseenter.' + this.widgetName, $.proxy(this, '_stop'))
+                .bind('mouseleave.' + this.widgetName, $.proxy(this, '_start'));
                 
             this.autoScrollInitiated = true;
             
@@ -58,8 +58,8 @@
         _unbindAutoScroll: function() {
             
             this.element
-                .unbind('mouseover.' + this.widgetName)
-                .unbind('mouseout.' + this.widgetName);
+                .unbind('mouseenter.' + this.widgetName)
+                .unbind('mouseleave.' + this.widgetName);
                 
             this.autoScrollInitiated = false;
             
