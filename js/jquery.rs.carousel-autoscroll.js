@@ -11,7 +11,7 @@
  * Depends:
  *  jquery.js v1.4+
  *  jquery.ui.widget.js v1.8+
- *  jquery.rs.carousel.js v0.8.5+
+ *  jquery.rs.carousel.js v0.8.6+
  *
  */
  
@@ -69,6 +69,9 @@
         _start: function() {
         
             var self = this;
+            
+            // ensures interval isn't started twice
+            this._stop();
             
             this.interval = setInterval(function() {
 
