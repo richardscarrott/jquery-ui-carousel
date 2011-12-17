@@ -33,7 +33,7 @@
 
                 this._setOption('loop', true);
                 this._addClonedItems();
-                this.goToPage(this.options.startAt || 1, false); // go to page (again) to ensure we ignore clones
+                this.goToPage(1, false); // go to page to ensure we ignore clones
 
             }
             

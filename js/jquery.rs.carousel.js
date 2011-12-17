@@ -48,10 +48,11 @@
             },
             speed: 'normal',
             easing: 'swing',
-            startAt: null,
             nextText: 'Next',
             prevText: 'Previous',
-            create_: null, // widget factory uses create, but doesn't provide any useful data...
+
+            // callbacks
+            create: null,
             before: null,
             after: null
         },
@@ -64,7 +65,6 @@
             this._addMask();
             this._addNextPrevActions();
             this.refresh(false);
-            this._trigger('create_', null, this.elements);
 
             return;
         },
