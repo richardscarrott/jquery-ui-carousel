@@ -35,11 +35,17 @@
             itemsPerTransition: 'auto',
             orientation: 'horizontal',
             loop: false,
-            pagination: true,
-            insertPagination: null,
             nextPrevActions: true,
-            insertNextAction: null,
-            insertPrevAction: null,
+            insertPrevAction: function () {
+                return $('<a>', {'class': this.widgetBaseClass + '-action-prev', text: this.options.prevText}).appendTo(this.element);
+            },
+            insertNextAction: function () {
+                return $('<a>', {'class': this.widgetBaseClass + '-action-next', text: this.options.nextText}).appendTo(this.element);
+            },
+            pagination: true,
+            insertPagination: function (pagination) {
+                return $(pagination).insertAfter(this.elements.mask);
+            },
             speed: 'normal',
             easing: 'swing',
             startAt: null,
@@ -197,29 +203,23 @@
 
             var self = this,
                 elems = this.elements,
-                opts = this.options,
-                baseClass = this.widgetBaseClass;
+                opts = this.options;
                 
             this._removeNextPrevActions();
 
-            elems.prevAction = $('<a href="#" class="' + baseClass + '-action-prev">' + opts.prevText + '</a>')
+            elems.prevAction = opts.insertPrevAction.apply(this)
                 .bind('click.' + this.widgetName, function (e) {
                     e.preventDefault();
                     self.prev();
-                });;
+                });
 
-            elems.nextAction = $('<a href="#" class="' + baseClass + '-action-next">' + opts.nextText + '</a>')
+            elems.nextAction = opts.insertNextAction.apply(this)
                 .bind('click.' + this.widgetName, function (e) {
                     e.preventDefault();
                     self.next();
                 });
-
-            $.isFunction(opts.insertPrevAction) ?
-                opts.insertPrevAction.apply(elems.prevAction[0]) : elems.prevAction.appendTo(this.element);
-
-            $.isFunction(opts.insertNextAction) ?
-                opts.insertNextAction.apply(elems.nextAction[0]) : elems.nextAction.appendTo(this.element);
-
+            
+            return;
         },
 
         _removeNextPrevActions: function () {
@@ -250,6 +250,7 @@
                 elems = this.elements,
                 opts = this.options,
                 baseClass = this.widgetBaseClass,
+                pagination = $('<ol class="' + baseClass + '-pagination" />'),
                 links = [],
                 noOfPages = this.getNoOfPages(),
                 i;
@@ -260,17 +261,14 @@
                 links[i] = '<li class="' + baseClass + '-pagination-link"><a href="#page-' + i + '">' + i + '</a></li>';
             }
 
-            elems.pagination = $('<ol class="' + baseClass + '-pagination" />')
+            pagination
                 .append(links.join(''))
                 .delegate('a', 'click.' + this.widgetName, function (e) {
                     e.preventDefault();
-
                     self.goToPage(parseInt(this.hash.split('-')[1], 10));
-
                 });
-
-            $.isFunction(opts.insertPagination) ?
-                opts.insertPagination.apply(elems.pagination[0]) : elems.pagination.insertAfter(elems.mask);
+            
+            this.elements.pagination = this.options.insertPagination.call(this, pagination);
             
             return;
         },

@@ -18,6 +18,11 @@
 			height: 150px;
 		}
 
+	#rs-carousel .rs-carousel-action-next,
+	#rs-carousel .rs-carousel-action-prev {
+		cursor: pointer;
+	}
+
 	#rs-carousel .rs-carousel-pagination-link {
 		display: inline;
 	}
