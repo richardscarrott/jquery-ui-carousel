@@ -52,8 +52,8 @@
             nextText: 'Next',
             prevText: 'Previous',
             create_: null, // widget factory uses create, but doesn't provide any useful data...
-            beforeAnimate: null,
-            afterAnimate: null
+            before: null,
+            after: null
         },
 
         _create: function () {
@@ -425,16 +425,12 @@
         },
 
         _slide: function (animate) {
-         
-            if (animate !== false) {
-                this._trigger('beforeAnimate', null, this.elements);
-            }
 
             var self = this,
-                speed = animate === false ? 0 : this.options.speed, // default to animate
+                animate = animate === false ? false : true, // undefined should pass as true
+                speed = animate ? this.options.speed : 0,
                 animateProps = {},
                 lastPos = this._getAbsoluteLastPos(),
-                
                 pos = this.elements.items
                     .eq(this.pages[this.page - 1] - 1) // arrays and .eq() are zero based, carousel is 1 based
                         .position()[this.helperStr.pos];
@@ -444,14 +440,22 @@
                 pos = lastPos;
             }
 
+            // might be nice to put animate on event object:
+            // $.Event('slide', { animate: animate }) - would require jQuery 1.6+
+            this._trigger('before', null, {
+                elements: this.elements,
+                animate: animate
+            });
+
             animateProps[this.helperStr.pos] = -pos;
             this.elements.runner
                 .stop()
                 .animate(animateProps, speed, this.options.easing, function () {
                     
-                    if (animate !== false) {
-                        self._trigger('afterAnimate', null, self.elements);
-                    }
+                    self._trigger('after', null, {
+                        elements: self.elements,
+                        animate: animate
+                    });
 
                 });
                 

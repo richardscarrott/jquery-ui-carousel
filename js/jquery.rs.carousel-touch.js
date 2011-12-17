@@ -159,7 +159,10 @@
             // bind CSS transition callback
             if (this.options.translate3d) {
                 this.elements.runner.bind('webkitTransitionEnd transitionend oTransitionEnd', function (e) {
-                    self._trigger('afterAnimate', e, self.elements);
+                    self._trigger('after', null, {
+                        elements: self.elements,
+                        animate: animate
+                    });
                     e.preventDefault(); // stops page from jumping to top...
                 });
             }
@@ -235,18 +238,14 @@
         
         },
         
-        // override _slide to work with tanslate3d
+        // override _slide to work with tanslate3d - TODO: remove duplication
         _slide: function (animate) {
-            
-            if (animate !== false) {
-                this._trigger('beforeAnimate', null, this.elements);
-            }
 
             var self = this,
-                speed = animate === false ? 0 : this.options.transitionSpeed, // default to animate
+                animate = animate === false ? false : true, // undefined should pass as true
+                speed = animate ? this.options.speed : 0,
                 animateProps = {},
                 lastPos = this._getAbsoluteLastPos(),
-                
                 pos = this.elements.items
                     .eq(this.pages[this.page - 1] - 1) // arrays and .eq() are zero based, carousel is 1 based
                         .position()[this.helperStr.pos];
@@ -255,6 +254,11 @@
             if (pos > lastPos) {
                 pos = lastPos;
             }
+
+            this._trigger('before', null, {
+                elements: this.elements,
+                animate: animate
+            });
             
             if (this.options.translate3d) {
                 
@@ -268,14 +272,15 @@
             else {
                 
                 animateProps[this.helperStr.pos] = -pos;
-                animateProps.useTranslate3d = true;
+                animateProps.useTranslate3d = true; // what the hell is this...
                 this.elements.runner
                     .stop()
                     .animate(animateProps, speed, this.options.easing, function () {
                         
-                        if (animate !== false) {
-                            self._trigger('afterAnimate', null, self.elements);
-                        }
+                        self._trigger('after', null, {
+                            elements: self.elements,
+                            animate: animate
+                        });
 
                     });
             }
