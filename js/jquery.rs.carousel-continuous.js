@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel-continuous v0.8.5
+ * jquery.rs.carousel-continuous v0.8.6
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -11,7 +11,7 @@
  * Depends:
  *  jquery.js v1.4+
  *  jquery.ui.widget.js v1.8+
- *  jquery.rs.carousel.js v0.8.5+
+ *  jquery.rs.carousel.js v0.8.6+
  *
  */
  
@@ -271,7 +271,5 @@
         }
         
     });
-
-    $.rs.carousel.version = '0.8.5';
     
 })(jQuery);

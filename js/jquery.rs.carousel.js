@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel.js v0.8.5
+ * jquery.rs.carousel.js v0.8.6
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -709,6 +709,6 @@
 
     });
     
-    $.rs.carousel.version = '0.8.5';
+    $.rs.carousel.version = '0.8.6';
 
 })(jQuery);

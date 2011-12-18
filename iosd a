@@ -1,0 +1,52 @@
+[1mdiff --git a/js/jquery.rs.carousel.js b/js/jquery.rs.carousel.js[m
+[1mindex 8ffd709..5efb1ca 100644[m
+[1m--- a/js/jquery.rs.carousel.js[m
+[1m+++ b/js/jquery.rs.carousel.js[m
+[36m@@ -37,19 +37,17 @@[m
+             loop: false,[m
+             nextPrevActions: true,[m
+             insertPrevAction: function () {[m
+[31m-                return $('<a>', {'class': this.widgetBaseClass + '-action-prev', text: this.options.prevText}).appendTo(this.element);[m
+[32m+[m[32m                return $('<a href="#" class="rs-carousel-action-prev">Prev</a>').appendTo(this);[m
+             },[m
+             insertNextAction: function () {[m
+[31m-                return $('<a>', {'class': this.widgetBaseClass + '-action-next', text: this.options.nextText}).appendTo(this.element);[m
+[32m+[m[32m                return $('<a href="#" class="rs-carousel-action-next">Next</a>').appendTo(this);[m
+             },[m
+             pagination: true,[m
+             insertPagination: function (pagination) {[m
+[31m-                return $(pagination).insertAfter(this.elements.mask);[m
+[32m+[m[32m                return $(pagination).insertAfter($(this).find('.rs-carousel-mask'));[m
+             },[m
+             speed: 'normal',[m
+             easing: 'swing',[m
+[31m-            nextText: 'Next',[m
+[31m-            prevText: 'Previous',[m
+ [m
+             // callbacks[m
+             create: null,[m
+[36m@@ -207,13 +205,13 @@[m
+                 [m
+             this._removeNextPrevActions();[m
+ [m
+[31m-            elems.prevAction = opts.insertPrevAction.apply(this)[m
+[32m+[m[32m            elems.prevAction = opts.insertPrevAction.apply(this.element[0])[m
+                 .bind('click.' + this.widgetName, function (e) {[m
+                     e.preventDefault();[m
+                     self.prev();[m
+                 });[m
+ [m
+[31m-            elems.nextAction = opts.insertNextAction.apply(this)[m
+[32m+[m[32m            elems.nextAction = opts.insertNextAction.apply(this.element[0])[m
+                 .bind('click.' + this.widgetName, function (e) {[m
+                     e.preventDefault();[m
+                     self.next();[m
+[36m@@ -268,7 +266,7 @@[m
+                     self.goToPage(parseInt(this.hash.split('-')[1], 10));[m
+                 });[m
+             [m
+[31m-            this.elements.pagination = this.options.insertPagination.call(this, pagination);[m
+[32m+[m[32m            this.elements.pagination = this.options.insertPagination.call(this.element[0], pagination);[m
+             [m
+             return;[m
+         },[m

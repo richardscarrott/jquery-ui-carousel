@@ -1,5 +1,5 @@
 /*
- * jQuery RS Carousel Plugin v0.8.5 - Touch Extension
+ * jquery.rs.carousel-touch v0.8.6
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -13,7 +13,7 @@
  *  jquery.translate3d.js v0.1+ // if passing in translate3d true for hardware acceleration
  *  jquery.event.drag.js v2.1.0+
  *  jquery.ui.widget.js v1.8+
- *  jquery.rs.carousel.js v0.8.5+
+ *  jquery.rs.carousel.js v0.8.6+
  *
  */
 
@@ -320,7 +320,5 @@
         }
         
     });
-
-    $.rs.carousel.version = '0.8.5';
 
 })(jQuery);

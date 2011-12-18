@@ -24,7 +24,7 @@
 	
 ### Here's the JavaScript:
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('.rs-carousel').carousel();
     });
 
@@ -78,40 +78,38 @@ Sets the orientation of the carousel, either 'horizontal' or 'vertical'.
 #### loop: false (boolean)
 If set to true carousel will loop back to first or last page accordingly.
 
-#### pagination: true (boolean)
-Sets whether pagination links should be included, pagination links are inserted as an ordered list.
-
-#### insertPagination: null (function)
-Allows you to override where in the DOM the pagination links are inserted.
-
-The context of the function will be the pagination links, e.g.
-
-    function () {
-        // this === <ol class="rs-carousel-pagination"></ol>
-        $(this).appendTo('body');
-    }
-
 #### nextPrevActions: true (boolean)
 Sets whether the next and prev actions are included, next and prev actions are inserted as anchor tags.
 
-#### insertNextAction: null (function)
-Allows you to override where in the DOM the next action is inserted.
+#### insertPrevAction: function () { return $('<a href="#" class="rs-carousel-action-prev">Previous</a>').appendTo(this); } (function)
+Allows you to define the prev actions mark-up as well as its location in the DOM.
 
-The context of the function will be the next action, e.g.
+The context of the function will be the carousel element, e.g.
 
     function () {
-        // this === <a href="#" class="rs-carousel-action-next">Next</a>
-        $(this).appendTo('body');
+        // this === <div class="rs-carousel"></div>
     }
 
-#### insertPrevAction: null (function)
-Allows you to override where in the DOM the prev action is inserted.
+#### insertPrevAction: function () { return $('<a href="#" class="rs-carousel-action-next">Next</a>').appendTo(this); } (function)
+Allows you to define the prev actions mark-up as well as its location in the DOM.
 
-The context of the function will be the prev action, e.g.
+The context of the function will be the carousel element, e.g.
 
     function () {
-        // this === <a href="#" class="rs-carousel-action-prev">Previous</a>
-        $(this).appendTo('body');
+        // this === <div class="rs-carousel"></div>
+    }
+
+#### pagination: true (boolean)
+Sets whether pagination links should be included, pagination links are constructed as an ordered list.
+
+#### insertPagination: function (pagination) { return $(pagination).insertAfter($(this).find('.rs-carousel-mask')); } (function)
+Allows you to override where in the DOM the pagination links are inserted as well as decorate them with any required Html.
+
+The context of the function will be the carousel element, e.g.
+
+    function (pagination) {
+        // this === <div class="rs-carousel"></div>
+        // pagination === <ol class="rs-carousel-pagination"> ... </ol>
     }
 
 #### speed: 'normal' (string)
@@ -119,15 +117,6 @@ Sets the speed of the carousel.
 
 #### easing: 'swing' (string)
 Sets the easing equation used.
-
-#### startAt: null (number)
-If set the carousel will start on the specified page (one based).
-
-#### nextText: 'Next' (string)
-Defines text to insert into next element.
-
-#### prevText: 'Previous' (string)
-Defines text to insert into prev element.
 
 #### disabled: false (boolean)
 If set to true carousel will no longer change state.
@@ -148,7 +137,7 @@ If set to true the carousel will continuously loop through its pages.
 NOTE: Requires the continuous extension (jquery.rs.carousel-continuous.js).
 
 ### Events
-#### create_: null (function)
+#### create: null (function)
 Fired on first call.
 
 It can be passed in the options object like this:
@@ -163,67 +152,62 @@ or bound to as an event like this:
         ...
     });
 
-data contains map of jQuery objects:
-
-    {
-        mask
-        runner
-        items
-        pagination
-        nextAction
-        prevAction
-    }
-
-#### beforeAnimate: null (function)
+#### before: null (function)
 Fired before transition.
 
 It can be passed in the options object like this:
 
     $('.rs-carousel').carousel({
-        beforeAnimate: function(event, data) { ... }
+        before: function(event, data) { ... }
     });
 	
 or bound to as an event like this:
 	
-    $('.rs-carousel').bind("carouselbeforeAnimate", function(event, data) {
+    $('.rs-carousel').bind("carouselbefore", function(event, data) {
         ...
     });
 	
-data contains map of jQuery objects:
+data provides access to the carousels core elements and indicates whether the transition was animated:
 
     {
-        mask
-        runner
-        items
-        pagination
-        nextAction
-        prevAction
+        animate: (boolean),
+        elements: {
+            mask: (jQuery object)
+            runner: (jQuery object)
+            items: (jQuery object)
+            pagination: (jQuery object)
+            nextAction: (jQuery object)
+            prevAction: (jQuery object)
+        }
     }
 
-#### afterAnimate: null (function)
+#### after: null (function)
 Fired after transition.
 
 It can be passed in the options object like this:
 
     $('.rs-carousel').carousel({
-        afterAnimate: function(event, data) { ... }
+        after: function(event, data) { ... }
     });
 	
 or bound to as an event like this:
 	
-    $('.rs-carousel').bind("carouselAfterAnimate", function(event, data) {
+    $('.rs-carousel').bind("carouselAfter", function(event, data) {
         ...
     });
 	
-data contains map of jQuery objects:
+data provides access to the carousels core elements and indicates whether the transition was animated:
 
     {
-        mask
-        runner
-        items
-        pagination
-        nextAction
-        prevAction
+        animate: (boolean),
+        elements: {
+            mask: (jQuery object)
+            runner: (jQuery object)
+            items: (jQuery object)
+            pagination: (jQuery object)
+            nextAction: (jQuery object)
+            prevAction: (jQuery object)
+        }
     }
 
 ### Methods
@@ -270,7 +254,7 @@ Returns previous page.
 #### getPages .carousel('getPages')
 Returns pages array. e.g. [1, 5, 9, 13] // where the index + 1 === page number and the value === index of first item in page.
 
-#### option .carousel('option', optionName , [value])
+#### option .carousel('option', optionName, [value])
 Get or set any carousel option. If no value is specified, will act as a getter.
 
 #### option .carousel('option', options)
