@@ -37,19 +37,17 @@
             loop: false,
             nextPrevActions: true,
             insertPrevAction: function () {
-                return $('<a>', {'class': this.widgetBaseClass + '-action-prev', text: this.options.prevText}).appendTo(this.element);
+                return $('<a href="#" class="rs-carousel-action-prev">Prev</a>').appendTo(this);
             },
             insertNextAction: function () {
-                return $('<a>', {'class': this.widgetBaseClass + '-action-next', text: this.options.nextText}).appendTo(this.element);
+                return $('<a href="#" class="rs-carousel-action-next">Next</a>').appendTo(this);
             },
             pagination: true,
             insertPagination: function (pagination) {
-                return $(pagination).insertAfter(this.elements.mask);
+                return $(pagination).insertAfter($(this).find('.rs-carousel-mask'));
             },
             speed: 'normal',
             easing: 'swing',
-            nextText: 'Next',
-            prevText: 'Previous',
 
             // callbacks
             create: null,
@@ -207,13 +205,13 @@
                 
             this._removeNextPrevActions();
 
-            elems.prevAction = opts.insertPrevAction.apply(this)
+            elems.prevAction = opts.insertPrevAction.apply(this.element[0])
                 .bind('click.' + this.widgetName, function (e) {
                     e.preventDefault();
                     self.prev();
                 });
 
-            elems.nextAction = opts.insertNextAction.apply(this)
+            elems.nextAction = opts.insertNextAction.apply(this.element[0])
                 .bind('click.' + this.widgetName, function (e) {
                     e.preventDefault();
                     self.next();
@@ -268,7 +266,7 @@
                     self.goToPage(parseInt(this.hash.split('-')[1], 10));
                 });
             
-            this.elements.pagination = this.options.insertPagination.call(this, pagination);
+            this.elements.pagination = this.options.insertPagination.call(this.element[0], pagination);
             
             return;
         },
