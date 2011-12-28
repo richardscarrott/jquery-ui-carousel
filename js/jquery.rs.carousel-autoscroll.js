@@ -36,10 +36,15 @@
             
             this._bindAutoScroll();
             this._start();
-            
+            this._paginatioCleanTime();
             return;
         },
-        
+        _paginatioCleanTime: function() {
+          var pagLoc = $('body').find('.rs-carousel-pagination');
+          pagLoc.find('li')
+            .bind('click.' + this.widgetName, $.proxy(this, '_stop'))
+            .bind('click.' + this.widgetName, $.proxy(this, '_start'));
+        },
         _bindAutoScroll: function() {
             
             if (this.autoScrollInitiated) {
