@@ -81,8 +81,8 @@ If set to true carousel will loop back to first or last page accordingly.
 #### nextPrevActions: true (boolean)
 Sets whether the next and prev actions are included, next and prev actions are inserted as anchor tags.
 
-#### insertPrevAction: function () { return $('<a href="#" class="rs-carousel-action-prev">Previous</a>').appendTo(this); } (function)
-Allows you to define the prev actions mark-up as well as its location in the DOM.
+#### insertPrevAction: function () { return $('<a href="#" class="rs-carousel-action-prev">Prev</a>').appendTo(this); }, (function)
+Allows you to define the prev action's mark-up as well as its location in the DOM.
 
 The context of the function will be the carousel element, e.g.
 
@@ -90,8 +90,8 @@ The context of the function will be the carousel element, e.g.
         // this === <div class="rs-carousel"></div>
     }
 
-#### insertPrevAction: function () { return $('<a href="#" class="rs-carousel-action-next">Next</a>').appendTo(this); } (function)
-Allows you to define the prev actions mark-up as well as its location in the DOM.
+#### insertNextAction: function () { return $('<a href="#" class="rs-carousel-action-next">Next</a>').appendTo(this); }, (function)
+Allows you to define the next action's mark-up as well as its location in the DOM.
 
 The context of the function will be the carousel element, e.g.
 
