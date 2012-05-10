@@ -186,8 +186,8 @@
             this.startTime = this._getTime();
             
             this.startPos = {
-                x: e.pageX,
-                y: e.pageY
+                x: e.originalEvent.pageX,
+                y: e.originalEvent.pageY
             };
             
             return;
@@ -207,8 +207,8 @@
             time = this.endTime - this.startTime;
             
             this.endPos = {
-                x: e.pageX,
-                y: e.pageY
+                x: e.originalEvent.pageX,
+                y: e.originalEvent.pageY
             };
             
             distance = Math.abs(this.startPos[axis] - this.endPos[axis]);
