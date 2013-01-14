@@ -1,6 +1,11 @@
 	
 
 	var demo = {
+
+		settings: {
+			minItemWidth: 50, // when variable widths are applied
+			variableItemWidth: false
+		},
 			
 		init: function(view) {
 		
@@ -22,13 +27,14 @@
 		
 			this.elements.carousel = view.find('#rs-carousel');
 			
-			form = this.elements.form = this.elements.form = view.find('form');
+			form = this.elements.form = view.find('form');
 			this.elements.inputs = form.find(':checkbox, select');
 			this.elements.addItemsBtn = form.find('#addItemsBtn');
 			this.elements.removeItemsBtn = form.find('#removeItemsBtn');
 			this.elements.itemCount = form.find('#itemCount');
 			this.elements.initBtn = form.find('#init');
 			this.elements.destroyBtn = form.find('#destroy');
+			this.elements.variableWidthBtn = form.find('#toggleVariableWidth');
 			
 		
 		},
@@ -47,6 +53,12 @@
 				value = self.getValueAsOption(input);
 				
 				carousel.carousel('option', option, value);
+
+				// there's no orientation change event, prob wouldn't be worth including but this means
+				// the variable widths will only update when actually 'clicking' on this button
+				if ($(this).is('#orientation')) {
+					self.updateItemWidths();
+				}
 				
 			});
 			
@@ -56,12 +68,18 @@
 					noOfItems = parseInt(elems.form.find('#addItems').val(), 10),
 					items = [],
 					i,
-					colorClass;
+					colorClass,
+					heightOrWidth = self.elements.carousel.hasClass('rs-carousel-horizontal') ? 'width' : 'height';
 					
 				for (i = 1; i <= noOfItems; i++) {
 					
 					colorClass = Math.floor(Math.random() * 7) + 1;
-					items.push('<li class="rs-carousel-item color-' + colorClass + '">' + (currentNoOfItems + i) + '</li>');
+					if (self.settings.variableItemWidth) {
+						items.push('<li style="' + heightOrWidth + ': ' + self.getRandomWidth() + 'px" class="rs-carousel-item color-' + colorClass + '">' + (currentNoOfItems + i) + '</li>');
+					}
+					else {
+						items.push('<li class="rs-carousel-item color-' + colorClass + '">' + (currentNoOfItems + i) + '</li>');
+					}
 					
 				}
 				
@@ -103,8 +121,8 @@
 				});
 				
 				// css translate3d() support detection
-				opts.translate3d = Modernizr && Modernizr.csstransforms3d;
-				opts.touch = Modernizr && Modernizr.touch;
+				opts.translate3d = true;//Modernizr && Modernizr.csstransforms3d;
+				opts.touch = true;//Modernizr && Modernizr.touch;
 				
 				carousel.carousel(opts);
 			});
@@ -113,12 +131,21 @@
 				e.preventDefault();
 				
 				$('body').addClass('no-js');
+				self.settings.variableItemWidth = false;
+				self.updateItemWidths();
 				carousel.carousel('destroy');
+			});
+
+			elems.variableWidthBtn.click(function (e) {
+				e.preventDefault();
+				self.settings.variableItemWidth = self.settings.variableItemWidth ? false : true;
+				self.updateItemWidths();
 			});
 
 			$(window).resize(function () {
 				elems.carousel.carousel('refresh');
 			});
+
 		},
 
 		updateItemCount: function () {
@@ -155,6 +182,34 @@
 			
 			return value;
 			
+		},
+
+		updateItemWidths: function () {
+
+			var self = this,
+				heightOrWidth = this.elements.carousel.hasClass('rs-carousel-horizontal') ? 'width' : 'height';
+
+			this.elements.carousel
+				.find('.rs-carousel-item')
+					.width('')
+					.height('')
+					[heightOrWidth](function () {
+						if (self.settings.variableItemWidth) {
+							return self.getRandomWidth();
+						}
+					})
+					.end()
+				.carousel('refresh');
+
+			return;
+		},
+
+		getRandomWidth: function () {
+
+			var heightOrWidth = this.elements.carousel.hasClass('rs-carousel-horizontal') ? 'width' : 'height',
+				maxWidth = this.elements.carousel.find('.rs-carousel-mask')[heightOrWidth]() / 2;
+
+			return this.settings.minItemWidth + (Math.floor(Math.random() * maxWidth));
 		}
 			
 	};

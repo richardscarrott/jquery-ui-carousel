@@ -75,7 +75,7 @@
             
             this.interval = setInterval(function() {
 
-                if (self.page === self.getNoOfPages()) {
+                if (self.index === self.getNoOfPages()) {
                     self.goToPage(1);
                 }
                 else {
@@ -91,7 +91,7 @@
         
             clearInterval(this.interval);
             
-            return;     
+            return;
         },
         
         _setOption: function (option, value) {

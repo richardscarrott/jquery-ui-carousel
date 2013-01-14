@@ -12,16 +12,16 @@
 	<link rel="stylesheet" type="text/css" href="css/demo.css" media="all" />
 	
 	<!-- lib -->
-	<script type="text/javascript" src="js/lib/modernizr.3dtransforms.touch.js"></script>
+	<!--script type="text/javascript" src="js/lib/modernizr.3dtransforms.touch.js"></script-->
 	<script type="text/javascript" src="js/lib/jquery.js"></script>
-	<script type="text/javascript" src="js/lib/jquery.translate3d.js"></script>
+	<!--script type="text/javascript" src="js/lib/jquery.translate3d.js"></script-->
 	<script type="text/javascript" src="js/lib/jquery.ui.widget.js"></script>
-	<script type="text/javascript" src="js/lib/jquery.event.drag.js"></script>
+	<!--script type="text/javascript" src="js/lib/jquery.event.drag.js"></script-->
 	
 	<!-- carousel -->
 	<script type="text/javascript" src="js/jquery.rs.carousel.js"></script>
 	<script type="text/javascript" src="js/jquery.rs.carousel-autoscroll.js"></script>
-	<script type="text/javascript" src="js/jquery.rs.carousel-continuous.js"></script>
+	<!--script type="text/javascript" src="js/jquery.rs.carousel-continuous.js"></script-->
 	<!--script type="text/javascript" src="js/jquery.rs.carousel-touch.js"></script-->
 
 	<!-- demo -->
@@ -33,13 +33,8 @@
 		
 			$('body').removeClass('no-js');
 			
-		    demo.init($('#container'));
-			
-			// example of hardware support (translate3d) detection, uses Modernizr
-			/*$('#rs-carousel').carousel({
-				translate3d: $.browser.webkit && Modernizr && Modernizr.csstransforms3d
-			});*/
-			
+		   	demo.init($('#container'));
+		
 		});
 	</script>
 	
@@ -53,6 +48,10 @@
 		</div>
 		
 		<form class="module">
+
+			<div class="field">
+				
+			</div>
 			
 			<div class="field">
 				<label for="orientation">orientation:</label>
@@ -62,7 +61,7 @@
 				</select>
 			</div>
 
-			<div class="field">
+			<!--div class="field">
 				<label for="itemsPerPage">itemsPerPage:</label>
 				<select id="itemsPerPage" name="itemsPerPage">
 					<option value="auto" selected="selected">auto</option>
@@ -71,7 +70,7 @@
 					<option value="3">3</option>
 					<option value="4">4</option>
 				</select>
-			</div>
+			</div-->
 			
 			<div class="field">
 				<label for="itemsPerTransition">itemsPerTransition:</label>
@@ -121,9 +120,13 @@
 				<span>NOTE: defaults to 8 seconds and is cancelled on hover</span>
 			</div>
 
-			<div class="field">
+			<!--div class="field">
 				<label for="continuous">continuous:</label>
 				<input type="checkbox" id="continuous" name="continuous" />
+			</div-->
+
+			<div class="field">
+				<input type="button" value="Toggle Variable Width" id="toggleVariableWidth" />
 			</div>
 			
 			<div class="field">
@@ -162,7 +165,7 @@
 			<ul class="rs-carousel-runner">
 				<li class="rs-carousel-item color-2">1</li>
 				<li class="rs-carousel-item color-3">2</li>
-				<li class="rs-carousel-item color-1"><a href="javascript:alert('Clicked');">3</a></li>
+				<li class="rs-carousel-item color-1">3</li>
 				<li class="rs-carousel-item color-2">4</li>
 				<li class="rs-carousel-item color-4">5</li>
 				<li class="rs-carousel-item color-7">6</li>
@@ -174,6 +177,19 @@
 				<li class="rs-carousel-item color-4">12</li>
 				<li class="rs-carousel-item color-3">13</li>
 				<li class="rs-carousel-item color-2">14</li>
+				<li class="rs-carousel-item color-3">15</li>
+				<li class="rs-carousel-item color-4">16</li>
+				<li class="rs-carousel-item color-2">17</li>
+				<li class="rs-carousel-item color-3">18</li>
+				<li class="rs-carousel-item color-1">19</li>
+				<li class="rs-carousel-item color-3">20</li>
+				<li class="rs-carousel-item color-4">21</li>
+				<li class="rs-carousel-item color-2">22</li>
+				<li class="rs-carousel-item color-3">23</li>
+				<li class="rs-carousel-item color-3">24</li>
+				<li class="rs-carousel-item color-2">25</li>
+				<li class="rs-carousel-item color-2">26</li>
+				<li class="rs-carousel-item color-4">27</li>
 			</ul>
 		</div>
 
