@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel.js v0.10
+ * jquery.rs.carousel.js v0.10.1
  *
  * Copyright (c) 2012 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -348,7 +348,7 @@
         // returns jQuery object of items on page
         getPage: function (index) {
 
-            return this.pages[(index || this.index) - 1];
+            return this.pages[(typeof index !== 'undefined' ? index : this.index) - 1];
 
         },
 
@@ -627,10 +627,13 @@
             return;
         },
 
-        // if no of items is less than items per page we disable carousel
+        // if no of items is less than items on first page then the
+        // carousel should be disabled.
         _checkDisabled: function () {
-            
-            if (this.getNoOfItems() <= this.getPage(1).length) {
+
+            var firstPage = this.getPage(1);
+
+            if (!firstPage || this.getNoOfItems() <= firstPage.length) {
                 this.elements.runner.css(this.isHorizontal ? 'left' : 'top', '');
                 this.disable();
             }
@@ -745,6 +748,6 @@
 
     });
     
-    $.rs.carousel.version = '0.10';
+    $.rs.carousel.version = '0.10.1';
 
 })(jQuery);
