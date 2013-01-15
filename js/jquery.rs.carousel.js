@@ -320,8 +320,6 @@
                 }
             }
 
-            console.log('pages', this.pages);
-
             return;
         },
 
@@ -435,19 +433,21 @@
 
         // abstract _slide to easily override within extensions
         _go: function (animate) {
-            
-            this._slide(animate);
+
+            var speed;
+
+            // undefined should pass as true
+            animate = animate === false ? false : true;
+            speed = animate ? this.options.speed : 0;
+
+            this._slide(animate, speed);
 
             return;
         },
 
-        _slide: function (animate) {
-
-            // undefined should pass as true
-            animate = animate === false ? false : true;
+        _slide: function (speed, animate) {
 
             var self = this,
-                speed = animate ? this.options.speed : 0,
                 animateProps = {},
                 lastPos = this._getAbsoluteLastPos(),
                 page = this.pages[this.index - 1],
