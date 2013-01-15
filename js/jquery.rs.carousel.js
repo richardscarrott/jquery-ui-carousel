@@ -453,18 +453,20 @@
                 page = this.pages[this.index - 1],
                 pos = page.first().position()[this.isHorizontal ? 'left' : 'top'];
 
+            // if before returns false return and revert index back to prevIndex
+            if (!this._trigger('before', null, {
+                elements: this.elements,
+                page: page,
+                animate: animate
+            })) {
+                this.index = this.prevIndex;
+                return;
+            }
+
             // check pos doesn't go past last posible pos
             if (pos > lastPos) {
                 pos = lastPos;
             }
-
-            // might be nice to put animate on event object:
-            // $.Event('slide', { animate: animate }) - would require jQuery 1.6+
-            this._trigger('before', null, {
-                elements: this.elements,
-                page: page,
-                animate: animate
-            });
 
             animateProps[this.isHorizontal ? 'left' : 'top'] = -pos;
             this.elements.runner
