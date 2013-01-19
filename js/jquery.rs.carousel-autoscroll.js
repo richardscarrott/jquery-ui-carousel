@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel-autoscroll v0.8.6
+ * jquery.rs.carousel-autoscroll v0.10.3
  *
  * Copyright (c) 2011 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -10,8 +10,8 @@
  *
  * Depends:
  *  jquery.js v1.4+
- *  jquery.ui.widget.js v1.8+
- *  jquery.rs.carousel.js v0.8.6+
+ *  jquery.ui.widget.js v1.8
+ *  jquery.rs.carousel.js v0.10.3
  *
  */
  
@@ -70,18 +70,10 @@
         
             var self = this;
             
-            // ensures interval isn't started twice
             this._stop();
             
             this.interval = setInterval(function() {
-
-                if (self.index === self.getNoOfPages()) {
-                    self.goToPage(1);
-                }
-                else {
-                    self.next();
-                }
-            
+                self.next();
             }, this.options.pause);
             
             return;
