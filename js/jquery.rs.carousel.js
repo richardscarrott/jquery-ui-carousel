@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel.js v0.10.1
+ * jquery.rs.carousel.js v0.10.3
  *
  * Copyright (c) 2012 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -24,6 +24,7 @@
             itemsPerTransition: 'auto',
             orientation: 'horizontal',
             loop: false,
+            whitespace: false,
             nextPrevActions: true,
             insertPrevAction: function () {
                 return $('<a href="#" class="rs-carousel-action rs-carousel-action-prev">Prev</a>').appendTo(this);
@@ -48,7 +49,7 @@
 
             this.index = 1;
             this._elements();
-            this._defineOrientation();
+            this._setIsHorizontal();
             this._addMask();
             this._addNextPrevActions();
             this.refresh(false);
@@ -114,8 +115,8 @@
             return;
         },
 
-        // defines obj to hold strings based on orientation for dynamic method calls
-        _defineOrientation: function () {
+        // set isHorizontal
+        _setIsHorizontal: function () {
 
             this.isHorizontal = this.options.orientation === 'horizontal' ? true : false;
 
@@ -266,22 +267,25 @@
         _setPages: function () {
 
             var self = this,
-                index = 0,
+                itemIndex = 0,
                 itemsPerTransition = parseInt(this.options.itemsPerTransition, 10),
-                // lastIndex is only required when itemsPerTransition is a number
-                lastIndex = isNaN(itemsPerTransition) ? undefined : this._getLastIndex(),
+                // lastItemIndex is only required when itemsPerTransition is a number
+                lastItemIndex = isNaN(itemsPerTransition) ? undefined : this._getLastItemIndex(),
                 maskDim = this._getMaskDim();
                 
             this.pages = [];
             
-            while (index < this.getNoOfItems()) {
+            while (itemIndex < this.getNoOfItems()) {
 
                 // if itemsPerTransition isn't a number we need to calculate the number
                 // of items on each page based on the masks width, this also allows the
-                // item widths to be vary.
+                // item widths to vary.
+
+                // look into why I used isNaN instead of typeof
                 if (isNaN(itemsPerTransition)) {
 
-                    var remainingItems = this.elements.items.eq(index).nextAll().andSelf(),
+                    // var remainingItems = this.elements.items.eq(itemIndex).nextAll().andSelf(),
+                    var remainingItems = this.elements.items.slice(itemIndex),
                         page = [],
                         dim = 0;
                 
@@ -301,46 +305,52 @@
                         });
 
                     this.pages.push($(page));
-                    index += page.length;
+                    itemIndex += page.length;
                     
                 }
 
                 // if itemsPerTransition is a number we don't need to calculate the width of the mask
+                // just simply slice up the items based on itemsPerTransition
                 else {
 
-                    var start = index;
-
-                    if (start >= lastIndex - 1) {
-                        this.pages.push(this.elements.items.slice(start));
+                    // If the itemIndex is greater than the lastItemIndex the current page should
+                    // contain the remaining items.
+                    if (itemIndex >= lastItemIndex) {
+                        this.pages.push(this.elements.items.slice(itemIndex));
                         break;
                     }
                     
-                    index += this.options.itemsPerTransition;
-                    this.pages.push(this.elements.items.slice(start, index));
+                    this.pages.push(this.elements.items.slice(itemIndex, itemIndex += itemsPerTransition));
                 }
             }
 
             return;
         },
 
-        // returns last logical index based on mask width
-        _getLastIndex: function () {
+        // returns last logical item index based on mask width
+        _getLastItemIndex: function () {
             
+            if (this.options.whitespace) {
+                return;
+            }
+
             var self = this,
-                lastIndex = 0,
+                lastItemIndex = 0,
                 dim = 0,
                 maskDim = self._getMaskDim();
 
+            // iterate through items backwards to work out the last
+            // item to scroll to
             [].reverse.apply($.extend({}, this.elements.items))
                 .each(function (i) {
                     dim += self.isHorizontal ? $(this).outerWidth(true) : $(this).outerHeight(true);
                     if (dim >= maskDim) {
-                        lastIndex = self.getNoOfItems() - i + 1;
+                        lastItemIndex = self.getNoOfItems() - i;
                         return false;
                     }
                 });
 
-            return lastIndex;
+            return lastItemIndex;
         },
 
         // returns jQuery object of items on page
@@ -440,7 +450,7 @@
             animate = animate === false ? false : true;
             speed = animate ? this.options.speed : 0;
 
-            this._slide(animate, speed);
+            this._slide(speed, animate);
 
             return;
         },
@@ -486,8 +496,13 @@
             return;
         },
 
-        // gets lastPos to ensure runner doesn't move beyond mask (allowing mask to be any width and the use of margins)
+        // gets lastPos to ensure runner doesn't move beyond mask
+        // whilst allowing mask to be any width and the use of margins
         _getAbsoluteLastPos: function () {
+            
+            if (this.options.whitespace) {
+                return;
+            }
 
             var lastItem = this.elements.items.eq(this.getNoOfItems() - 1);
             
@@ -495,7 +510,7 @@
                     this._getMaskDim() - parseInt(lastItem.css('margin-' + (this.isHorizontal ? 'right' : 'bottom')), 10));
         },
 
-        // updates pagination, next and prev link status classes
+        // updates pagination, next and prev link state classes
         _updateUi: function () {
 
             if (this.options.pagination) {
@@ -584,7 +599,7 @@
                     .css(this.isHorizontal ? 'left' : 'top', '')
                     .width('');
 
-                this._defineOrientation();
+                this._setIsHorizontal();
                 this.refresh();
 
                 break;
@@ -624,6 +639,12 @@
                 this.refresh();
 
                 break;
+
+            case 'whitespace':
+
+                this.refresh();
+
+                break;
             }
 
             return;
@@ -649,7 +670,7 @@
         // refresh carousel
         refresh: function (recache) {
 
-            // assume true (undefined should pass condition)
+            // undefined should pass condition
             if (recache !== false) {
                 this._recacheItems();
             }
@@ -750,6 +771,6 @@
 
     });
     
-    $.rs.carousel.version = '0.10.1';
+    $.rs.carousel.version = '0.10.3';
 
 })(jQuery);
