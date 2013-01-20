@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel.js v0.10.4
+ * jquery.rs.carousel.js v0.10.5
  *
  * Copyright (c) 2013 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -9,7 +9,7 @@
  * http://www.gnu.org/licenses/gpl.html
  *
  * Depends:
- *  jquery.js v1.4+
+ *  jquery.js v1.6+
  *  jquery.ui.widget.js v1.8
  *
  */
@@ -372,7 +372,7 @@
                 index = 0;
             }
             
-            this.goToPage(index, animate);
+            this.goToPage(index, $.Event('carouselnext', { animate: animate }));
 
             return;
         },
@@ -384,19 +384,27 @@
             if (this.options.loop && index < 0) {
                 index = this.getNoOfPages() - 1;
             }
-            
-            this.goToPage(index, animate);
+
+            this.goToPage(index, $.Event('carouselprev', { animate: animate }));
 
             return;
         },
 
-        // shows specific page (one based)
-        goToPage: function (index, animate) {
+        // shows specific page. The public API shows signature as
+        // `goToPage(index[, animate])` - the event object is only
+        // for internal use.
+        goToPage: function (index, e) {
+
+            if (typeof e !== 'object') {
+                e = $.Event('goToPage', {
+                    animate: e
+                });
+            }
 
             if (!this.options.disabled && this._isValid(index)) {
                 this.prevIndex = this.index;
                 this.index = index;
-                this._go(animate);
+                this._go(e);
             }
             
             return;
@@ -426,20 +434,20 @@
         },
 
         // abstract _slide to easily override within extensions
-        _go: function (animate) {
+        _go: function (e) {
 
             var speed;
 
             // undefined should pass as true
-            animate = animate === false ? false : true;
-            speed = animate ? this.options.speed : 0;
+            e.animate = e.animate === false ? false : true;
+            e.speed = e.animate ? this.options.speed : 0;
 
-            this._slide(speed, animate);
+            this._slide(e);
 
             return;
         },
 
-        _slide: function (speed, animate) {
+        _slide: function (e) {
 
             var self = this,
                 animateProps = {},
@@ -448,11 +456,7 @@
                 pos = page.first().position()[this.isHorizontal ? 'left' : 'top'];
 
             // if before returns false return and revert index back to prevIndex
-            if (!this._trigger('before', null, {
-                elements: this.elements,
-                page: page,
-                animate: animate
-            })) {
+            if (!this._trigger('before', e, this._getEventData())) {
                 this.index = this.prevIndex;
                 return;
             }
@@ -465,14 +469,8 @@
             animateProps[this.isHorizontal ? 'left' : 'top'] = -pos;
             this.elements.runner
                 .stop()
-                .animate(animateProps, speed, this.options.easing, function () {
-                    
-                    self._trigger('after', null, {
-                        elements: self.elements,
-                        page: page,
-                        animate: animate
-                    });
-
+                .animate(animateProps, e.speed, this.options.easing, function () {
+                    self._trigger('after', e, self._getEventData());
                 });
                 
             this._updateUi();
@@ -492,6 +490,22 @@
             
             return Math.floor(lastItem.position()[this.isHorizontal ? 'left' : 'top'] + lastItem[this.isHorizontal ? 'outerWidth' : 'outerHeight']() -
                     this._getMaskDim() - parseInt(lastItem.css('margin-' + (this.isHorizontal ? 'right' : 'bottom')), 10));
+        },
+
+        _getEventData: function () {
+
+            return {
+                page: this.getPage(),
+                prevPage: this.getPage(this.prevIndex),
+                elements: this.elements
+            };
+
+        },
+
+        _getCreateEventData: function () {
+
+            return this._getEventData();
+
         },
 
         // updates pagination, next and prev link state classes
@@ -754,6 +768,6 @@
 
     });
     
-    $.rs.carousel.version = '0.10.4';
+    $.rs.carousel.version = '0.10.5';
 
 })(jQuery);

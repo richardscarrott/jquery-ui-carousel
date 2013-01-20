@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel-continuous v0.10.4
+ * jquery.rs.carousel-continuous v0.10.5
  *
  * Copyright (c) 2013 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -9,9 +9,9 @@
  * http://www.gnu.org/licenses/gpl.html
  *
  * Depends:
- *  jquery.js v1.4+
+ *  jquery.js v1.6+
  *  jquery.ui.widget.js v1.8
- *  jquery.rs.carousel.js v0.10.4
+ *  jquery.rs.carousel.js v0.10.5
  *
  */
  
@@ -122,21 +122,22 @@
             return;
         },
 
-        _slide: function (animate, speed) {
+        _slide: function (e) {
 
             var self = this,
                 pos;
 
             if (this.options.continuous) {
-                // if was last page
-                if (this.index === 0 && this.prevIndex === this.getNoOfPages() - 1) {
+
+                // if moving to first page
+                if (e.type === 'carouselnext' && this.index === 0) {
                     // jump to last page clone
                     pos = this.elements.clonedEnd
                         .first()
                             .position()[this.isHorizontal ? 'left' : 'top'];
                 }
-                // if was first page
-                else if (this.index === this.getNoOfPages() - 1 && this.prevIndex === 0) {
+                // if moving to last page
+                else if (e.type === 'carouselprev' && this.index === this.getNoOfPages() - 1) {
                     // jump to first page clone
                     pos = this.elements.clonedBeginning
                         .first()
@@ -159,6 +160,7 @@
             
             if (this.options.continuous) {
                 this._addClonedItems();
+                this._setRunnerWidth();
                 this.goToPage(this.index, false);
             }
             
@@ -210,7 +212,6 @@
                 }
                 
                 this.refresh();
-
             }
             
             return;
