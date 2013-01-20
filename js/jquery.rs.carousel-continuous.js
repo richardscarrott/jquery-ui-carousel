@@ -1,7 +1,7 @@
 /*
- * jquery.rs.carousel-continuous v0.8.6
+ * jquery.rs.carousel-continuous v0.10.4
  *
- * Copyright (c) 2011 Richard Scarrott
+ * Copyright (c) 2013 Richard Scarrott
  * http://www.richardscarrott.co.uk
  *
  * Dual licensed under the MIT and GPL licenses:
@@ -10,8 +10,8 @@
  *
  * Depends:
  *  jquery.js v1.4+
- *  jquery.ui.widget.js v1.8+
- *  jquery.rs.carousel.js v0.8.6+
+ *  jquery.ui.widget.js v1.8
+ *  jquery.rs.carousel.js v0.10.4
  *
  */
  
@@ -26,15 +26,20 @@
         },
         
         _create: function () {
+
+            if (this.options.continuous) {
+                this.options.loop = true;
+                // clones fill whitespace
+                this.options.whitespace = true;
+            }
         
             _super._create.apply(this, arguments);
 
             if (this.options.continuous) {
-
-                this._setOption('loop', true);
                 this._addClonedItems();
-                this.goToPage(1, false); // go to page to ensure we ignore clones
-
+                this._setRunnerWidth();
+                // go to page to ensure clones are ignored
+                this.goToPage(0, false);
             }
             
             return;
@@ -49,23 +54,21 @@
             }
         
             var elems = this.elements,
-                cloneCount = this._getCloneCount(),
-                cloneClass = this.widgetBaseClass + '-item-clone';
+                cloneClass = this.widgetBaseClass + '-item-clone',
+                visibleItems = this._getVisibleItems(0);
 
             this._removeClonedItems();
-        
-            elems.clonedBeginning = this.elements.items
-                .slice(0, cloneCount)
-                    .clone()
-                        .addClass(cloneClass);
 
-            elems.clonedEnd = this.elements.items
-                .slice(-cloneCount)
-                    .clone()
-                        .addClass(cloneClass);
-            
-            elems.clonedBeginning.appendTo(elems.runner);
-            elems.clonedEnd.prependTo(elems.runner);
+            elems.clonedBeginning = visibleItems
+                .clone()
+                    .add(this.elements.items.slice(visibleItems.length).first().clone())
+                        .addClass(cloneClass)
+                        .appendTo(elems.runner);
+
+            elems.clonedEnd = this.getPage(this.getNoOfPages() - 1)
+                .clone()
+                    .addClass(cloneClass)
+                    .prependTo(elems.runner);
             
             return;
         },
@@ -86,15 +89,6 @@
         
         },
 
-        // number of cloned items should equal itemsPerPage or, if greater, itemsPerTransition
-        _getCloneCount: function () {
-
-            var visibleItems = Math.ceil(this._getMaskDim() / this._getItemDim()),
-                itemsPerTransition = this.getItemsPerTransition();
-
-            return visibleItems >= itemsPerTransition ? visibleItems : itemsPerTransition;
-        },
-
         // needs to be overridden to take into account cloned items
         _setRunnerWidth: function () {
 
@@ -102,12 +96,22 @@
                 return;
             }
 
-            var self = this;
+            var self = this,
+                width = 0;
             
             if (this.options.continuous) {
                 
                 this.elements.runner.width(function () {
-                    return self._getItemDim() * (self.getNoOfItems() + (self._getCloneCount() * 2));
+                    
+                    self.elements.items
+                        .add(self.elements.clonedBeginning)
+                            .add(self.elements.clonedEnd)
+                                .each(function () {
+                                    width += $(this).outerWidth(true);
+                                });
+
+                    return width;
+
                 });
 
             }
@@ -118,47 +122,29 @@
             return;
         },
 
-        _slide: function (animate) {
+        _slide: function (animate, speed) {
 
             var self = this,
-                itemIndex,
-                cloneIndex;
+                pos;
 
-            // if first or last page jump to cloned before slide
             if (this.options.continuous) {
-
-                // this criteria means using goToPage(1) when on last page will act as continuous,
-                // good thing is it means autoScrolls _start method doesn't have to be overridden
-                // anymore, but is it desired?
-                if (this.page === 1 && this.prevPage === this.getNoOfPages()) {
-
-                    // jump to clonedEnd
-                    this.elements.runner.css(this.helperStr.pos, function () {
-
-                        // get item index of old page in context of clonedEnd
-                        itemIndex = self.pages[self.prevPage - 1];
-
-                        cloneIndex = self.elements.items
-                            .slice(-self._getCloneCount())
-                            .index(self.elements.items.eq(itemIndex - 1));
-
-                        return -self.elements.clonedEnd
-                            .eq(cloneIndex)
-                                .position()[self.helperStr.pos];
-                    });
-
+                // if was last page
+                if (this.index === 0 && this.prevIndex === this.getNoOfPages() - 1) {
+                    // jump to last page clone
+                    pos = this.elements.clonedEnd
+                        .first()
+                            .position()[this.isHorizontal ? 'left' : 'top'];
                 }
-                else if (this.page === this.getNoOfPages() && this.prevPage === 1) {
-
-                    // jump to clonedBeginning
-                    this.elements.runner.css(this.helperStr.pos, function () {
-                        return -self.elements.clonedBeginning
-                            .first()
-                                .position()[self.helperStr.pos];
-                    });
-                                                
+                // if was first page
+                else if (this.index === this.getNoOfPages() - 1 && this.prevIndex === 0) {
+                    // jump to first page clone
+                    pos = this.elements.clonedBeginning
+                        .first()
+                            .position()[this.isHorizontal ? 'left' : 'top'];
                 }
 
+                this.elements.runner
+                        .css(this.isHorizontal ? 'left' : 'top', -pos);
             }
 
             // continue
@@ -167,42 +153,13 @@
             return;
         },
 
-        // don't need to take into account itemsPerPage when continuous as there's no absolute last pos
-        getNoOfPages: function () {
-            
-            var itemsPerTransition;
-
-            if (this.options.continuous) {
-
-                itemsPerTransition = this.getItemsPerTransition();
-
-                if (itemsPerTransition <= 0) {
-                    return 0;
-                }
-
-                return Math.ceil(this.getNoOfItems() / itemsPerTransition);
-            }
-
-            return _super.getNoOfPages.apply(this, arguments);
-        },
-
-        // not required as cloned items fill space
-        _getAbsoluteLastPos: function () {
-            
-            if (this.options.continuous) {
-                return;
-            }
-
-            return _super._getAbsoluteLastPos.apply(this, arguments);
-        },
-
         refresh: function() {
 
             _super.refresh.apply(this, arguments);
             
             if (this.options.continuous) {
                 this._addClonedItems();
-                this.goToPage(this.page, false);
+                this.goToPage(this.index, false);
             }
             
             return;
@@ -242,22 +199,20 @@
         _setOption: function (option, value) {
             
             _super._setOption.apply(this, arguments);
-            
-            switch (option) {
-                
-            case 'continuous':
 
-                this._setOption('loop', value);
+            if (option === 'continuous') {
+
+                this.options.loop = true;
+                this.options.whitespace = true;
 
                 if (!value) {
                     this._removeClonedItems();
                 }
                 
                 this.refresh();
-                
-                break;
-            }
 
+            }
+            
             return;
         },
         

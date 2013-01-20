@@ -1,7 +1,7 @@
 /*
  * jquery.rs.carousel-autoscroll v0.10.3
  *
- * Copyright (c) 2011 Richard Scarrott
+ * Copyright (c) 2013 Richard Scarrott
  * http://www.richardscarrott.co.uk
  *
  * Dual licensed under the MIT and GPL licenses:
@@ -11,7 +11,7 @@
  * Depends:
  *  jquery.js v1.4+
  *  jquery.ui.widget.js v1.8
- *  jquery.rs.carousel.js v0.10.3
+ *  jquery.rs.carousel.js v0.10.4
  *
  */
  

@@ -1,7 +1,7 @@
 /*
  * jquery.rs.carousel.js v0.10.4
  *
- * Copyright (c) 2012 Richard Scarrott
+ * Copyright (c) 2013 Richard Scarrott
  * http://www.richardscarrott.co.uk
  *
  * Dual licensed under the MIT and GPL licenses:
