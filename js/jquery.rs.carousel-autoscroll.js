@@ -89,12 +89,8 @@
         _setOption: function (option, value) {
         
             _super._setOption.apply(this, arguments);
-            
-            switch (option) {
-                
-            case 'autoScroll':
-            
-                this._stop();
+
+            if (option === 'autoScroll' || option === 'pause') {
                 
                 if (value) {
                     this._bindAutoScroll();
@@ -102,10 +98,9 @@
                 }
                 else {
                     this._unbindAutoScroll();
+                    this._stop();
                 }
-                
-                break;
-                    
+
             }
             
             return;
