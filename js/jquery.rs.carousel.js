@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel.js v0.10.3
+ * jquery.rs.carousel.js v0.10.4
  *
  * Copyright (c) 2012 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -47,7 +47,7 @@
 
         _create: function () {
 
-            this.index = 1;
+            this.index = 0;
             this._elements();
             this._setIsHorizontal();
             this._addMask();
@@ -236,8 +236,8 @@
                 
             this._removePagination();
 
-            for (i = 1; i <= noOfPages; i++) {
-                links[i] = '<li class="' + baseClass + '-pagination-link"><a href="#page-' + i + '">' + i + '</a></li>';
+            for (i = 0; i < noOfPages; i++) {
+                links[i] = '<li class="' + baseClass + '-pagination-link"><a href="#page-' + i + '">' + (i + 1) + '</a></li>';
             }
 
             pagination
@@ -262,101 +262,85 @@
             return;
         },
 
-        // sets pages array e.g.
-        // [jQuery(li, li, li), jQuery(li, li, li, li), jQuery(li, li, li), jQuery(li, li)]
+        // sets pages array - [jQuery(li, li, li), jQuery(li, li, li, li), jQuery(li, li, li), jQuery(li, li)]
         _setPages: function () {
 
             var self = this,
                 itemIndex = 0,
-                itemsPerTransition = parseInt(this.options.itemsPerTransition, 10),
-                // lastItemIndex is only required when itemsPerTransition is a number
-                lastItemIndex = isNaN(itemsPerTransition) ? undefined : this._getLastItemIndex(),
-                maskDim = this._getMaskDim();
+                lastItemIndex = isNaN(this.options.itemsPerTransition) ? undefined : this._getLastItemIndex(),
+                maskDim = this._getMaskDim(),
+                page,
+                start;
                 
             this.pages = [];
             
             while (itemIndex < this.getNoOfItems()) {
 
-                // if itemsPerTransition isn't a number we need to calculate the number
-                // of items on each page based on the masks width, this also allows the
-                // item widths to vary.
-
-                // look into why I used isNaN instead of typeof
-                if (isNaN(itemsPerTransition)) {
-
-                    // var remainingItems = this.elements.items.eq(itemIndex).nextAll().andSelf(),
-                    var remainingItems = this.elements.items.slice(itemIndex),
-                        page = [],
-                        dim = 0;
-                
-                    remainingItems
-                        .each(function () {
-                            dim += self.isHorizontal ? $(this).outerWidth(true) : $(this).outerHeight(true);
-                            if (dim > maskDim) {
-                                // if no items have been pushed to page then it means the
-                                // first item is larger than the mask so we still need to push before
-                                // breaking.
-                                if (page.length === 0) {
-                                    page.push(this);
-                                }
-                                return false;
-                            }
-                            page.push(this);
-                        });
-
-                    this.pages.push($(page));
-                    itemIndex += page.length;
-                    
+                // if itemsPerTransition isn't a number we need to get the visible
+                // items at each item index
+                if (isNaN(this.options.itemsPerTransition)) {
+                    this.pages.push(self._getVisibleItems(itemIndex));
+                    itemIndex += this.pages[this.pages.length - 1].length;
                 }
-
-                // if itemsPerTransition is a number we don't need to calculate the width of the mask
-                // just simply slice up the items based on itemsPerTransition
+                // otherwise simply slice up the items based on itemsPerTransition
                 else {
-
-                    // If the itemIndex is greater than the lastItemIndex the current page should
-                    // contain the remaining items.
+                    // making sure we don't go past the lastItemIndex
                     if (itemIndex >= lastItemIndex) {
                         this.pages.push(this.elements.items.slice(itemIndex));
                         break;
                     }
-                    
-                    this.pages.push(this.elements.items.slice(itemIndex, itemIndex += itemsPerTransition));
+                    start = itemIndex;
+                    itemIndex += this.options.itemsPerTransition;
+                    this.pages.push(this.elements.items.slice(start, itemIndex));
                 }
             }
 
             return;
         },
 
-        // returns last logical item index based on mask width
+        // returns last logical item index
         _getLastItemIndex: function () {
-            
+
             if (this.options.whitespace) {
                 return;
             }
 
-            var self = this,
-                lastItemIndex = 0,
-                dim = 0,
-                maskDim = self._getMaskDim();
+            return this.elements.items.index(this._getVisibleItems(0, true).last());
+        },
 
-            // iterate through items backwards to work out the last
-            // item to scroll to
-            [].reverse.apply($.extend({}, this.elements.items))
-                .each(function (i) {
+        // returns a jquery object containing the visible items where the `itemIndex`
+        // is considered to be the first visible item. Passing in reverse as true allows
+        // us to, for example, return the visible items from the last item backwards.
+        _getVisibleItems: function (itemIndex, reverse) {
+
+            var self = this,
+                page = [],
+                items = !reverse ? this.elements.items.slice(itemIndex) : [].reverse.apply($(this.elements.items)).slice(itemIndex),
+                maskDim = this._getMaskDim(),
+                dim = 0;
+        
+            items
+                .each(function () {
                     dim += self.isHorizontal ? $(this).outerWidth(true) : $(this).outerHeight(true);
-                    if (dim >= maskDim) {
-                        lastItemIndex = self.getNoOfItems() - i;
+                    if (dim > maskDim) {
+                        // if no items have been pushed to page then it means the
+                        // first item is larger than the mask so we still need to push before
+                        // breaking.
+                        if (page.length === 0) {
+                            page.push(this);
+                        }
                         return false;
                     }
+                    page.push(this);
                 });
 
-            return lastItemIndex;
+            return $(page);
         },
 
         // returns jQuery object of items on page
         getPage: function (index) {
 
-            return this.pages[(typeof index !== 'undefined' ? index : this.index) - 1];
+            return this.pages[(typeof index !== 'undefined' ? index : this.index)] || $([]);
 
         },
 
@@ -384,8 +368,8 @@
 
             var index = this.index + 1;
 
-            if (this.options.loop && index > this.getNoOfPages()) {
-                index = 1;
+            if (this.options.loop && index >= this.getNoOfPages()) {
+                index = 0;
             }
             
             this.goToPage(index, animate);
@@ -397,8 +381,8 @@
 
             var index = this.index - 1;
 
-            if (this.options.loop && index < 1) {
-                index = this.getNoOfPages();
+            if (this.options.loop && index < 0) {
+                index = this.getNoOfPages() - 1;
             }
             
             this.goToPage(index, animate);
@@ -421,7 +405,7 @@
         // returns true if index is valid, false if not
         _isValid: function (index) {
             
-            if (index <= this.getNoOfPages() && index >= 1) {
+            if (index < this.getNoOfPages() && index >= 0) {
                 return true;
             }
             
@@ -431,11 +415,11 @@
         // returns valid page index
         _makeValid: function (index) {
                 
-            if (index < 1) {
-                index = 1;
+            if (index < 0) {
+                index = 0;
             }
-            else if (index > this.getNoOfPages()) {
-                index = this.getNoOfPages();
+            else if (index >= this.getNoOfPages()) {
+                index = this.getNoOfPages() - 1;
             }
 
             return index;
@@ -460,7 +444,7 @@
             var self = this,
                 animateProps = {},
                 lastPos = this._getAbsoluteLastPos(),
-                page = this.pages[this.index - 1],
+                page = this.getPage(),
                 pos = page.first().position()[this.isHorizontal ? 'left' : 'top'];
 
             // if before returns false return and revert index back to prevIndex
@@ -532,7 +516,7 @@
             this.elements.pagination
                 .children('.' + baseClass + '-pagination-link')
                     .removeClass(activeClass)
-                    .eq(this.index - 1)
+                    .eq(this.index)
                         .addClass(activeClass);
 
             return;
@@ -550,10 +534,10 @@
 
             if (!this.options.loop) {
                 
-                if (index === this.getNoOfPages()) {
+                if (index === this.getNoOfPages() - 1) {
                     elems.nextAction.addClass(disabledClass);
                 }
-                else if (index === 1) {
+                else if (index === 0) {
                     elems.prevAction.addClass(disabledClass);
                 }
 
@@ -562,8 +546,6 @@
             return;
         },
 
-        // formalise appending items as continuous adding complexity by inserting
-        // cloned items
         add: function (items) {
 
             this.elements.runner.append(items);
@@ -654,9 +636,7 @@
         // carousel should be disabled.
         _checkDisabled: function () {
 
-            var firstPage = this.getPage(1);
-
-            if (!firstPage || this.getNoOfItems() <= firstPage.length) {
+            if (this.getNoOfItems() <= this.getPage(0).length) {
                 this.elements.runner.css(this.isHorizontal ? 'left' : 'top', '');
                 this.disable();
             }
@@ -738,7 +718,7 @@
 
         },
 
-        // item can be $obj, element or 1 based index
+        // `index` can be $obj, element or 0 based index
         goToItem: function (index, animate) {
 
             var page,
@@ -746,19 +726,21 @@
                 item,
                 itemLength;
 
-            if (!isNaN(parseInt(index, 10))) {
-                index = this.elements.items.eq(index - 1);
+            // if a number get the element
+            if (!isNaN(index)) {
+                index = this.elements.items.eq(index);
             }
 
             if (index.jquery) {
+                // unwrap from jquery object
                 index = index[0];
             }
 
             // find item in pages array
             pages:
-            for (page = 1, pageLength = this.pages.length; page <= pageLength; page++) {
-                for (item = 0, itemLength = this.pages[page - 1].length; item < itemLength; item++) {
-                    if (this.pages[page - 1][item] === index) {
+            for (page = 0, pageLength = this.getNoOfPages(); page < pageLength; page++) {
+                for (item = 0, itemLength = this.getPage(page).length; item < itemLength; item++) {
+                    if (this.getPage(page)[item] === index) {
                         break pages;
                     }
                 }
@@ -766,11 +748,12 @@
 
             this.goToPage(page, animate);
 
-            return;
+            // return item as jquery object
+            return $(index);
         }
 
     });
     
-    $.rs.carousel.version = '0.10.3';
+    $.rs.carousel.version = '0.10.4';
 
 })(jQuery);
