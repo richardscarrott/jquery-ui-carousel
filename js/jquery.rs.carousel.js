@@ -21,6 +21,12 @@
     $.widget('rs.carousel', {
 
         options: {
+            // selectors
+            mask: '> div',
+            runner: '> ul',
+            items: '> li',
+
+            // options
             itemsPerTransition: 'auto',
             orientation: 'horizontal',
             loop: false,
@@ -61,14 +67,19 @@
         _elements: function () {
 
             var elems = this.elements = {},
-                baseClass = '.' + this.widgetBaseClass;
+                baseClass = this.widgetBaseClass;
 
-            elems.mask = this.element.children(baseClass + '-mask');
-            elems.runner = this.element.find(baseClass + '-runner').first();
-            elems.items = elems.runner.children(baseClass + '-item');
-            elems.pagination = undefined;
-            elems.nextAction = undefined;
-            elems.prevAction = undefined;
+            elems.mask = this.element
+                .find(this.options.mask)
+                    .addClass(baseClass + '-mask');
+
+            elems.runner = (elems.mask.length ? elems.mask : this.element)
+                    .find(this.options.runner)
+                            .addClass(baseClass + '-runner');
+
+            elems.items = elems.runner
+                .find(this.options.items)
+                    .addClass(baseClass + '-item');
 
             return;
         },

@@ -10,7 +10,7 @@
 	    border: 6px solid #444;
 	}
 
-		#rs-carousel .rs-carousel-item {
+		#rs-carousel ul li {
 			color: #fff;
 			font-size: 8em;
 			text-align: center;
