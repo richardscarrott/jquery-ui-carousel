@@ -413,7 +413,7 @@
         goToPage: function (index, e) {
 
             if (typeof e !== 'object') {
-                e = $.Event('goToPage', {
+                e = $.Event('carouselgoToPage', {
                     animate: e
                 });
             }
