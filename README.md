@@ -1,6 +1,6 @@
 ## Quick start
 
-### Include the following CSS and scripts:
+### Include the following JavaScript and CSS:
     
     <!-- carousel CSS -->
     <link rel="stylesheet" type="text/css" href="css/jquery.rs.carousel.css" media="all" />
@@ -78,13 +78,13 @@
 
 ### Options
 #### `mask: '> div'` (string)
-A jQuery selector to match the `.rs-carousel-mask` element. The DOM is queried from the the widgets root element. If the mask isn't found it will get dynamically added by the plugin.
+A jQuery selector to match the `.rs-carousel-mask` element. The DOM is queried from the widgets root element. If the mask isn't found it will get dynamically added by the plugin.
 
 #### `runner: '> ul'` (string)
 A jQuery selector to match the `.rs-carousel-runner` element. If the mask was found the DOM is queried from the mask otherwise it will be queried from the widgets root element.
 
 #### `items: '> li'` (string)
-A jQuery selector to match the `.rs-carousel-item` element(s). The DOM is queried from the the widgets runner.
+A jQuery selector to match the `.rs-carousel-item` element(s). The DOM is queried from the widgets runner.
 
 #### `itemsPerTransition: 'auto'` (string, number)
 Sets the number of items to scroll per transition, if set to 'auto' the number of items scrolled will be based on how many items are visible.
