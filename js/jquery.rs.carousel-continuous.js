@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel-continuous v0.10.5
+ * jquery.rs.carousel-continuous v0.10.6
  *
  * Copyright (c) 2013 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -10,8 +10,8 @@
  *
  * Depends:
  *  jquery.js v1.6+
- *  jquery.ui.widget.js v1.8
- *  jquery.rs.carousel.js v0.10.5
+ *  jquery.ui.widget.js v1.8+
+ *  jquery.rs.carousel.js v0.10.6
  *
  */
  
@@ -54,7 +54,7 @@
             }
         
             var elems = this.elements,
-                cloneClass = this.widgetBaseClass + '-item-clone',
+                cloneClass = this._getWidgetFullName() + '-item-clone',
                 visibleItems = this._getVisibleItems(0);
 
             this._removeClonedItems();
@@ -170,11 +170,11 @@
         // override to avoid clones
         _recacheItems: function () {
 
-            var baseClass = '.' + this.widgetBaseClass;
+            var fullName = '.' + this._getWidgetFullName();
 
             this.elements.items = this.elements.runner
-                .children(baseClass + '-item')
-                    .not(baseClass + '-item-clone');
+                .children(fullName + '-item')
+                    .not(fullName + '-item-clone');
 
             return;
         },

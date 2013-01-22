@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel.js v0.10.5
+ * jquery.rs.carousel.js v0.10.6
  *
  * Copyright (c) 2013 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -10,7 +10,7 @@
  *
  * Depends:
  *  jquery.js v1.6+
- *  jquery.ui.widget.js v1.8
+ *  jquery.ui.widget.js v1.8+
  *
  */
  
@@ -51,6 +51,12 @@
             after: null
         },
 
+        _getWidgetFullName: function () {
+
+            return this.widgetFullName || this.widgetBaseClass;
+
+        },
+
         _create: function () {
 
             this.index = 0;
@@ -67,19 +73,19 @@
         _elements: function () {
 
             var elems = this.elements = {},
-                baseClass = this.widgetBaseClass;
+                fullName = this._getWidgetFullName();
 
             elems.mask = this.element
                 .find(this.options.mask)
-                    .addClass(baseClass + '-mask');
+                    .addClass(fullName + '-mask');
 
             elems.runner = (elems.mask.length ? elems.mask : this.element)
                     .find(this.options.runner)
-                            .addClass(baseClass + '-runner');
+                            .addClass(fullName + '-runner');
 
             elems.items = elems.runner
                 .find(this.options.items)
-                    .addClass(baseClass + '-item');
+                    .addClass(fullName + '-item');
 
             return;
         },
@@ -92,11 +98,11 @@
 
             this._removeClasses();
 
-            var baseClass = this.widgetBaseClass,
+            var fullName = this._getWidgetFullName(),
                 classes = [];
 
-            classes.push(baseClass);
-            classes.push(baseClass + '-' + this.options.orientation);
+            classes.push(fullName);
+            classes.push(fullName + '-' + this.options.orientation);
 
             this.element.addClass(classes.join(' '));
 
@@ -113,7 +119,7 @@
 
                 $.each(classes.split(' '), function (i, value) {
 
-                    if (value.indexOf(self.widgetBaseClass) !== -1) {
+                    if (value.indexOf(self._getWidgetFullName()) !== -1) {
                         widgetClasses.push(value);
                     }
 
@@ -145,7 +151,7 @@
             }
 
             elems.mask = elems.runner
-                .wrap('<div class="' + this.widgetBaseClass + '-mask" />')
+                .wrap('<div class="' + this._getWidgetFullName() + '-mask" />')
                 .parent();
 
             // indicates whether mask was dynamically added or already existed in mark-up
@@ -239,8 +245,8 @@
             var self = this,
                 elems = this.elements,
                 opts = this.options,
-                baseClass = this.widgetBaseClass,
-                pagination = $('<ol class="' + baseClass + '-pagination" />'),
+                fullName = this._getWidgetFullName(),
+                pagination = $('<ol class="' + fullName + '-pagination" />'),
                 links = [],
                 noOfPages = this.getNoOfPages(),
                 i;
@@ -248,7 +254,7 @@
             this._removePagination();
 
             for (i = 0; i < noOfPages; i++) {
-                links[i] = '<li class="' + baseClass + '-pagination-link"><a href="#page-' + i + '">' + (i + 1) + '</a></li>';
+                links[i] = '<li class="' + fullName + '-pagination-link"><a href="#page-' + i + '">' + (i + 1) + '</a></li>';
             }
 
             pagination
@@ -535,11 +541,11 @@
 
         _updatePagination: function () {
             
-            var baseClass = this.widgetBaseClass,
-                activeClass = baseClass + '-pagination-link-active';
+            var fullName = this._getWidgetFullName(),
+                activeClass = fullName + '-pagination-link-active';
 
             this.elements.pagination
-                .children('.' + baseClass + '-pagination-link')
+                .children('.' + fullName + '-pagination-link')
                     .removeClass(activeClass)
                     .eq(this.index)
                         .addClass(activeClass);
@@ -551,7 +557,7 @@
             
             var elems = this.elements,
                 index = this.index,
-                disabledClass = this.widgetBaseClass + '-action-disabled';
+                disabledClass = this._getWidgetFullName() + '-action-disabled';
 
             elems.nextAction
                 .add(elems.prevAction)
@@ -697,7 +703,7 @@
         _recacheItems: function () {
 
             this.elements.items = this.elements.runner
-                .children('.' + this.widgetBaseClass + '-item');
+                .children('.' + this._getWidgetFullName() + '-item');
 
             return;
         },
@@ -714,7 +720,7 @@
             
             if (this.maskAdded) {
                 elems.runner
-                    .unwrap('.' + this.widgetBaseClass + '-mask');
+                    .unwrap('.' + this._getWidgetFullName() + '-mask');
             }
 
             cssProps[this.isHorizontal ? 'left' : 'top'] = '';
@@ -779,6 +785,6 @@
 
     });
     
-    $.rs.carousel.version = '0.10.5';
+    $.rs.carousel.version = '0.10.6';
 
 })(jQuery);

@@ -1,5 +1,5 @@
 /*
- * jquery.rs.carousel-autoscroll v0.10.5
+ * jquery.rs.carousel-autoscroll v0.10.6
  *
  * Copyright (c) 2013 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -10,8 +10,8 @@
  *
  * Depends:
  *  jquery.js v1.6+
- *  jquery.ui.widget.js v1.8
- *  jquery.rs.carousel.js v0.10.5
+ *  jquery.ui.widget.js v1.8+
+ *  jquery.rs.carousel.js v0.10.6
  *
  */
  
