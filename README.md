@@ -1,4 +1,4 @@
-## Quick start
+## jQuery RS Carousel Quick Start
 
 ### Include the following JavaScript and CSS:
     
@@ -74,7 +74,7 @@
         <a class="rs-carousel-action rs-carousel-action-next rs-carousel-action-disabled" href="#">Next</a>
     </div>
 
-## DOCS
+## Documentation
 
 ### Options
 #### `mask: '> div'` (string)
