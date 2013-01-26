@@ -18,7 +18,7 @@
 
 ### This is the basic HTML structure required:
 
-    <div class="my-carousel">
+    <div class="rs-carousel">
         <ul>
             <li>
                 <!-- item 1 content -->
@@ -41,12 +41,12 @@
 ### Here's the JavaScript:
 
     $(document).ready(function () {
-        $('.my-carousel').carousel();
+        $('.rs-carousel').carousel();
     });
 
 ### And here's the generated markup:
 
-    <div class="my-carousel rs-carousel">
+    <div class="rs-carousel rs-carousel-horizontal">
         <div class="rs-carousel-mask">
             <ul class="rs-carousel-runner">
                 <li class="rs-carousel-item">
@@ -165,28 +165,28 @@ Fired on first call.
 
 It can be passed in the options object like this:
 
-    $('.rs-carousel').carousel({
+    $(':rs-carousel').carousel({
        create: function (event, data) { ... }
     });
 	
 and bound as an event like this:
 	
-    $('.rs-carousel').on('carouselcreate', function (event, data) {
+    $(':rs-carousel').on('carouselcreate', function (event, data) {
         ...
     });
 
 #### `before: null` (function)
-Fired before transition.
+Fired before transition. Calling `preventDefault` on the event object will prevent the carousel from scrolling.
 
 It can be passed in the options object like this:
 
-    $('.rs-carousel').carousel({
+    $(':rs-carousel').carousel({
         before: function (event, data) { ... }
     });
 	
 and bound as an event like this:
 	
-    $('.rs-carousel').bind("carouselbefore", function (event, data) {
+    $(':rs-carousel').on('carouselbefore', function (event, data) {
         ...
     });
 
@@ -195,13 +195,13 @@ Fired after transition.
 
 It can be passed in the options object like this:
 
-    $('.rs-carousel').carousel({
+    $(':rs-carousel').carousel({
         after: function(event, data) { ... }
     });
 	
 and bound as an event like this:
 	
-    $('.rs-carousel').bind("carouselAfter", function(event, data) {
+    $(':rs-carousel').on('carouselafter', function(event, data) {
         ...
     });
 
