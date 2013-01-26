@@ -222,66 +222,61 @@ The second argument is `data` which provides access to the carousels core elemen
         }
     }
 
-### Methods TODO: Update methods for 0.10.*
-#### next .carousel('next')
+### Methods
+#### next `$(':rs-carousel').carousel('next')`
 Moves to the next page.
 
-#### prev .carousel('prev')
+#### prev `$(':rs-carousel').carousel('prev')`
 Moves to the prev page.
 
-#### goToPage .carousel('goToPage', page, [animate])
-Moves to the specified 'page' (one based). If animate is set to false it'll jump straight there.
+#### goToPage `$(':rs-carousel').carousel('goToPage', page [, animate])`
+Moves to the specified zero based `page`. If `animate` is set to false it'll jump straight there.
 
-#### goToItem .carousel('goToItem', item, [animate])
-Moves to page containing item, item can be a one based number, a vanilla DOM element
-or a jQuery object. If animate is set to false it'll jump straight there.
+#### goToItem `$(':rs-carousel').carousel('goToItem', item [, animate])`
+Moves to page containing `item`, `item` can be a zero based number, a vanilla DOM element
+or a jQuery object. If `animate` is set to false it'll jump straight there.
 
-#### getNoOfItems .carousel('getNoOfItems')
-Returns current number of items in carousel.
+#### refresh `$(':rs-carousel').carousel('refresh')`
+Refreshes carousel based on new state. The carousel can be made responsive by calling this method on the windows resize event.
 
-#### getNoOfPages .carousel('getNoOfPages')
+#### getPage `$(':rs-carousel').carousel('getPage' [, index])`
+Returns a jQuery object containing the items on the page found at `index`. If `index` is omitted it'll return the current page.
+
+#### getPages `$(':rs-carousel').carousel('getPages')`
+Returns the array of pages e.g. [jQuery(li, li, li), jQuery(li, li, li, li), jQuery(li, li, li), jQuery(li, li)]
+
+#### getIndex `$(':rs-carousel').carousel('getIndex')`
+Returns the index of the current page.
+
+#### getPrevIndex `$(':rs-carousel').carousel('getPrevIndex')`
+Returns the index of the previous page.
+
+#### getNoOfPages `$(':rs-carousel').carousel('getNoOfPages')`
 Returns the number of pages.
 
-#### getItemsPerPage .carousel('getItemsPerPage')
-Returns the number items per page.
+#### getNoOfItems `$(':rs-carousel').carousel('getNoOfItems')`
+Returns number of items in carousel.
 
-#### getItemsPerTransition .carousel('getItemsPerTransition')
-returns the number items per transition
+#### add `$(':rs-carousel').carousel('add', items)`
+Appends items to carousel, `items` can be DOM element, HTML string, or jQuery object.
 
-#### add .carousel('add', items)
-Appends items to carousel, items can be DOM element, HTML string, or jQuery object.
+#### remove `$(':rs-carousel').carousel('remove', selector)`
+Removes the items matched by `selector` from the carousel.
 
-#### remove .carousel('remove', selector)
-Removes matched elements from the carousel.
+#### option `$(':rs-carousel').carousel('option', optionName [, value])`
+Get or set any carousel option. If no `value` is specified, will act as a getter.
 
-#### refresh .carousel('refresh')
-Refreshes carousel based on new state.
+#### option `$(':rs-carousel').carousel('option' [, options])`
+Get or set multiple carousel options at once by providing an `options` object. If `options` is omitted it will return all options.
 
-#### getPage .carousel('getPage')
-Returns current page.
+#### disable `$(':rs-carousel').carousel('disable')`
+Disables the carousel and adds the `'rs-carousel-disabled'` className to the root element.
 
-#### getPrevPage .carousel('getPrevPage')
-Returns previous page.
+#### enable `$(':rs-carousel').carousel('enable')`
+Enables the carousel and removes the `'rs-carousel-disabled'` className from the root element.
 
-#### getPages .carousel('getPages')
-Returns pages array. e.g. [1, 5, 9, 13] // where the index + 1 === page number and the value === index of first item in page.
+#### widget `$(':rs-carousel').carousel('widget')`
+Returns the root element.
 
-#### option .carousel('option', optionName, [value])
-Get or set any carousel option. If no value is specified, will act as a getter.
-
-#### option .carousel('option', options)
-Set multiple carousel options at once by providing an options object.
-
-#### disable .carousel('disable')
-Disables the carousel.
-
-#### enable .carousel('enable')
-Enables the carousel.
-
-#### widget .carousel('widget')
-Returns the .rs-carousel element.
-
-#### destroy .carousel('destroy')
+#### destroy `$(':rs-carousel').carousel('destroy')`
 Removes the carousel functionality completely. This will return the element back to its pre-init state.
-
-[If you have any questions or ideas you can contact me here](http://richardscarrott.co.uk/contact "Richard Scarrott").

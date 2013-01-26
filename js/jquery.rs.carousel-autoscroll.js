@@ -1,5 +1,11 @@
+/*global jQuery */
+/*jshint bitwise: true, camelcase: true, curly: true, eqeqeq: true, forin: true,
+immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: single,
+undef: true, unused: true, strict: true, trailing: true, browser: true */
+
 /*
- * jquery.rs.carousel-autoscroll v0.10.6
+ * jquery.rs.carousel-autoscroll v0.10.7
+ * https://github.com/richardscarrott/jquery-ui-carousel
  *
  * Copyright (c) 2013 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -11,11 +17,13 @@
  * Depends:
  *  jquery.js v1.6+
  *  jquery.ui.widget.js v1.8+
- *  jquery.rs.carousel.js v0.10.6
+ *  jquery.rs.carousel.js v0.10.7
  *
  */
  
-(function($, undefined) {
+(function ($, undefined) {
+
+    'use strict';
 
     var _super = $.rs.carousel.prototype;
     
@@ -26,7 +34,7 @@
             autoScroll: false
         },
         
-        _create: function() {
+        _create: function () {
         
             _super._create.apply(this);
             
@@ -40,7 +48,7 @@
             return;
         },
         
-        _bindAutoScroll: function() {
+        _bindAutoScroll: function () {
             
             if (this.autoScrollInitiated) {
                 return;
@@ -55,7 +63,7 @@
             return;
         },
         
-        _unbindAutoScroll: function() {
+        _unbindAutoScroll: function () {
             
             this.element
                 .unbind('mouseenter.' + this.widgetName)
@@ -66,20 +74,20 @@
             return;
         },
         
-        _start: function() {
+        _start: function () {
         
             var self = this;
             
             this._stop();
             
-            this.interval = setInterval(function() {
+            this.interval = setInterval(function () {
                 self.next();
             }, this.options.pause);
             
             return;
         },
         
-        _stop: function() {
+        _stop: function () {
         
             clearInterval(this.interval);
             
@@ -106,7 +114,7 @@
             return;
         },
         
-        destroy: function() {
+        destroy: function () {
             
             this._stop();
             _super.destroy.apply(this);

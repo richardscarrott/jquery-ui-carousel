@@ -1,5 +1,11 @@
+/*global jQuery */
+/*jshint bitwise: true, camelcase: true, curly: true, eqeqeq: true, forin: true,
+immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: single,
+undef: true, unused: true, strict: true, trailing: true, browser: true */
+
 /*
- * jquery.rs.carousel-continuous v0.10.6
+ * jquery.rs.carousel-continuous v0.10.7
+ * https://github.com/richardscarrott/jquery-ui-carousel
  *
  * Copyright (c) 2013 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -11,11 +17,13 @@
  * Depends:
  *  jquery.js v1.6+
  *  jquery.ui.widget.js v1.8+
- *  jquery.rs.carousel.js v0.10.6
+ *  jquery.rs.carousel.js v0.10.7
  *
  */
  
-(function($, undefined) {
+(function ($, undefined) {
+
+    'use strict';
 
     var _super = $.rs.carousel.prototype;
     
@@ -92,27 +100,30 @@
         // needs to be overridden to take into account cloned items
         _setRunnerWidth: function () {
 
-            if (!this.isHorizontal) {
-                return;
-            }
-
-            var self = this,
+            var elems = this.elements,
                 width = 0;
             
             if (this.options.continuous) {
+
+                // reset width in case orientation
+                // has been changed
+                elems.runner.width('');
+
+                if (!this.isHorizontal) {
+                    return;
+                }
                 
-                this.elements.runner.width(function () {
-                    
-                    self.elements.items
-                        .add(self.elements.clonedBeginning)
-                            .add(self.elements.clonedEnd)
-                                .each(function () {
-                                    width += $(this).outerWidth(true);
-                                });
+                elems.runner
+                    .width(function () {
+                        elems.items
+                            .add(elems.clonedBeginning)
+                                .add(elems.clonedEnd)
+                                    .each(function () {
+                                        width += $(this).outerWidth(true);
+                                    });
 
-                    return width;
-
-                });
+                        return width;
+                    });
 
             }
             else {
@@ -124,20 +135,19 @@
 
         _slide: function (e) {
 
-            var self = this,
-                pos;
+            var pos;
 
             if (this.options.continuous) {
 
                 // if moving to first page
-                if (e.type === 'carouselnext' && this.index === 0) {
+                if (e.type === 'carousel:next' && this.index === 0) {
                     // jump to last page clone
                     pos = this.elements.clonedEnd
                         .first()
                             .position()[this.isHorizontal ? 'left' : 'top'];
                 }
                 // if moving to last page
-                else if (e.type === 'carouselprev' && this.index === this.getNoOfPages() - 1) {
+                else if (e.type === 'carousel:prev' && this.index === this.getNoOfPages() - 1) {
                     // jump to first page clone
                     pos = this.elements.clonedBeginning
                         .first()
@@ -154,7 +164,7 @@
             return;
         },
 
-        refresh: function() {
+        refresh: function () {
 
             _super.refresh.apply(this, arguments);
             
@@ -170,11 +180,12 @@
         // override to avoid clones
         _recacheItems: function () {
 
-            var fullName = '.' + this._getWidgetFullName();
+            var fullName = this._getWidgetFullName();
 
             this.elements.items = this.elements.runner
-                .children(fullName + '-item')
-                    .not(fullName + '-item-clone');
+                .find(this.options.items)
+                    .not('.' + fullName + '-item-clone')
+                        .addClass(fullName + '-item');
 
             return;
         },
@@ -217,7 +228,7 @@
             return;
         },
         
-        destroy: function() {
+        destroy: function () {
             
             this._removeClonedItems();
             
