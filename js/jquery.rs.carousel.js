@@ -228,7 +228,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                 itemIndex = 0,
                 lastItemIndex = isNaN(this.options.itemsPerTransition) ? undefined : this._getLastItemIndex(),
                 start;
-                
+
             this.pages = [];
             
             while (itemIndex < this.getNoOfItems()) {
@@ -247,7 +247,8 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                         break;
                     }
                     start = itemIndex;
-                    itemIndex += this.options.itemsPerTransition;
+                    // #37 - allow `itemsPerTransition` to be passed in as string
+                    itemIndex += parseInt(this.options.itemsPerTransition, 10);
                     this.pages.push(this.elements.items.slice(start, itemIndex));
                 }
             }
