@@ -1,15 +1,18 @@
 {
   "name": "rs.carousel",
   "title": "jQuery RS Carousel",
-  "description": "jQuery RS Carousel is a responsive and unobtrusive carousel written on top of jQuery and the jQuery UI Widget Factory providing a full and familiar API.",
+  "description": "jQuery RS Carousel is a responsive and unobtrusive carousel written on top of jQuery and the jQuery UI Widget Factory providing a full and familiar API in less than 2.6kB minified and gzipped",
   "keywords": [
     "carousel",
     "slider",
     "slideshow",
     "cycle",
-    "responsive"
+    "responsive",
+    "ui",
+    "widget",
+    "rs"
   ],
-  "version": "0.10.5",
+  "version": "0.10.7",
   "author": {
     "name": "Richard Scarrott",
     "email": "riscarrott@googlemail.com",
@@ -26,7 +29,6 @@
     }
   ],
   "bugs": "https://github.com/richardscarrott/jquery-ui-carousel/issues",
-  "homepage": "http://www.richardscarrott.co.uk/assets/javascript/jquery/ui-carousel/demo/",
   "demo": "http://www.richardscarrott.co.uk/assets/javascript/jquery/ui-carousel/demo/",
   "docs": "https://github.com/richardscarrott/jquery-ui-carousel#docs",
   "download": "https://github.com/richardscarrott/jquery-ui-carousel/archive/master.zip",
