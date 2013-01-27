@@ -34,6 +34,6 @@
   "download": "https://github.com/richardscarrott/jquery-ui-carousel/archive/master.zip",
   "dependencies": {
     "jquery": ">=1.6",
-    "jquery.ui.widget": "=1.8"
+    "jquery.ui.widget": ">=1.8"
   }
 }
