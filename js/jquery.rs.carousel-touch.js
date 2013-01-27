@@ -1,3 +1,8 @@
+
+// NOTE: THIS HASN'T BEEN UPDATED TO WORK WITH THE LATEST VERSION OF
+// THE CAROUSEL, IF REQUIRED v0.8.6 CAN BE DOWNLOADED HERE:
+// https://github.com/richardscarrott/jquery-ui-carousel/tree/0.8.6
+
 /*
  * jquery.rs.carousel-touch v0.8.6
  *

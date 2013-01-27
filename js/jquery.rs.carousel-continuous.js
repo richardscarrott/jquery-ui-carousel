@@ -69,6 +69,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
             elems.clonedBeginning = visibleItems
                 .clone()
+                    // add one extra item in case its partially visible
                     .add(this.elements.items.slice(visibleItems.length).first().clone())
                         .addClass(cloneClass)
                         .appendTo(elems.runner);
