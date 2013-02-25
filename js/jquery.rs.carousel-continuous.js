@@ -42,13 +42,6 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             }
         
             _super._create.apply(this, arguments);
-
-            if (this.options.continuous) {
-                this._addClonedItems();
-                this._setRunnerWidth();
-                // go to page to ensure clones are ignored
-                this.goToPage(0, false);
-            }
             
             return;
         },
@@ -155,8 +148,14 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                             .position()[this.isHorizontal ? 'left' : 'top'];
                 }
 
-                this.elements.runner
+                if (this.options.translate3d) {
+                    this.elements.runner
+                        .css('transform', 'translate3d(' + (this.isHorizontal ? -pos + 'px, 0, 0' : '0, ' + -pos + 'px, 0') + ')');
+                }
+                else {
+                    this.elements.runner
                         .css(this.isHorizontal ? 'left' : 'top', -pos);
+                }
             }
 
             // continue
@@ -172,7 +171,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             if (this.options.continuous) {
                 this._addClonedItems();
                 this._setRunnerWidth();
-                this.goToPage(this.index, false);
+                this.goToPage(this.index, false, undefined, true);
             }
             
             return;

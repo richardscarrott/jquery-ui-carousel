@@ -55,6 +55,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             speed: 'normal',
             easing: 'swing',
             fx: 'slide',
+            translate3d: false,
 
             // callbacks
             create: null,
@@ -203,7 +204,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             this._addPagination();
             this._setRunnerWidth();
             this.index = this._makeValid(this.index);
-            this.goToPage(this.index, false);
+            this.goToPage(this.index, false, undefined, true);
             this._checkDisabled();
 
             return;
@@ -421,8 +422,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             return;
         },
 
-        // `eventName` is for internal use only
-        goToPage: function (index, animate, eventName) {
+        goToPage: function (index, animate, /* INTERNAL */ eventName, /* INTERNAL */ silent) {
 
             // undefined should pass
             animate = animate === false ? false : true;
@@ -434,7 +434,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                 this['_' + this.options.fx]($.Event(eventName ? eventName : 'carousel:gotopage', {
                     animate: animate,
                     speed: animate ? this.options.speed : 0
-                }));
+                }), silent);
             }
 
             // make sure updateUi is called even when disabled
@@ -500,16 +500,19 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             return index;
         },
 
-        _slide: function (e) {
+        // if silent is true callbacks won't be fired
+        _slide: function (e, silent) {
 
             var self = this,
                 animateProps = {},
                 lastPos = this._getAbsoluteLastPos(),
                 page = this.getPage(),
-                pos = page.first().position()[this.isHorizontal ? 'left' : 'top'];
+                pos = page.first().position()[this.isHorizontal ? 'left' : 'top'],
+                fullName = this._getWidgetFullName(),
+                transitionEndEvent;
 
             // if before returns false return and revert index back to prevIndex
-            if (!this._trigger('before', e, this._getEventData())) {
+            if (!silent && !this._trigger('before', e, this._getEventData())) {
                 this.index = this.prevIndex;
                 return;
             }
@@ -519,12 +522,49 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                 pos = lastPos;
             }
 
-            animateProps[this.isHorizontal ? 'left' : 'top'] = -pos;
-            this.elements.runner
-                .stop()
-                .animate(animateProps, e.speed, this.options.easing, function () {
-                    self._trigger('after', e, self._getEventData());
-                });
+            if (this.options.translate3d) {
+                
+                transitionEndEvent = [
+                    'transitionend.' + fullName,
+                    'webkitTransitionEnd.' + fullName,
+                    'oTransitionEnd.' + fullName
+                ];
+
+                if (e.animate) {
+                    this.element.addClass(fullName + '-transition');
+                }
+                
+                this.elements.runner
+                    .unbind(transitionEndEvent.join(' '))
+                    .on(transitionEndEvent.join(' '), function (e) {
+                        self.element.removeClass(fullName + '-transition');
+                        if (!silent) {
+                            self._trigger('after', e, self._getEventData());
+                        }
+                    })
+                    .css('transform', 'translate3d(' + (this.isHorizontal ? -pos + 'px, 0, 0' : '0, ' + -pos + 'px, 0') + ')');
+
+                // if we're not animating the after callback should still be called
+                if (!e.animate) {
+                    self.element.removeClass(fullName + '-transition');
+                    if (!silent) {
+                        self._trigger('after', e, self._getEventData());
+                    }
+                }
+
+            }
+            else {
+                
+                animateProps[this.isHorizontal ? 'left' : 'top'] = -pos;
+                this.elements.runner
+                    .stop()
+                    .animate(animateProps, e.speed, this.options.easing, function () {
+                        if (!silent) {
+                            self._trigger('after', e, self._getEventData());
+                        }
+                    });
+
+            }
 
             return;
         },

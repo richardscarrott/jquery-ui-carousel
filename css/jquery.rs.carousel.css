@@ -12,14 +12,34 @@
  *  a basic reset + items must have width & height
  */
 	
-.rs-carousel .rs-carousel-mask {
+.rs-carousel-mask {
 	overflow: hidden;
 }
 
-	.rs-carousel .rs-carousel-runner {
+	.rs-carousel-runner {
 	    position: relative;
 	}
 		
-		.rs-carousel.rs-carousel-horizontal .rs-carousel-item {
+		.rs-carousel-horizontal .rs-carousel-item {
 			float: left;
 		}
+
+	.rs-carousel-mask {
+		position: relative;
+	}
+
+	.rs-carousel-runner {
+		-moz-transform: translate3d(0, 0, 0);
+		-webkit-transform: translate3d(0, 0, 0);
+		-o-transform: translate3d(0, 0, 0);
+		-ms-transform: translate3d(0, 0, 0);
+		transform: translate3d(0, 0, 0);
+	}
+
+	.rs-carousel-transition .rs-carousel-runner {
+		-moz-transition: -moz-transform .400s ease;
+		-webkit-transition: -webkit-transform .400s ease;
+		-o-transition: -o-transform .400s ease;
+		-ms-transition: -ms-transform .400s ease;
+		transition: transform .400s ease;
+	}
