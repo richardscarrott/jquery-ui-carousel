@@ -4,7 +4,7 @@ immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: sing
 undef: true, unused: true, strict: true, trailing: true, browser: true */
 
 /*
- * jquery.rs.carousel.js v0.10.7
+ * jquery.rs.carousel.js v0.11
  * https://github.com/richardscarrott/jquery-ui-carousel
  *
  * Copyright (c) 2013 Richard Scarrott
@@ -15,9 +15,8 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
  * http://www.gnu.org/licenses/gpl.html
  *
  * Depends:
- *  jquery.js v1.6+
+ *  jquery.js v1.8+
  *  jquery.ui.widget.js v1.8+
- *
  */
  
 (function ($, undefined) {
@@ -28,7 +27,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
     
     $.widget('rs.carousel', {
 
-        version: '0.10.7',
+        version: '0.11',
 
         options: {
             // selectors
@@ -789,6 +788,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
             cssProps[this.isHorizontal ? 'left' : 'top'] = '';
             cssProps[this.isHorizontal ? 'width' : 'height'] = '';
+            cssProps.transform = '';
             elems.runner
                 .css(cssProps);
             

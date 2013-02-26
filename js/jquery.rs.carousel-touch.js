@@ -1,12 +1,12 @@
-
-// NOTE: THIS HASN'T BEEN UPDATED TO WORK WITH THE LATEST VERSION OF
-// THE CAROUSEL, IF REQUIRED v0.8.6 CAN BE DOWNLOADED HERE:
-// https://github.com/richardscarrott/jquery-ui-carousel/tree/0.8.6
+/*global jQuery */
+/*jshint bitwise: true, camelcase: true, curly: true, eqeqeq: true, forin: true,
+immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: single,
+undef: true, unused: true, strict: true, trailing: true, browser: true */
 
 /*
- * jquery.rs.carousel-touch v0.8.6
+ * jquery.rs.carousel-touch v0.11
  *
- * Copyright (c) 2011 Richard Scarrott
+ * Copyright (c) 2013 Richard Scarrott
  * http://www.richardscarrott.co.uk
  *
  * Dual licensed under the MIT and GPL licenses:
@@ -14,15 +14,16 @@
  * http://www.gnu.org/licenses/gpl.html
  *
  * Depends:
- *  jquery.js v1.4+
- *  jquery.translate3d.js v0.1+ // if passing in translate3d true for hardware acceleration
- *  jquery.event.drag.js v2.1.0+
+ *  jquery.js v1.8+
+ *  jquery.translate3d.js v0.2+ // if passing in translate3d true for hardware acceleration
+ *  jquery.event.drag.js v2.3+ // https://github.com/richardscarrott/jquery.threedubmedia/
  *  jquery.ui.widget.js v1.8+
- *  jquery.rs.carousel.js v0.8.6+
- *
+ *  jquery.rs.carousel.js v0.11+
  */
 
 (function ($) {
+
+    'use strict';
 
     var _super = $.Widget.prototype;
     
@@ -37,16 +38,19 @@
         
         _create: function () {
 
-            var self = this;
+            var self = this,
+                fullName = this.widgetFullName || this.widgetBaseClass;
 
             this.element
-                .bind('dragstart', function (e) {
+                .bind('dragstart.' + fullName, {
+                    axis: this.options.axis
+                }, function (e) {
                     self._mouseStart(e);
                 })
-                .bind('drag', function (e) {
+                .bind('drag.' + fullName, function (e) {
                     self._mouseDrag(e);
                 })
-                .bind('dragend', function (e) {
+                .bind('dragend.' + fullName, function (e) {
                     self._mouseStop(e);
                 });
             
@@ -59,7 +63,7 @@
             
         },
         
-        _mouseStart: function(e) {
+        _mouseStart: function (e) {
             
             this.mouseStartPos = this.options.axis === 'x' ? e.pageX : e.pageY;
             
@@ -75,7 +79,7 @@
             return;
         },
         
-        _mouseDrag: function(e) {
+        _mouseDrag: function (e) {
         
             var page = this.options.axis === 'x' ? e.pageX : e.pageY,
                 pos = (page - this.mouseStartPos) + this.runnerPos,
@@ -112,7 +116,8 @@
             }
             
             this.element.css(cssProps);
-            //this._mouseDestroy();
+            this.element.unbind('.' + (this.widgetFullName || this.widgetBaseClass));
+
             _super.destroy.apply(this);
             
             return;
@@ -127,24 +132,36 @@
 // touch extension
 (function ($) {
     
+    'use strict';
+
     var _super = $.rs.carousel.prototype;
         
     $.widget('rs.carousel', $.rs.carousel, {
     
         options: {
             touch: false,
-            translate3d: false,
-            sensitivity: 0.8
+            sensitivity: 1
         },
         
         _create: function () {
             
             _super._create.apply(this);
+
+            this.makeDraggable();
             
+            return;
+        },
+
+        makeDraggable: function () {
+
             var self = this;
 
             if (this.options.touch) {
-                
+
+                if (this.elements.runner.data('rsDraggable3d')) {
+                    this.elements.runner.draggable3d('destroy');
+                }
+
                 this.elements.runner
                     .draggable3d({
                         translate3d: this.options.translate3d,
@@ -158,20 +175,8 @@
                             self._dragStopHandler(e);
                         }
                     });
+            }
 
-            }
-                
-            // bind CSS transition callback
-            if (this.options.translate3d) {
-                this.elements.runner.bind('webkitTransitionEnd transitionend oTransitionEnd', function (e) {
-                    self._trigger('after', null, {
-                        elements: self.elements,
-                        animate: animate
-                    });
-                    e.preventDefault(); // stops page from jumping to top...
-                });
-            }
-            
             return;
         },
         
@@ -185,7 +190,8 @@
         
             // remove transition class to ensure drag doesn't transition
             if (this.options.translate3d) {
-                this.elements.runner.removeClass(this.widgetBaseClass + '-runner-transition');
+                this.elements.runner
+                    .removeClass(this._getWidgetFullName() + '-runner-transition');
             }
         
             this.startTime = this._getTime();
@@ -219,18 +225,17 @@
             distance = Math.abs(this.startPos[axis] - this.endPos[axis]);
             speed = distance / time;
             direction = this.startPos[axis] > this.endPos[axis] ? 'next' : 'prev';
-            
-            if (speed > this.options.sensitivity || distance > (this._getItemDim() * this.getItemsPerTransition() / 2)) {
-                if ((this.page === this.getNoOfPages() && direction === 'next')
-                    || (this.page === 1 && direction === 'prev')) {
-                    this.goToPage(this.page);
+
+            if (speed > this.options.sensitivity || distance > this._getMaskDim() / 2) {
+                if ((this.index === this.getNoOfPages() - 1 && direction === 'next') || (this.index === 0 && direction === 'prev')) {
+                    this.goToPage(this.index);
                 }
                 else {
                     this[direction]();
                 }
             }
             else {
-                this.goToPage(this.page); // go back to current page
+                this.goToPage(this.index); // go back to current page
             }
             
             return;
@@ -241,58 +246,6 @@
             var date = new Date();
             return date.getTime();
         
-        },
-        
-        // override _slide to work with tanslate3d - TODO: remove duplication
-        _slide: function (animate) {
-
-            var self = this,
-                animate = animate === false ? false : true, // undefined should pass as true
-                speed = animate ? this.options.speed : 0,
-                animateProps = {},
-                lastPos = this._getAbsoluteLastPos(),
-                pos = this.elements.items
-                    .eq(this.pages[this.page - 1] - 1) // arrays and .eq() are zero based, carousel is 1 based
-                        .position()[this.helperStr.pos];
-
-            // check pos doesn't go past last posible pos
-            if (pos > lastPos) {
-                pos = lastPos;
-            }
-
-            this._trigger('before', null, {
-                elements: this.elements,
-                animate: animate
-            });
-            
-            if (this.options.translate3d) {
-                
-                this.elements.runner
-                    .addClass(this.widgetBaseClass + '-runner-transition')
-                    .css({
-                        translate3d: this.isHorizontal ? {x: -pos} : {y: -pos}
-                    });
-                
-            }
-            else {
-                
-                animateProps[this.helperStr.pos] = -pos;
-                animateProps.useTranslate3d = true; // what the hell is this...
-                this.elements.runner
-                    .stop()
-                    .animate(animateProps, speed, this.options.easing, function () {
-                        
-                        self._trigger('after', null, {
-                            elements: self.elements,
-                            animate: animate
-                        });
-
-                    });
-            }
-                
-            this._updateUi();
-            
-            return;
         },
         
         _setOption: function (option, value) {
@@ -311,7 +264,9 @@
         
         _switchAxis: function () {
         
-            this.elements.runner.draggable3d('option', 'axis', this._getAxis());
+            // this.elements.runner.draggable3d('option', 'axis', this._getAxis());
+            this.elements.runner.draggable3d('destroy');
+            this.makeDraggable();
             
             return;
         },

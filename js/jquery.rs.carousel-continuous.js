@@ -4,7 +4,7 @@ immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: sing
 undef: true, unused: true, strict: true, trailing: true, browser: true */
 
 /*
- * jquery.rs.carousel-continuous v0.10.7
+ * jquery.rs.carousel-continuous v0.11
  * https://github.com/richardscarrott/jquery-ui-carousel
  *
  * Copyright (c) 2013 Richard Scarrott
@@ -15,10 +15,9 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
  * http://www.gnu.org/licenses/gpl.html
  *
  * Depends:
- *  jquery.js v1.6+
+ *  jquery.js v1.8+
  *  jquery.ui.widget.js v1.8+
- *  jquery.rs.carousel.js v0.10.7
- *
+ *  jquery.rs.carousel.js v0.11
  */
  
 (function ($, undefined) {
@@ -62,7 +61,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
             elems.clonedBeginning = visibleItems
                 .clone()
-                    // add one extra item in case its partially visible
+                    // add one extra item in case it's partially visible
                     .add(this.elements.items.slice(visibleItems.length).first().clone())
                         .addClass(cloneClass)
                         .appendTo(elems.runner);
@@ -148,13 +147,15 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                             .position()[this.isHorizontal ? 'left' : 'top'];
                 }
 
-                if (this.options.translate3d) {
-                    this.elements.runner
-                        .css('transform', 'translate3d(' + (this.isHorizontal ? -pos + 'px, 0, 0' : '0, ' + -pos + 'px, 0') + ')');
-                }
-                else {
-                    this.elements.runner
-                        .css(this.isHorizontal ? 'left' : 'top', -pos);
+                if (pos !== undefined) {
+                    if (this.options.translate3d) {
+                        this.elements.runner
+                            .css('transform', 'translate3d(' + (this.isHorizontal ? -pos + 'px, 0, 0' : '0, ' + -pos + 'px, 0') + ')');
+                    }
+                    else {
+                        this.elements.runner
+                            .css(this.isHorizontal ? 'left' : 'top', -pos);
+                    }
                 }
             }
 

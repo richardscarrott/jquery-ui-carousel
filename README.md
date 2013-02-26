@@ -8,6 +8,10 @@
     <!-- lib -->
     <script type="text/javascript" src="js/lib/jquery.js"></script>
     <script type="text/javascript" src="js/lib/jquery.ui.widget.js"></script>
+    <!-- if using touch -->
+    <script type="text/javascript" src="js/lib/jquery.event.drag.js"></script>
+    <!-- if using touch and translate3d -->
+    <script type="text/javascript" src="js/lib/jquery.translate3d.js"></script>
     
     <!-- carousel core -->
     <script type="text/javascript" src="js/jquery.rs.carousel.js"></script>
@@ -15,6 +19,7 @@
     <!-- carousel extensions (optional) -->
     <script type="text/javascript" src="js/jquery.rs.carousel-autoscroll.js"></script>
     <script type="text/javascript" src="js/jquery.rs.carousel-continuous.js"></script>
+    <script type="text/javascript" src="js/jquery.rs.carousel-touch.js"></script>
 
 ### This is the basic HTML structure required:
 
@@ -138,11 +143,30 @@ The context of the function will be the carousels root element and the function 
 #### `speed: 'normal'` (string)
 Sets the speed of the carousel.
 
+NOTE: If using `translate3d` the speed must be set within CSS, for example:
+
+    .rs-carousel-transition .rs-carousel-runner {
+        -moz-transition-duration: .200s;
+        -webkit-transition-duration: .200s;
+        -o-transition-duration: .200s;
+        -ms-transition-duration: .200s;
+        transition-duration: .200s;
+    }
+
 #### `easing: 'swing'` (string)
 Sets the easing equation used.
 
 #### `disabled: false` (boolean)
 If set to true carousel will no longer change state.
+
+#### `translate3d: false` (boolean)
+If set to true 3d css transforms are used instead of standard css left and top properties which can often result in smoother animations through hardware acceleration, this is especially apparent on iOS devices.
+
+NOTE: jquery.rs.carousel doesn't handle feature detection of translate3d, instead this is left to third party libs such as [Modernizr](http://modernizr.com/docs/#csstransforms3d). An example usage might be:
+
+    $('.rs-carousel').carousel({
+        translate3d: Modernizr && Modernizr.csstransforms3d
+    });
 
 #### `autoScroll: false` (boolean)
 Set to true to invoke auto scrolling, note when the mouse enters the carousel the interval will stop, it'll consequently begin when the mouse leaves.
@@ -158,6 +182,17 @@ NOTE: Requires the autoScroll extension (jquery.rs.carousel-autoscroll.js).
 If set to true the carousel will continuously loop through its pages rather than scrolling all the way back to the first page.
 
 NOTE: Requires the continuous extension (jquery.rs.carousel-continuous.js).
+
+#### `touch: false` (boolean)
+If set to true the carousel will become draggable allowing you to flick through pages.
+
+NOTE: Currently the carousel will also be draggable using a mouse on non-touch devices, if this is undesired it can be conditionally turned on or off using a feature detection library such as [Modernizr](http://modernizr.com/docs/#touch):
+
+    $('.rs-carousel').carousel({
+        touch: Modernizr && Modernizr.touch
+    });
+
+NOTE: Requires the touch extension (jquery.rs.carousel-touch.js).
 
 ### Events
 #### `create: null` (function)

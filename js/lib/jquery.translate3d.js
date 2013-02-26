@@ -1,13 +1,13 @@
 /*
- * jQuery.translate3d.js v0.1
+ * jQuery.translate3d.js v0.2
  *
- * Copyright (c) 2011 Richard Scarrott
+ * Copyright (c) 2013 Richard Scarrott
  * http://www.richardscarrott.co.uk
  *
  * Dual licensed under the MIT and GPL licenses:
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl.html
- * 
+ *
  * // getter
  * $(selector).css('translate3d'); // returns { x: val, y: val, z: val }
  *
@@ -35,7 +35,7 @@
 		}
 		else {
 			for (var i = 0; i < prefixes.length; i++) {
-				vendorProp = prefixes[i] + capProp;	
+				vendorProp = prefixes[i] + capProp;
 				if (vendorProp in style) {
 					supportedProp = vendorProp;
 					break;
@@ -47,13 +47,13 @@
 		$.support[prop] = supportedProp;
 		return supportedProp;
 	},
-	transform = getSupportedProp('transform');	
+	transform = getSupportedProp('transform');
 	
 	if ($.support.transform) {
 		$.cssHooks.translate3d = {
 			set: function(elem, obj) {
 
-				var obj = $.extend({
+				obj = $.extend({
 					x: 0,
 					y: 0,
 					z: 0
@@ -67,15 +67,15 @@
 				elem.style[transform] = 'translate3d(' + obj.x + ', ' + obj.y + ', ' + obj.z + ')';
 			},
 
-			// properly regex out all three values... prob shouldn't conver to Int here incase the value was percentage etc.
+			// properly regex out all three values... prob shouldn't convert to Int here incase the value was percentage etc.
 			get: function (elem) {
 				var value = elem.style[transform];
 				if (value) {
 					value = value.split('(')[1].split(',');  // a bit rubbish me thinks...
 					return {
-						x: parseInt(value[0]),
-						y: parseInt(value[1]),
-						z: parseInt(value[2].split(')')[0])
+						x: parseInt(value[0], 10),
+						y: parseInt(value[1], 10),
+						z: parseInt(value[2].split(')')[0], 10)
 					};
 				}
 			}

@@ -68,6 +68,7 @@
 	/** vertical **/
 	#rs-carousel.rs-carousel-vertical .rs-carousel-mask {
 		width: 150px;
+		height: 500px;
 	}
 
 	#rs-carousel.rs-carousel-vertical.rs-carousel-items-1 .rs-carousel-mask {

@@ -120,9 +120,8 @@
 					
 				});
 				
-				// css translate3d() support detection
-				opts.translate3d = true;//Modernizr && Modernizr.csstransforms3d;
-				opts.touch = true;//Modernizr && Modernizr.touch;
+				opts.translate3d = Modernizr && Modernizr.csstransforms3d;
+				opts.touch = true; // Modernizr && Modernizr.touch;
 				
 				carousel.carousel(opts);
 			});
