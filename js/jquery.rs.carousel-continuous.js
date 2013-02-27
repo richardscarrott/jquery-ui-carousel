@@ -4,7 +4,7 @@ immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: sing
 undef: true, unused: true, strict: true, trailing: true, browser: true */
 
 /*
- * jquery.rs.carousel-continuous v0.11
+ * jquery.rs.carousel-continuous v0.11.1
  * https://github.com/richardscarrott/jquery-ui-carousel
  *
  * Copyright (c) 2013 Richard Scarrott
@@ -17,7 +17,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
  * Depends:
  *  jquery.js v1.8+
  *  jquery.ui.widget.js v1.8+
- *  jquery.rs.carousel.js v0.11
+ *  jquery.rs.carousel.js v0.11.1
  */
  
 (function ($, undefined) {
@@ -44,6 +44,23 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             
             return;
         },
+
+        refresh: function () {
+
+            _super.refresh.apply(this, arguments);
+            
+            if (this.options.continuous) {
+                this._addClonedItems();
+                this._setRunnerWidth();
+                // jump to current page to avoid clones noting the carousel
+                // needs to be enabled beforehand
+                this.enable();
+                this.goToPage(this.index, false, undefined, true);
+                this._checkDisabled();
+            }
+            
+            return;
+        },
         
         // appends and prepends items to provide illusion of continuous scrolling
         _addClonedItems: function () {
@@ -54,7 +71,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             }
         
             var elems = this.elements,
-                cloneClass = this._getWidgetFullName() + '-item-clone',
+                cloneClass = this.widgetFullName + '-item-clone',
                 visibleItems = this._getVisibleItems(0);
 
             this._removeClonedItems();
@@ -165,23 +182,10 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             return;
         },
 
-        refresh: function () {
-
-            _super.refresh.apply(this, arguments);
-            
-            if (this.options.continuous) {
-                this._addClonedItems();
-                this._setRunnerWidth();
-                this.goToPage(this.index, false, undefined, true);
-            }
-            
-            return;
-        },
-
         // override to avoid clones
         _recacheItems: function () {
 
-            var fullName = this._getWidgetFullName();
+            var fullName = this.widgetFullName;
 
             this.elements.items = this.elements.runner
                 .find(this.options.items)

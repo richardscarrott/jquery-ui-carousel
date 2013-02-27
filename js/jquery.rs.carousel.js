@@ -4,7 +4,7 @@ immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: sing
 undef: true, unused: true, strict: true, trailing: true, browser: true */
 
 /*
- * jquery.rs.carousel.js v0.11
+ * jquery.rs.carousel.js v0.11.1
  * https://github.com/richardscarrott/jquery-ui-carousel
  *
  * Copyright (c) 2013 Richard Scarrott
@@ -27,7 +27,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
     
     $.widget('rs.carousel', {
 
-        version: '0.11',
+        version: '0.11.1',
 
         options: {
             // selectors
@@ -64,6 +64,10 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
         _create: function () {
 
+            // widget factory 1.8.* backwards compat
+            this.widgetFullName = this.widgetFullName || this.widgetBaseClass;
+            this.eventNamespace = this.eventNamespace || '.' + this.widgetName;
+
             this.index = 0;
             this._elements();
             this._setIsHorizontal();
@@ -74,17 +78,11 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             return;
         },
 
-        _getWidgetFullName: function () {
-
-            return this.widgetFullName || this.widgetBaseClass;
-
-        },
-
         // caches DOM elements
         _elements: function () {
 
             var elems = this.elements = {},
-                fullName = this._getWidgetFullName();
+                fullName = this.widgetFullName;
 
             this.element.addClass(fullName);
 
@@ -106,7 +104,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
         _setIsHorizontal: function () {
 
             var elems = this.elements,
-                fullName = this._getWidgetFullName();
+                fullName = this.widgetFullName;
 
             this.element
                 .removeClass(fullName + '-horizontal')
@@ -137,7 +135,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             }
 
             elems.mask = elems.runner
-                .wrap('<div class="' + this._getWidgetFullName() + '-mask" />')
+                .wrap('<div class="' + this.widgetFullName + '-mask" />')
                 .parent();
 
             // indicates whether mask was dynamically added or already existed in mark-up
@@ -155,18 +153,19 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
             var self = this,
                 elems = this.elements,
-                opts = this.options;
+                opts = this.options,
+                eventNamespace = this.eventNamespace;
                 
             this._removeNextPrevActions();
 
             elems.prevAction = opts.insertPrevAction.apply(this.element[0])
-                .bind('click.' + this.widgetName, function (e) {
+                .bind('click' + eventNamespace, function (e) {
                     e.preventDefault();
                     self.prev();
                 });
 
             elems.nextAction = opts.insertNextAction.apply(this.element[0])
-                .bind('click.' + this.widgetName, function (e) {
+                .bind('click' + eventNamespace, function (e) {
                     e.preventDefault();
                     self.next();
                 });
@@ -216,7 +215,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
             this.elements.items = this.elements.runner
                 .find(this.options.items)
-                    .addClass(this._getWidgetFullName() + '-item');
+                    .addClass(this.widgetFullName + '-item');
 
             return;
         },
@@ -315,7 +314,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             }
 
             var self = this,
-                fullName = this._getWidgetFullName(),
+                fullName = this.widgetFullName,
                 pagination = $('<ol class="' + fullName + '-pagination" />'),
                 links = [],
                 noOfPages = this.getNoOfPages(),
@@ -329,7 +328,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
             pagination
                 .append(links.join(''))
-                .delegate('a', 'click.' + this.widgetName, function (e) {
+                .delegate('a', 'click' + this.eventNamespace, function (e) {
                     e.preventDefault();
                     self.goToPage(parseInt(this.hash.split('-')[1], 10));
                 });
@@ -507,7 +506,8 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                 lastPos = this._getAbsoluteLastPos(),
                 page = this.getPage(),
                 pos = page.first().position()[this.isHorizontal ? 'left' : 'top'],
-                fullName = this._getWidgetFullName(),
+                eventNamespace = this.eventNamespace,
+                fullName = this.widgetFullName,
                 transitionEndEvent;
 
             // if before returns false return and revert index back to prevIndex
@@ -524,9 +524,9 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             if (this.options.translate3d) {
                 
                 transitionEndEvent = [
-                    'transitionend.' + fullName,
-                    'webkitTransitionEnd.' + fullName,
-                    'oTransitionEnd.' + fullName
+                    'transitionend' + eventNamespace,
+                    'webkitTransitionEnd' + eventNamespace,
+                    'oTransitionEnd' + eventNamespace
                 ];
 
                 if (e.animate) {
@@ -632,7 +632,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
         _updatePagination: function () {
             
-            var fullName = this._getWidgetFullName(),
+            var fullName = this.widgetFullName,
                 activeClass = fullName + '-pagination-link-active';
 
             this.elements.pagination
@@ -648,7 +648,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             
             var elems = this.elements,
                 index = this.index,
-                disabledClass = this._getWidgetFullName() + '-action-disabled';
+                disabledClass = this.widgetFullName + '-action-disabled';
 
             elems.nextAction
                 .add(elems.prevAction)
@@ -767,7 +767,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
         destroy: function () {
 
             var elems = this.elements,
-                fullName = this._getWidgetFullName(),
+                fullName = this.widgetFullName,
                 cssProps = {};
 
             this.element
@@ -794,6 +794,9 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             
             this._removePagination();
             this._removeNextPrevActions();
+
+            elems.runner
+                .unbind(this.eventNamespace);
             
             _super.destroy.apply(this, arguments);
 

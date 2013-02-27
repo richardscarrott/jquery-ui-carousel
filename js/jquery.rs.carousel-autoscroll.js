@@ -4,7 +4,7 @@ immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: sing
 undef: true, unused: true, strict: true, trailing: true, browser: true */
 
 /*
- * jquery.rs.carousel-autoscroll v0.11
+ * jquery.rs.carousel-autoscroll v0.11.1
  * https://github.com/richardscarrott/jquery-ui-carousel
  *
  * Copyright (c) 2013 Richard Scarrott
@@ -17,7 +17,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
  * Depends:
  *  jquery.js v1.8+
  *  jquery.ui.widget.js v1.8+
- *  jquery.rs.carousel.js v0.11
+ *  jquery.rs.carousel.js v0.11.1
  */
  
 (function ($, undefined) {
@@ -53,11 +53,11 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                 return;
             }
 
-            var fullName = this._getWidgetFullName();
+            var eventNamespace = this.eventNamespace;
             
             this.element
-                .bind('mouseenter.' + fullName, $.proxy(this, '_stop'))
-                .bind('mouseleave.' + fullName, $.proxy(this, '_start'));
+                .bind('mouseenter' + eventNamespace, $.proxy(this, '_stop'))
+                .bind('mouseleave' + eventNamespace, $.proxy(this, '_start'));
                 
             this.autoScrollInitiated = true;
             
@@ -66,11 +66,11 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
         
         _unbindAutoScroll: function () {
 
-            var fullName = this._getWidgetFullName();
+            var eventNamespace = this.eventNamespace;
             
             this.element
-                .unbind('mouseenter.' + fullName)
-                .unbind('mouseleave.' + fullName);
+                .unbind('mouseenter' + eventNamespace)
+                .unbind('mouseleave' + eventNamespace);
                 
             this.autoScrollInitiated = false;
             

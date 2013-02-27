@@ -4,7 +4,7 @@ immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: sing
 undef: true, unused: true, strict: true, trailing: true, browser: true */
 
 /*
- * jquery.rs.carousel-touch v0.11
+ * jquery.rs.carousel-touch v0.11.1
  *
  * Copyright (c) 2013 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -18,7 +18,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
  *  jquery.translate3d.js v0.2+ // if passing in translate3d true for hardware acceleration
  *  jquery.event.drag.js v2.3+ // https://github.com/richardscarrott/jquery.threedubmedia/
  *  jquery.ui.widget.js v1.8+
- *  jquery.rs.carousel.js v0.11+
+ *  jquery.rs.carousel.js v0.11.1+
  */
 
 (function ($) {
@@ -38,22 +38,31 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
         
         _create: function () {
 
+            this.eventNamespace = this.eventNamespace || '.' + this.widgetName;
+            this._bindDragEvents();
+            
+            return;
+        },
+
+        _bindDragEvents: function () {
+
             var self = this,
-                fullName = this.widgetFullName || this.widgetBaseClass;
+                eventNamespace = this.eventNamespace;
 
             this.element
-                .bind('dragstart.' + fullName, {
+                .unbind(eventNamespace)
+                .bind('dragstart' + eventNamespace, {
                     axis: this.options.axis
                 }, function (e) {
-                    self._mouseStart(e);
+                    self._start(e);
                 })
-                .bind('drag.' + fullName, function (e) {
-                    self._mouseDrag(e);
+                .bind('drag' + eventNamespace, function (e) {
+                    self._drag(e);
                 })
-                .bind('dragend.' + fullName, function (e) {
-                    self._mouseStop(e);
+                .bind('dragend' + eventNamespace, function (e) {
+                    self._end(e);
                 });
-            
+
             return;
         },
         
@@ -63,15 +72,15 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             
         },
         
-        _mouseStart: function (e) {
+        _start: function (e) {
             
             this.mouseStartPos = this.options.axis === 'x' ? e.pageX : e.pageY;
             
             if (this.options.translate3d) {
-                this.runnerPos = this.element.css('translate3d')[this.options.axis];
+                this.elPos = this.element.css('translate3d')[this.options.axis];
             }
             else {
-                this.runnerPos = parseInt(this.element.position()[this._getPosStr()], 10);
+                this.elPos = parseInt(this.element.position()[this._getPosStr()], 10);
             }
             
             this._trigger('start', e);
@@ -79,10 +88,10 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             return;
         },
         
-        _mouseDrag: function (e) {
+        _drag: function (e) {
         
             var page = this.options.axis === 'x' ? e.pageX : e.pageY,
-                pos = (page - this.mouseStartPos) + this.runnerPos,
+                pos = (page - this.mouseStartPos) + this.elPos,
                 cssProps = {};
             
             if (this.options.translate3d) {
@@ -97,9 +106,20 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             return;
         },
         
-        _mouseStop: function (e) {
+        _end: function (e) {
             
             this._trigger('stop', e);
+            
+            return;
+        },
+
+        _setOption: function (option) {
+        
+            _super._setOption.apply(this, arguments);
+            
+            if (option === 'axis') {
+                this._bindDragEvents();
+            }
             
             return;
         },
@@ -116,7 +136,6 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             }
             
             this.element.css(cssProps);
-            this.element.unbind('.' + (this.widgetFullName || this.widgetBaseClass));
 
             _super.destroy.apply(this);
             
@@ -147,35 +166,39 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             
             _super._create.apply(this);
 
-            this.makeDraggable();
+            this._initDrag();
             
             return;
         },
 
-        makeDraggable: function () {
+        _initDrag: function () {
 
             var self = this;
 
-            if (this.options.touch) {
+            this.elements.runner
+                .draggable3d({
+                    translate3d: this.options.translate3d,
+                    axis: this._getAxis(),
+                    start: function (e) {
+                        e = e.originalEvent.touches ? e.originalEvent.touches[0] : e;
+                        self._dragStartHandler(e);
+                    },
+                    stop: function (e) {
+                        e = e.originalEvent.touches ? e.originalEvent.touches[0] : e;
+                        self._dragStopHandler(e);
+                    }
+                });
 
-                if (this.elements.runner.data('rsDraggable3d')) {
-                    this.elements.runner.draggable3d('destroy');
-                }
+            return;
+        },
 
-                this.elements.runner
-                    .draggable3d({
-                        translate3d: this.options.translate3d,
-                        axis: this._getAxis(),
-                        start: function (e) {
-                            e = e.originalEvent.touches ? e.originalEvent.touches[0] : e;
-                            self._dragStartHandler(e);
-                        },
-                        stop: function (e) {
-                            e = e.originalEvent.touches ? e.originalEvent.touches[0] : e;
-                            self._dragStopHandler(e);
-                        }
-                    });
-            }
+        _destroyDrag: function () {
+
+            this.elements.runner
+                .draggable3d('destroy');
+
+            // go back to page as destroying draggable3d removes elements position
+            this.goToPage(this.index, false, undefined, true);
 
             return;
         },
@@ -191,7 +214,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             // remove transition class to ensure drag doesn't transition
             if (this.options.translate3d) {
                 this.elements.runner
-                    .removeClass(this._getWidgetFullName() + '-runner-transition');
+                    .removeClass(this.widgetFullName + '-runner-transition');
             }
         
             this.startTime = this._getTime();
@@ -255,7 +278,20 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             switch (option) {
                 
             case 'orientation':
+
                 this._switchAxis();
+
+                break;
+
+            case 'touch':
+                
+                if (value) {
+                    this._initDrag();
+                }
+                else {
+                    this._destroyDrag();
+                }
+
                 break;
             }
             
@@ -264,16 +300,15 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
         
         _switchAxis: function () {
         
-            // this.elements.runner.draggable3d('option', 'axis', this._getAxis());
-            this.elements.runner.draggable3d('destroy');
-            this.makeDraggable();
+            this.elements.runner
+                .draggable3d('option', 'axis', this._getAxis());
             
             return;
         },
         
         destroy: function () {
             
-            this.elements.runner.draggable3d('destroy');
+            this._destroyDrag();
             _super.destroy.apply(this);
             
             return;

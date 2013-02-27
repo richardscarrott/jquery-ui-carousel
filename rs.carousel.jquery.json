@@ -14,7 +14,7 @@
     "widget",
     "rs"
   ],
-  "version": "0.11.0",
+  "version": "0.11.1",
   "author": {
     "name": "Richard Scarrott",
     "email": "riscarrott@googlemail.com",
@@ -32,8 +32,8 @@
   ],
   "bugs": "https://github.com/richardscarrott/jquery-ui-carousel/issues",
   "demo": "http://www.richardscarrott.co.uk/assets/javascript/jquery/ui-carousel/demo/",
-  "docs": "https://github.com/richardscarrott/jquery-ui-carousel#docs",
-  "download": "https://github.com/richardscarrott/jquery-ui-carousel/archive/0.11.0.zip",
+  "docs": "http://richardscarrott.github.com/jquery-ui-carousel/",
+  "download": "https://github.com/richardscarrott/jquery-ui-carousel/archive/0.11.1.zip",
   "dependencies": {
     "jquery": ">=1.8",
     "jquery.ui.widget": ">=1.8"
