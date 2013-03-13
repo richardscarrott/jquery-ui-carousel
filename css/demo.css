@@ -18,8 +18,13 @@
 			height: 150px;
 		}
 
-	#rs-carousel .rs-carousel-action-next,
-	#rs-carousel .rs-carousel-action-prev {
+	#rs-carousel .rs-carousel-action {
+		color: gray;
+		cursor: default;
+	}
+
+	#rs-carousel .rs-carousel-action-active {
+		color: #1788D7;
 		cursor: pointer;
 	}
 
@@ -40,10 +45,8 @@
 			color: #fff;
 		}
 
-	#rs-carousel.rs-carousel-disabled .rs-carousel-pagination-link a,
-	#rs-carousel.rs-carousel-disabled .rs-carousel-action-next,
-	#rs-carousel.rs-carousel-disabled .rs-carousel-action-prev,
-	#rs-carousel .rs-carousel-action-disabled {
+	#rs-carousel .rs-carousel-pagination-disabled .rs-carousel-pagination-link a,
+	#rs-carousel .rs-carousel-action-disabled.rs-carousel-action {
 		color: gray;
 		cursor: default;
 	}

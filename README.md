@@ -51,7 +51,7 @@
 
 ### And here's the generated markup:
 
-    <div class="rs-carousel rs-carousel-horizontal">
+    <div class="rs-carousel [rs-carousel-horizontal rs-carousel-vertical rs-carousel-disabled]">
         <div class="rs-carousel-mask">
             <ul class="rs-carousel-runner">
                 <li class="rs-carousel-item">
@@ -71,12 +71,12 @@
                 </li>
             </ul>
         </div>
-        <ol class="rs-carousel-pagination">
-            <li class="rs-carousel-pagination-link rs-carousel-pagination-link-active"><a href="#page-1">1</a></li>
-            <li class="rs-carousel-pagination-link"><a href="#page-2">2</a></li>
+        <ol class="rs-carousel-pagination [rs-carousel-pagination-disabled]">
+            <li class="rs-carousel-pagination-link [rs-carousel-pagination-link-active]"><a href="#page-1">1</a></li>
+            <li class="rs-carousel-pagination-link [rs-carousel-pagination-link-active]"><a href="#page-2">2</a></li>
         </ol>
-        <a class="rs-carousel-action rs-carousel-action-prev" href="#">Previous</a>
-        <a class="rs-carousel-action rs-carousel-action-next rs-carousel-action-disabled" href="#">Next</a>
+        <a class="rs-carousel-action rs-carousel-action-prev [rs-carousel-action-active rs-carousel-action-disabled]" href="#">Prev</a>
+        <a class="rs-carousel-action rs-carousel-action-next [rs-carousel-action-active rs-carousel-action-disabled]" href="#">Next</a>
     </div>
 
 ## Documentation

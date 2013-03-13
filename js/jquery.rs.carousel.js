@@ -4,7 +4,7 @@ immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: sing
 undef: true, unused: true, strict: true, trailing: true, browser: true */
 
 /*
- * jquery.rs.carousel.js v0.11.1
+ * jquery.rs.carousel.js v0.11.2
  * https://github.com/richardscarrott/jquery-ui-carousel
  *
  * Copyright (c) 2013 Richard Scarrott
@@ -18,16 +18,16 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
  *  jquery.js v1.8+
  *  jquery.ui.widget.js v1.8+
  */
- 
+
 (function ($, undefined) {
 
     'use strict';
 
     var _super = $.Widget.prototype;
-    
+
     $.widget('rs.carousel', {
 
-        version: '0.11.1',
+        version: '0.11.2',
 
         options: {
             // selectors
@@ -155,7 +155,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                 elems = this.elements,
                 opts = this.options,
                 eventNamespace = this.eventNamespace;
-                
+
             this._removeNextPrevActions();
 
             elems.prevAction = opts.insertPrevAction.apply(this.element[0])
@@ -169,24 +169,24 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                     e.preventDefault();
                     self.next();
                 });
-            
+
             return;
         },
 
         _removeNextPrevActions: function () {
-        
+
             var elems = this.elements;
-        
+
             if (elems.nextAction) {
                 elems.nextAction.remove();
                 elems.nextAction = undefined;
             }
-            
+
             if (elems.prevAction) {
                 elems.prevAction.remove();
                 elems.prevAction = undefined;
             }
-            
+
             return;
         },
 
@@ -229,7 +229,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                 start;
 
             this.pages = [];
-            
+
             while (itemIndex < this.getNoOfItems()) {
 
                 // if itemsPerTransition isn't a number we need to get the visible
@@ -275,7 +275,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                 items = !reverse ? this.elements.items.slice(itemIndex) : [].reverse.apply($(this.elements.items)).slice(itemIndex),
                 maskDim = this._getMaskDim(),
                 dim = 0;
-        
+
             items
                 .each(function () {
                     dim += self.isHorizontal ? $(this).outerWidth(true) : $(this).outerHeight(true);
@@ -295,15 +295,15 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
         },
 
         _getMaskDim: function () {
-            
+
             return this.elements.mask[this.isHorizontal ? 'width' : 'height']();
 
         },
 
         getNoOfItems: function () {
-            
+
             return this.elements.items.length;
-             
+
         },
 
         // adds pagination links and binds associated events
@@ -319,7 +319,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                 links = [],
                 noOfPages = this.getNoOfPages(),
                 i;
-                
+
             this._removePagination();
 
             for (i = 0; i < noOfPages; i++) {
@@ -332,25 +332,25 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                     e.preventDefault();
                     self.goToPage(parseInt(this.hash.split('-')[1], 10));
                 });
-            
+
             this.elements.pagination = this.options.insertPagination.call(this.element[0], pagination);
-            
+
             return;
         },
 
         _removePagination: function () {
-        
+
             if (this.elements.pagination) {
                 this.elements.pagination.remove();
                 this.elements.pagination = undefined;
             }
-            
+
             return;
         },
 
         // returns noOfPages
         getNoOfPages: function () {
-            
+
             return this.pages.length;
 
         },
@@ -359,28 +359,31 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
         // carousel should be disabled.
         _checkDisabled: function () {
 
-            if (this.getNoOfItems() <= this.getPage(0).length) {
+            if (this.getNoOfPages() <= 1) {
                 this.disable();
+                this._disabled = true;
             }
-            else {
+            // only enable if carousel was disabled internally.
+            else if (this._disabled) {
                 this.enable();
+                this._disabled = false;
             }
 
             return;
         },
 
         _setRunnerWidth: function () {
-            
+
             var elems = this.elements,
                 width = 0;
 
             // reset width in case orientation has been changed
             elems.runner.width('');
-        
+
             if (!this.isHorizontal) {
                 return;
             }
-            
+
             elems.runner
                 .width(function () {
                     elems.items
@@ -401,7 +404,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             if (this.options.loop && index >= this.getNoOfPages()) {
                 index = 0;
             }
-            
+
             this.goToPage(index, animate, 'carousel:next');
 
             return;
@@ -437,7 +440,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
             // make sure updateUi is called even when disabled
             this._updateUi();
-            
+
             return;
         },
 
@@ -477,17 +480,17 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
         // returns true if index is valid, false if not
         _isValid: function (index) {
-            
+
             if (index < this.getNoOfPages() && index >= 0) {
                 return true;
             }
-            
+
             return false;
         },
 
         // returns valid page index
         _makeValid: function (index) {
-                
+
             if (index < 0) {
                 index = 0;
             }
@@ -522,7 +525,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             }
 
             if (this.options.translate3d) {
-                
+
                 transitionEndEvent = [
                     'transitionend' + eventNamespace,
                     'webkitTransitionEnd' + eventNamespace,
@@ -532,7 +535,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                 if (e.animate) {
                     this.element.addClass(fullName + '-transition');
                 }
-                
+
                 this.elements.runner
                     .unbind(transitionEndEvent.join(' '))
                     .on(transitionEndEvent.join(' '), function (e) {
@@ -553,7 +556,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
             }
             else {
-                
+
                 animateProps[this.isHorizontal ? 'left' : 'top'] = -pos;
                 this.elements.runner
                     .stop()
@@ -570,7 +573,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
         // gets lastPos to ensure runner doesn't move beyond mask
         _getAbsoluteLastPos: function () {
-            
+
             if (this.options.whitespace) {
                 return;
             }
@@ -595,7 +598,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
         // returns pages array
         getPages: function () {
-            
+
             return this.pages;
 
         },
@@ -631,11 +634,18 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
         },
 
         _updatePagination: function () {
-            
-            var fullName = this.widgetFullName,
-                activeClass = fullName + '-pagination-link-active';
 
-            this.elements.pagination
+            var fullName = this.widgetFullName,
+                activeClass = fullName + '-pagination-link-active',
+                disabledClass = fullName + '-pagination-disabled',
+                pagination = this.elements.pagination
+                    .removeClass(disabledClass);
+
+            if (this.options.disabled) {
+                pagination.addClass(disabledClass);
+            }
+
+            pagination
                 .children('.' + fullName + '-pagination-link')
                     .removeClass(activeClass)
                     .eq(this.index)
@@ -645,26 +655,34 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
         },
 
         _updateNextPrevActions: function () {
-            
-            var elems = this.elements,
-                index = this.index,
-                disabledClass = this.widgetFullName + '-action-disabled';
 
-            elems.nextAction
-                .add(elems.prevAction)
-                    .removeClass(disabledClass);
+            var elems = this.elements,
+                actions = elems.nextAction.add(elems.prevAction),
+                index = this.index,
+                fullName = this.widgetFullName,
+                activeClass = fullName + '-action-active',
+                disabledClass = fullName + '-action-disabled';
+
+            actions
+                .addClass(activeClass)
+                .removeClass(disabledClass);
+
+            if (this.options.disabled) {
+                actions.addClass(disabledClass);
+            }
 
             if (!this.options.loop) {
-                if (this.options.disabled) {
+
+                if (index === this.getNoOfPages() - 1) {
                     elems.nextAction
-                        .add(elems.prevAction)
-                             .addClass(disabledClass);
-                } else if (index === this.getNoOfPages() - 1) {
-                    elems.nextAction.addClass(disabledClass);
+                        .removeClass(activeClass);
                 }
-                else if (index === 0) {
-                    elems.prevAction.addClass(disabledClass);
+
+                if (index === 0) {
+                    elems.prevAction
+                        .removeClass(activeClass);
                 }
+
             }
 
             return;
@@ -708,17 +726,13 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                 break;
 
             case 'loop':
+            case 'disabled':
 
                 this._updateUi();
 
                 break;
 
             case 'itemsPerTransition':
-
-                this.refresh();
-
-                break;
-
             case 'whitespace':
 
                 this.refresh();
@@ -738,7 +752,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
         },
 
         remove: function (selector) {
-            
+
             if (this.getNoOfItems() > 0) {
 
                 this.elements.items
@@ -753,14 +767,14 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
         // returns current index
         getIndex: function () {
-            
+
             return this.index;
 
         },
 
         // returns prev index
         getPrevIndex: function () {
-            
+
             return this.prevIndex;
 
         },
@@ -782,7 +796,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                 .removeClass(fullName + '-runner');
             elems.items
                 .removeClass(fullName + '-item');
-            
+
             if (this.maskAdded) {
                 elems.runner
                     .unwrap();
@@ -793,13 +807,13 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             cssProps.transform = '';
             elems.runner
                 .css(cssProps);
-            
+
             this._removePagination();
             this._removeNextPrevActions();
 
             elems.runner
                 .unbind(this.eventNamespace);
-            
+
             _super.destroy.apply(this, arguments);
 
             return;
