@@ -655,14 +655,16 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
                     .removeClass(disabledClass);
 
             if (!this.options.loop) {
-                
-                if (index === this.getNoOfPages() - 1) {
+                if (this.options.disabled) {
+                    elems.nextAction
+                        .add(elems.prevAction)
+                             .addClass(disabledClass);
+                } else if (index === this.getNoOfPages() - 1) {
                     elems.nextAction.addClass(disabledClass);
                 }
                 else if (index === 0) {
                     elems.prevAction.addClass(disabledClass);
                 }
-
             }
 
             return;
