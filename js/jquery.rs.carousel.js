@@ -619,8 +619,8 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
         },
 
-        // updates pagination, next and prev link state classes
         _updateUi: function () {
+            this._updateActiveItem();
 
             if (this.options.pagination) {
                 this._updatePagination();
@@ -631,6 +631,15 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             }
 
             return;
+        },
+
+        _updateActiveItem: function() {
+            var fullName = this.widgetFullName,
+                activeClass = fullName + '-item-active';
+
+            this.elements.items
+              .removeClass(activeClass)
+              .eq(this.index).addClass(activeClass);
         },
 
         _updatePagination: function () {
@@ -822,3 +831,4 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
     });
 
 })(jQuery);
+
