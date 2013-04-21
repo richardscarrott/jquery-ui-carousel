@@ -619,8 +619,11 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
         },
 
+
+        // updates pagination, next and prev link state classes
         _updateUi: function () {
-            this._updateActiveItem();
+
+            this._updateActiveItems();
 
             if (this.options.pagination) {
                 this._updatePagination();
@@ -633,13 +636,18 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             return;
         },
 
-        _updateActiveItem: function() {
+        _updateActiveItems: function() {
+
             var fullName = this.widgetFullName,
                 activeClass = fullName + '-item-active';
 
             this.elements.items
-              .removeClass(activeClass)
-              .eq(this.index).addClass(activeClass);
+                .removeClass(activeClass);
+
+            this.getPage()
+                .addClass(activeClass);
+
+            return;
         },
 
         _updatePagination: function () {
