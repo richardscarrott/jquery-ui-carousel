@@ -54,19 +54,19 @@
     <div class="rs-carousel [rs-carousel-horizontal rs-carousel-vertical rs-carousel-disabled]">
         <div class="rs-carousel-mask">
             <ul class="rs-carousel-runner">
-                <li class="rs-carousel-item">
+                <li class="rs-carousel-item [rs-carousel-item-active]">
                     <!-- item 1 content -->
                 </li>
-                <li class="rs-carousel-item">
+                <li class="rs-carousel-item [rs-carousel-item-active]">
                     <!-- item 2 content -->
                 </li>
-                <li class="rs-carousel-item">
+                <li class="rs-carousel-item [rs-carousel-item-active]">
                     <!-- item 3 content -->
                 </li>
-                <li class="rs-carousel-item">
+                <li class="rs-carousel-item [rs-carousel-item-active]">
                     <!-- item 4 content -->
                 </li>
-                <li class="rs-carousel-item">
+                <li class="rs-carousel-item [rs-carousel-item-active]">
                     <!-- item 5 content etc. -->
                 </li>
             </ul>
