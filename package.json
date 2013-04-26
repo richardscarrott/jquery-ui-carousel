@@ -1,0 +1,46 @@
+{
+  "name": "jquery.rs.carousel",
+  "title": "jQuery RS Carousel",
+  "description": "jQuery RS Carousel is a responsive and touch-enabled carousel written on top of jQuery and the jQuery UI Widget Factory providing a full and familiar API in less than 2.6kB minified and gzipped",
+  "keywords": [
+    "jquery",
+    "carousel",
+    "touch",
+    "drag",
+    "slider",
+    "slideshow",
+    "cycle",
+    "responsive",
+    "ui",
+    "widget",
+    "rs"
+  ],
+  "version": "0.11.2",
+  "author": {
+    "name": "Richard Scarrott",
+    "email": "riscarrott@googlemail.com",
+    "url": "http://richardscarrott.co.uk"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    },
+    {
+      "type": "GPL",
+      "url": "http://www.gnu.org/licenses/gpl.html"
+    }
+  ],
+  "bugs": "https://github.com/richardscarrott/jquery-ui-carousel/issues",
+  "demo": "http://www.richardscarrott.co.uk/assets/javascript/jquery/ui-carousel/demo/",
+  "docs": "http://richardscarrott.github.com/jquery-ui-carousel/",
+  "download": "https://github.com/richardscarrott/jquery-ui-carousel/archive/0.11.2.zip",
+  "devDependencies": {
+    "grunt": "0.4.x",
+    "grunt-contrib-jshint": "0.1.x",
+    "grunt-contrib-uglify": "0.2.x",
+    "grunt-contrib-jasmine": "0.4.x",
+    "grunt-jquerymanifest": "0.1.x",
+    "underscore": "1.4.x"
+  }
+}

@@ -1,0 +1,12 @@
+.rs-carousel-mask {
+    width: 500px;
+}
+
+.rs-carousel-vertical .rs-carousel-mask {
+    height: 400px;
+}
+
+    .rs-carousel-item {
+        width: 100px;
+        height: 100px;
+    }

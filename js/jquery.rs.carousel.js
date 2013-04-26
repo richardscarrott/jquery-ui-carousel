@@ -636,7 +636,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             return;
         },
 
-        _updateActiveItems: function() {
+        _updateActiveItems: function () {
 
             var fullName = this.widgetFullName,
                 activeClass = fullName + '-item-active';

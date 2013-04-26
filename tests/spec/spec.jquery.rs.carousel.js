@@ -4,6 +4,10 @@
 //     - root is 500px wide
 //          - so, by default, will have 2 pages - [jQuery(li, li, li, li, li), jQuery(li, li, li, li)]
 
+// config
+jasmine.getFixtures().fixturesPath = 'tests/spec/fixtures/html';
+jasmine.getStyleFixtures().fixturesPath = 'tests/spec/fixtures/css';
+
 describe('The carousel', function () {
 
     var root,
@@ -12,7 +16,8 @@ describe('The carousel', function () {
         rootNestedChild;
 
     beforeEach(function () {
-        loadFixtures('carousel.html', 'carousel-with-mask.html', 'carousel-nested.html'); // synchronous
+        loadFixtures('carousel.html', 'carousel-with-mask.html', 'carousel-nested.html');
+        loadStyleFixtures('style.css');
         root = $('#rs-carousel');
         rootWithMask = $('#rs-carousel-with-mask');
         rootNested = $('#rs-carousel-nested');

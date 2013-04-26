@@ -16,37 +16,12 @@
   <!-- include source files here... -->
   <link rel="stylesheet" type="text/css" href="../css/jquery.rs.carousel.css">
 
-  <!-- carousel prerequisite (width + height) -->
-  <style type="text/css">
-    .rs-carousel-mask {
-      width: 500px;
-    }
-
-      .rs-carousel-item {
-        width: 100px;
-        height: 100px;
-      }
-
-    .rs-carousel-vertical .rs-carousel-mask {
-      height: 400px;
-    }
-
-    /* make syncrounous */
-    .rs-carousel-transition .rs-carousel-runner {
-        -moz-transition-duration: 0;
-        -webkit-transition-duration: 0;
-        -o-transition-duration: 0;
-        -ms-transition-duration: 0;
-        transition-duration: 0;
-    }
-  </style>
-
   <!-- lib -->
   <script type="text/javascript" src="../js/lib/modernizr.3dtransforms.touch.js"></script>
   <script type="text/javascript" src="../js/lib/jquery.js"></script>
   <script type="text/javascript" src="../js/lib/jquery.ui.widget.js"></script>
   <!--script type="text/javascript" src="../js/lib/jquery.event.drag.js"></script-->
-  <script type="text/javascript" src="../js/lib/jquery.translate3d.js"></script>
+  <!--script type="text/javascript" src="../js/lib/jquery.translate3d.js"></script-->
   
   <!-- carousel -->
   <script type="text/javascript" src="../js/jquery.rs.carousel.js"></script>
@@ -83,9 +58,6 @@
         jasmineEnv.execute();
       }
 
-      // jasmine-jquery config
-      jasmine.getFixtures().fixturesPath = 'spec/fixtures';
-
     })();
   </script>
 
@@ -93,7 +65,7 @@
 
 <body>
 
-  <div id="debug">
+  <!--div id="debug">
 
     <style type="text/css">
       #rs-carousel-debug .rs-carousel-mask {
@@ -131,7 +103,7 @@
         translate3d: true
       });
     </script>
-  </div>
+  </div-->
 
 </body>
 </html>
