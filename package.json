@@ -35,7 +35,7 @@
   "bugs": "https://github.com/richardscarrott/jquery-ui-carousel/issues",
   "demo": "http://www.richardscarrott.co.uk/assets/javascript/jquery/ui-carousel/demo/",
   "docs": "http://richardscarrott.github.com/jquery-ui-carousel/",
-  "download": "https://github.com/richardscarrott/jquery-ui-carousel/archive/0.11.2.zip",
+  "download": "https://github.com/richardscarrott/jquery-ui-carousel/archive/1.0.0.zip",
   "devDependencies": {
     "grunt": "0.4.x",
     "grunt-contrib-jshint": "0.1.x",
