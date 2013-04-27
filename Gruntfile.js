@@ -51,18 +51,18 @@ module.exports = function(grunt) {
         banner: '/*! <%= pkg.name %> | <%= pkg.version %> | <%= grunt.template.today("yyyy-mm-dd") %> | <%= pkg.docs %> */\n'
       },
       build: {
-        src: 'js/<%= pkg.name %>.js',
-        dest: 'js/<%= pkg.name %>.min.js'
+        src: 'src/js/<%= pkg.name %>.js',
+        dest: 'dist/js/<%= pkg.name %>.min.js'
       }
     },
 
     jasmine: {
-      src: 'js/jquery.rs.carousel.js',
+      src: 'src/js/jquery.rs.carousel.js',
       options: {
         specs: 'tests/spec/*.js',
         helpers: 'tests/lib/jasmine-jquery.js',
-        vendor: ['js/lib/modernizr.3dtransforms.touch.js', 'js/lib/jquery.js', 'js/lib/jquery.ui.widget.js'],
-        styles: ['tests/lib/reset.css', 'css/jquery.rs.carousel.css']
+        vendor: ['vendor/modernizr.3dtransforms.touch.js', 'vendor/jquery.js', 'vendor/jquery.ui.widget.js'],
+        styles: ['tests/lib/reset.css', 'src/css/jquery.rs.carousel.css']
       }
     }
 
