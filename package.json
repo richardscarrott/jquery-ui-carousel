@@ -15,7 +15,7 @@
     "widget",
     "rs"
   ],
-  "version": "0.11.2",
+  "version": "1.0.0",
   "author": {
     "name": "Richard Scarrott",
     "email": "riscarrott@googlemail.com",
@@ -31,6 +31,7 @@
       "url": "http://www.gnu.org/licenses/gpl.html"
     }
   ],
+  "homepage": "https://github.com/richardscarrott/jquery-ui-carousel",
   "bugs": "https://github.com/richardscarrott/jquery-ui-carousel/issues",
   "demo": "http://www.richardscarrott.co.uk/assets/javascript/jquery/ui-carousel/demo/",
   "docs": "http://richardscarrott.github.com/jquery-ui-carousel/",
@@ -41,6 +42,8 @@
     "grunt-contrib-uglify": "0.2.x",
     "grunt-contrib-jasmine": "0.4.x",
     "grunt-jquerymanifest": "0.1.x",
-    "underscore": "1.4.x"
+    "underscore": "1.4.x",
+    "grunt-contrib-cssmin": "~0.6.0",
+    "grunt-replace": "~0.4.3"
   }
 }

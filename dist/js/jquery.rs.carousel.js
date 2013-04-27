@@ -4,8 +4,8 @@ immed: true, indent: 4, latedef: true, newcap: true, nonew: true, quotmark: sing
 undef: true, unused: true, strict: true, trailing: true, browser: true */
 
 /*
- * jquery.rs.carousel.js @VERSION
- * @HOMEPAGE
+ * jquery.rs.carousel.js 1.0.0
+ * https://github.com/richardscarrott/jquery-ui-carousel
  *
  * Copyright (c) 2013 Richard Scarrott
  * http://www.richardscarrott.co.uk
@@ -27,7 +27,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
     $.widget('rs.carousel', {
 
-        version: '@VERSION',
+        version: '1.0.0',
 
         options: {
             // selectors

@@ -3,23 +3,23 @@
 ### Include the following JavaScript and CSS:
     
     <!-- carousel CSS -->
-    <link rel="stylesheet" type="text/css" href="css/jquery.rs.carousel.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="dist/css/jquery.rs.carousel.css" media="all" />
 
     <!-- lib -->
-    <script type="text/javascript" src="js/lib/jquery.js"></script>
-    <script type="text/javascript" src="js/lib/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="vendor/jquery.js"></script>
+    <script type="text/javascript" src="vendor/jquery.ui.widget.js"></script>
     <!-- if using touch -->
-    <script type="text/javascript" src="js/lib/jquery.event.drag.js"></script>
+    <script type="text/javascript" src="vendor/jquery.event.drag.js"></script>
     <!-- if using touch and translate3d -->
-    <script type="text/javascript" src="js/lib/jquery.translate3d.js"></script>
+    <script type="text/javascript" src="vendor/jquery.translate3d.js"></script>
     
     <!-- carousel core -->
-    <script type="text/javascript" src="js/jquery.rs.carousel.js"></script>
+    <script type="text/javascript" src="dist/js/jquery.rs.carousel.js"></script>
 
     <!-- carousel extensions (optional) -->
-    <script type="text/javascript" src="js/jquery.rs.carousel-autoscroll.js"></script>
-    <script type="text/javascript" src="js/jquery.rs.carousel-continuous.js"></script>
-    <script type="text/javascript" src="js/jquery.rs.carousel-touch.js"></script>
+    <script type="text/javascript" src="dist/js/jquery.rs.carousel-autoscroll.js"></script>
+    <script type="text/javascript" src="dist/js/jquery.rs.carousel-continuous.js"></script>
+    <script type="text/javascript" src="dist/js/jquery.rs.carousel-touch.js"></script>
 
 ### This is the basic HTML structure required:
 

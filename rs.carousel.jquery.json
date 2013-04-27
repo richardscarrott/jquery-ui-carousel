@@ -1,6 +1,6 @@
 {
   "name": "rs.carousel",
-  "version": "0.11.2",
+  "version": "1.0.0",
   "title": "jquery.rs.carousel",
   "author": {
     "name": {
@@ -11,11 +11,17 @@
   },
   "licenses": [
     {
-      "url": "http://opensource.org/licenses/undefined"
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    },
+    {
+      "type": "GPL",
+      "url": "http://www.gnu.org/licenses/gpl.html"
     }
   ],
   "dependencies": {
-    "jquery": "*"
+    "jquery": ">=1.8",
+    "jquery.ui.widget": ">=1.8"
   },
   "description": "jQuery RS Carousel is a responsive and touch-enabled carousel written on top of jQuery and the jQuery UI Widget Factory providing a full and familiar API in less than 2.6kB minified and gzipped",
   "keywords": [
@@ -30,6 +36,7 @@
     "widget",
     "rs"
   ],
+  "homepage": "https://github.com/richardscarrott/jquery-ui-carousel",
   "docs": "http://richardscarrott.github.com/jquery-ui-carousel/",
   "demo": "http://www.richardscarrott.co.uk/assets/javascript/jquery/ui-carousel/demo/",
   "download": "https://github.com/richardscarrott/jquery-ui-carousel/archive/0.11.2.zip",

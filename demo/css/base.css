@@ -1,0 +1,174 @@
+	
+	/* reset */
+	html, body, div, span, applet, object, iframe,
+	h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+	a, abbr, acronym, address, big, cite, code,
+	del, dfn, em, font, img, ins, kbd, q, s, samp,
+	small, strike, strong, sub, sup, tt, var,
+	dl, dt, dd, ol, ul, li,
+	fieldset, form, label, legend,
+	table, caption, tbody, tfoot, thead, tr, th, td {
+		margin: 0;
+		padding: 0;
+		border: none;
+		outline: 0;
+		font-family: 100%;
+	}
+
+	/** block level **/
+	ul,
+	ol {
+		list-style: none;
+	}
+
+	table {
+		border-collapse: collapse;
+	}
+
+		table th {
+			text-align: left;
+		}
+
+	iframe {
+		border-width: 0;
+		background: #DDD;
+	}
+
+	/** inline **/
+	a {
+		color: #1788D7;
+		text-decoration: none;
+	}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+	img {
+		vertical-align: bottom;
+	}
+
+	pre,
+	kbd,
+	code,
+	samp,
+	tt,
+	var {
+		font-family: monospace;
+	}
+
+	pre {
+		white-space: pre-wrap;
+	}
+
+	/* base */
+	body {
+		background: #444;
+		font-family: arial, helvetica, sans-serif;
+		font-size: 81.25%; /** 13px **/
+		color: #444;
+		line-height: 1.4;
+	}
+
+	/* layout */
+	#container {
+		width: 666px;
+		margin: 0 auto;
+		background: #F5F5F5;
+		padding: 30px;
+	}
+
+	/* headings */
+	.h1,
+	.h2,
+	.h3,
+	.h4 {
+		line-height: 1.2;
+		font-weight: normal;
+		margin: 0 0 0.3em;
+		font-family: trebuchet ms, lucida sans unicode, arial, sans-serif;
+		font-size: 1.538em;
+	}
+
+	/* copy */
+	.copy p,
+	.copy pre,
+	.copy blockquote,
+	.copy dl,
+	.copy ul,
+	.copy ol,
+	.copy address {
+		margin: 0 0 1.384em;
+	}
+
+	.copy ul,
+	.copy ol {
+		padding: 0 0 0 20px;
+	}
+
+	.copy li {
+		margin: 0 0  0.461em;
+	}
+
+	.copy strong,
+	.copy dt {
+		font-weight: bold;
+	}
+
+	.copy em {
+		font-style: italic;
+	}
+
+	.copy cite {
+		font-style: normal;
+	}
+
+	.copy acronym,
+	.copy abbr {
+		border-bottom: 1px dotted #333;
+		cursor: help;
+	}
+
+	/* module */
+	.module {
+		margin: 0 0 1.384em;
+	}
+
+	/* forms */
+	.field,
+	.actions {
+		margin: 20px;
+	}
+		
+	.action-set .action {
+		display: inline;
+	}
+
+	/* colours */
+	.color-1 {
+		background: #007cd2;
+	}
+
+	.color-2 {
+		background: #1788D7;
+	}
+
+	.color-3 {
+		background: #3798db;
+	}
+
+	.color-4 {
+		background: #62acdf;
+	}
+
+	.color-5 {
+		background: #86bbe0;
+	}
+
+	.color-6 {
+		background: #a7c7de;
+	}
+
+	.color-7 {
+		background: #d5dbdf;
+	}
