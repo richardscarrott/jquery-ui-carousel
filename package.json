@@ -44,6 +44,7 @@
     "grunt-jquerymanifest": "0.1.x",
     "underscore": "1.4.x",
     "grunt-contrib-cssmin": "~0.6.0",
-    "grunt-replace": "~0.4.3"
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-copy": "~0.4.1"
   }
 }

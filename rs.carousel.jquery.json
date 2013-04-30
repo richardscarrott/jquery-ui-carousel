@@ -3,11 +3,9 @@
   "version": "1.0.0",
   "title": "jquery.rs.carousel",
   "author": {
-    "name": {
-      "name": "Richard Scarrott",
-      "email": "riscarrott@googlemail.com",
-      "url": "http://richardscarrott.co.uk"
-    }
+    "name": "Richard Scarrott",
+    "email": "riscarrott@googlemail.com",
+    "url": "http://richardscarrott.co.uk"
   },
   "licenses": [
     {
