@@ -1,5 +1,4 @@
 	
-
 	var demo = {
 
 		settings: {
