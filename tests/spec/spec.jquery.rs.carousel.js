@@ -130,7 +130,7 @@ describe('The carousel', function () {
             expect(spy.callCount).toEqual(2);
         });
 
-        it('before', function () {
+        it('should be called', function () {
             var spy = jasmine.createSpy('beforeHandler');
             root.on('carouselbefore', spy);
             root.carousel({ before: spy });
@@ -199,6 +199,19 @@ describe('The carousel', function () {
                 expect(spy).toHaveBeenCalled();
             });
 
+            it('should set the event type to carousel:gotopage', function () {
+                root.carousel({
+                    before: function (e) {
+                        expect(e.originalEvent.type).toEqual('carousel:gotopage');
+                    },
+                    after: function (e) {
+                        expect(e.originalEvent.type).toEqual('carousel:gotopage');
+                    },
+                    speed: 0
+                });
+                root.carousel('goToPage', 1);
+            });
+
         });
         
         describe('next', function () {
@@ -211,6 +224,19 @@ describe('The carousel', function () {
                 root.carousel('next');
                 expect(spy).toHaveBeenCalled();
                 expect(root.carousel('getIndex')).toEqual(1);
+            });
+
+            it('should set the event type to carousel:next', function () {
+                root.carousel({
+                    before: function (e) {
+                        expect(e.originalEvent.type).toEqual('carousel:next');
+                    },
+                    after: function (e) {
+                        expect(e.originalEvent.type).toEqual('carousel:next');
+                    },
+                    speed: 0
+                });
+                root.carousel('next');
             });
 
         });
@@ -226,6 +252,20 @@ describe('The carousel', function () {
                 args = spy.mostRecentCall.args || [];
                 expect(spy).toHaveBeenCalled();
                 expect(root.carousel('getIndex')).toEqual(0);
+            });
+
+            it('should set the event type to carousel:prev', function () {
+                root.carousel({
+                    before: function (e) {
+                        expect(e.originalEvent.type).toEqual('carousel:prev');
+                    },
+                    after: function (e) {
+                        expect(e.originalEvent.type).toEqual('carousel:prev');
+                    },
+                    speed: 0
+                });
+                root.carousel('goToPage', 1, null, null, true); // make sure prev will actually do something (and it's silent)
+                root.carousel('prev');
             });
 
         });

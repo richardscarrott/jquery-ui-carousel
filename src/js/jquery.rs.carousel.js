@@ -538,7 +538,7 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
                 this.elements.runner
                     .unbind(transitionEndEvent.join(' '))
-                    .on(transitionEndEvent.join(' '), function (e) {
+                    .on(transitionEndEvent.join(' '), function () {
                         self.element.removeClass(fullName + '-transition');
                         if (!silent) {
                             self._trigger('after', e, self._getEventData());
@@ -548,9 +548,9 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
 
                 // if we're not animating the after callback should still be called
                 if (!e.animate) {
-                    self.element.removeClass(fullName + '-transition');
+                    this.element.removeClass(fullName + '-transition');
                     if (!silent) {
-                        self._trigger('after', e, self._getEventData());
+                        this._trigger('after', e, this._getEventData());
                     }
                 }
 
