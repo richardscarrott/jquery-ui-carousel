@@ -315,3 +315,9 @@ Returns the root element.
 
 #### destroy `$(':rs-carousel').carousel('destroy')`
 Removes the carousel functionality completely. This will return the element back to its pre-init state.
+
+## Thank you
+
+[![BrowserStack](browserstack.svg)](https://www.browserstack.com/ "BrowserStack")
+
+[BrowserStack](https://www.browserstack.com/ "BrowserStack") for providing a free subscription to support cross browser testing.
