@@ -318,6 +318,7 @@ Removes the carousel functionality completely. This will return the element back
 
 ## Thank you
 
-[![BrowserStack](./browserstack.svg)](https://www.browserstack.com/ "BrowserStack")
+![BrowserStack](browserstack.svg)
+[![BrowserStack](browserstack.svg)](https://www.browserstack.com/ "BrowserStack")
 
 [BrowserStack](https://www.browserstack.com/ "BrowserStack") for providing a free subscription to support cross browser testing.
