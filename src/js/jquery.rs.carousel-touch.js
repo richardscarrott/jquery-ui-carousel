@@ -251,11 +251,15 @@ undef: true, unused: true, strict: true, trailing: true, browser: true */
             direction = this.startPos[axis] > this.endPos[axis] ? 'next' : 'prev';
 
             if (speed > this.options.sensitivity || distance > this._getMaskDim() / 2) {
-                if ((this.index === this.getNoOfPages() - 1 && direction === 'next') || (this.index === 0 && direction === 'prev')) {
-                    this.goToPage(this.index);
-                }
-                else {
+                if(this.options.continuous){
                     this[direction]();
+                }else{
+                    if ((this.index === this.getNoOfPages() - 1 && direction === 'next') || (this.index === 0 && direction === 'prev')) {
+                        this.goToPage(this.index);
+                    }
+                    else {
+                        this[direction]();
+                    }
                 }
             }
             else {
